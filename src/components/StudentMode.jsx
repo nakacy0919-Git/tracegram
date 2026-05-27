@@ -14,7 +14,7 @@ export default function StudentMode({ categories }) {
   if (gameState === 'select') {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-6 overflow-y-auto">
-        <div className="max-w-3xl w-full">
+        <div className="max-w-4xl w-full">
           <h2 className="text-3xl font-bold text-center text-white mb-8">トレーニングを選ぼう</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {availableCategories.map((category) => (
@@ -85,48 +85,51 @@ export default function StudentMode({ categories }) {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center p-6">
-        <h2 className="text-2xl mb-4 text-center text-slate-200 font-medium">{activeProblem.hint}</h2>
-        {/* ★ 日本語訳の表示エリアを追加 */}
-        {activeProblem.translation && (
-          <p className="text-lg mb-12 text-center text-slate-400 font-medium">
-            「{activeProblem.translation}」
-          </p>
-        )}
-        
-        <div className="flex flex-wrap justify-center gap-x-1 gap-y-3 max-w-4xl mx-auto">
-          {activeProblem.tokens.map((token, idx) => {
-            const isSelected = selectedIndices.includes(idx);
-            // ★ 配列に対応
-            const isGlowing = activeProblem.modifiedIndices 
-              ? activeProblem.modifiedIndices.includes(idx) 
-              : activeProblem.modifiedIndex === idx;
-            
-            let bgClass = "bg-transparent text-slate-200 hover:bg-slate-800/50";
-            let animateState = "idle";
+      {/* ★ 変更点：items-center を外し、横幅を広くして左揃えにしました */}
+      <div className="flex-1 flex flex-col justify-center p-6 md:p-12">
+        <div className="w-full max-w-7xl mx-auto">
+          <h2 className="text-2xl mb-4 text-left text-slate-200 font-medium">{activeProblem.hint}</h2>
+          
+          {activeProblem.translation && (
+            <p className="text-lg mb-12 text-left text-slate-400 font-medium">
+              「{activeProblem.translation}」
+            </p>
+          )}
+          
+          {/* ★ 変更点：justify-center を justify-start に変更し、単語を左から詰めるようにしました */}
+          <div className="flex flex-wrap justify-start gap-x-1 gap-y-4 w-full">
+            {activeProblem.tokens.map((token, idx) => {
+              const isSelected = selectedIndices.includes(idx);
+              const isGlowing = activeProblem.modifiedIndices 
+                ? activeProblem.modifiedIndices.includes(idx) 
+                : activeProblem.modifiedIndex === idx;
+              
+              let bgClass = "bg-transparent text-slate-200 hover:bg-slate-800/50";
+              let animateState = "idle";
 
-            if (isSelected) {
-              if (feedbackState === 'correct') {
-                bgClass = "bg-emerald-500 text-white shadow-emerald-500/50";
-                animateState = "correct";
-              } else if (feedbackState === 'wrong') {
-                bgClass = "bg-rose-500 text-white shadow-rose-500/50";
-                animateState = "wrong";
-              } else {
-                bgClass = "bg-blue-600 text-white shadow-blue-500/50";
-                animateState = "selected";
+              if (isSelected) {
+                if (feedbackState === 'correct') {
+                  bgClass = "bg-emerald-500 text-white shadow-emerald-500/50";
+                  animateState = "correct";
+                } else if (feedbackState === 'wrong') {
+                  bgClass = "bg-rose-500 text-white shadow-rose-500/50";
+                  animateState = "wrong";
+                } else {
+                  bgClass = "bg-blue-600 text-white shadow-blue-500/50";
+                  animateState = "selected";
+                }
+              } 
+              else if (isGlowing) {
+                bgClass = "bg-purple-900/40 border border-purple-400 text-purple-300 shadow-[0_0_20px_rgba(168,85,247,0.6)] animate-pulse";
               }
-            } 
-            else if (isGlowing) {
-              bgClass = "bg-purple-900/40 border border-purple-400 text-purple-300 shadow-[0_0_20px_rgba(168,85,247,0.6)] animate-pulse";
-            }
 
-            return (
-              <motion.div key={idx} data-token-idx={idx} onPointerDown={(e) => handlePointerDown(e, idx)} className={`text-3xl md:text-4xl font-bold px-3 py-2 rounded-lg cursor-pointer select-none transition-colors duration-200 ${bgClass}`} variants={tokenVariants} initial="idle" animate={animateState}>
-                {token}
-              </motion.div>
-            );
-          })}
+              return (
+                <motion.div key={idx} data-token-idx={idx} onPointerDown={(e) => handlePointerDown(e, idx)} className={`text-3xl md:text-4xl font-bold px-3 py-2 rounded-lg cursor-pointer select-none transition-colors duration-200 ${bgClass}`} variants={tokenVariants} initial="idle" animate={animateState}>
+                  {token}
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
