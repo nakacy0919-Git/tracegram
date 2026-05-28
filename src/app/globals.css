@@ -1,26 +1,39 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: #334155;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+/* ▼ いただいた CSS Pattern Background */
+.pattern-bg {
+  background-color: #ffffff;
+  background-image: 
+    radial-gradient(rgba(148, 163, 184, 0.2) 2px, transparent 2px),
+    radial-gradient(rgba(148, 163, 184, 0.2) 2px, transparent 2px);
+  background-size: 24px 24px, 24px 24px;
+  background-position: 0 0, 12px 12px;
+}
+
+/* ▼ いただいた ニューモーフィズムデザイン */
+/* ※どんな文字数・サイズのカードにもフィットするように width/height は外しています */
+.box {
+  background-color: #e0e5ec;
+  border-radius: 24px;
+  box-shadow: 
+    9px 9px 16px 0px rgba(163, 177, 198, 0.6),
+    -9px -9px 16px 0px rgba(255, 255, 255, 1);
+  transition: all 0.2s ease;
+}
+
+/* ▼ なぞった時（選択時）のへこむデザイン（内側に影を落とす） */
+.box-pressed {
+  background-color: #e0e5ec;
+  border-radius: 24px;
+  box-shadow: 
+    inset 6px 6px 12px 0px rgba(163, 177, 198, 0.6),
+    inset -6px -6px 12px 0px rgba(255, 255, 255, 1);
+  transition: all 0.2s ease;
 }
