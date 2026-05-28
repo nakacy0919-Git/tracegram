@@ -1,150 +1,190 @@
-"use client";
-import { useState, useRef, useCallback } from 'react';
-import { PROBLEM_SETS } from '../data/mockData';
+import { useState, useRef, useEffect } from 'react';
 
-let audioCtx = null;
-const initAudio = () => {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  if (audioCtx.state === 'suspended') audioCtx.resume();
-};
-
-const playSound = (type) => {
-  try {
-    initAudio();
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    
-    if (type === 'tick') {
-      osc.type = 'sine'; osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(900, audioCtx.currentTime + 0.05);
-      gain.gain.setValueAtTime(0.05, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
-      osc.start(); osc.stop(audioCtx.currentTime + 0.05);
-    } else if (type === 'success') {
-      osc.type = 'triangle'; osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(1046.50, audioCtx.currentTime + 0.3);
-      gain.gain.setValueAtTime(0.15, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
-      osc.start(); osc.stop(audioCtx.currentTime + 0.4);
-    } else if (type === 'fail') {
-      osc.type = 'sawtooth'; osc.frequency.setValueAtTime(180, audioCtx.currentTime);
-      osc.frequency.linearRampToValueAtTime(120, audioCtx.currentTime + 0.15);
-      gain.gain.setValueAtTime(0.1, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
-      osc.start(); osc.stop(audioCtx.currentTime + 0.15);
-    }
-  } catch (e) { console.error(e); }
-};
-
-export const useTrace = (categories) => {
-  // ★ 状態管理を「select(選択)」「playing(プレイ中)」「result(結果)」の3フェーズに変更
-  const [gameState, setGameState] = useState('select'); 
+export function useTrace(categories) {
+  const [gameState, setGameState] = useState('select'); // 'select' | 'level_select' | 'play' | 'result'
   const [activeCategory, setActiveCategory] = useState(null);
-  
+  const [selectedLevel, setSelectedLevel] = useState(null); // 1 | 2 | 3
+  const [filteredProblems, setFilteredProblems] = useState([]); // レベルで絞り込んだ問題
   const [currentProblemIdx, setCurrentProblemIdx] = useState(0);
+  
   const [score, setScore] = useState(0);
   const [combo, setCombo] = useState(0);
-
+  const [correctCount, setCorrectCount] = useState(0); // ★ 追加：正解数
+  
   const [selectedIndices, setSelectedIndices] = useState([]);
-  const [isDragging, setIsDragging] = useState(false);
   const [feedbackState, setFeedbackState] = useState('idle');
+  
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragMode, setDragMode] = useState('select'); 
+  const [startTime, setStartTime] = useState(0);
+  const [elapsedTime, setElapsedTime] = useState(0); // ★ 追加：トータル経過時間（秒）
+  const [lastBonus, setLastBonus] = useState(null);
+
   const mainContainerRef = useRef(null);
+  const audioCtxRef = useRef(null);
+  const timerIntervalRef = useRef(null); // ★ タイマー用
 
-  const activeProblem = activeCategory?.problems[currentProblemIdx];
+  const activeProblem = filteredProblems[currentProblemIdx];
 
-  // ★ ゲームスタート処理
-  const startGame = useCallback((category) => {
+  const playTraceSound = (count, isDeselect = false) => {
+    try {
+      if (!audioCtxRef.current) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtxRef.current = new AudioContext();
+      }
+      const ctx = audioCtxRef.current;
+      if (ctx.state === 'suspended') ctx.resume();
+
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.type = 'triangle';
+      const baseFreq = isDeselect ? 300 : 440;
+      osc.frequency.setValueAtTime(baseFreq + (count * 30), ctx.currentTime);
+
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.1);
+    } catch (e) {
+      console.warn("Audio play failed", e);
+    }
+  };
+
+  // ★ 変更：カテゴリを選んだら、まずレベル選択画面へ進む
+  const selectCategory = (category) => {
     setActiveCategory(category);
+    setGameState('level_select');
+  };
+
+  // ★ 変更：レベルを選んだら、問題を絞り込んでゲームスタート
+  const startGame = (level) => {
+    setSelectedLevel(level);
+    
+    // idに含まれるキーワードで初級(-b-)、中級(-i-)、上級(-a-)を判定
+    const levelKey = level === 1 ? '-b-' : level === 2 ? '-i-' : '-a-';
+    const filtered = activeCategory.problems.filter(p => p.id.includes(levelKey));
+    
+    setFilteredProblems(filtered);
     setCurrentProblemIdx(0);
     setScore(0);
     setCombo(0);
-    setGameState('playing');
-  }, []);
+    setCorrectCount(0);
+    setSelectedIndices([]);
+    setFeedbackState('idle');
+    setGameState('play');
+    setStartTime(Date.now());
+    setElapsedTime(0);
+    setLastBonus(null);
+  };
 
-  // ★ メニューに戻る処理
-  const backToMenu = useCallback(() => {
+  // ★ 追加：プレイ中のリアルタイムタイマー監視
+  useEffect(() => {
+    if (gameState === 'play') {
+      timerIntervalRef.current = setInterval(() => {
+        setElapsedTime(prev => prev + 1);
+      }, 1000);
+    } else {
+      if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
+    }
+    return () => {
+      if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
+    };
+  }, [gameState]);
+
+  const backToMenu = () => {
     setGameState('select');
     setActiveCategory(null);
-  }, []);
+    setSelectedLevel(null);
+    setFilteredProblems([]);
+    if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
+  };
 
-  const nextProblem = useCallback(() => {
-    if (currentProblemIdx < activeCategory.problems.length - 1) {
-      setCurrentProblemIdx(prev => prev + 1);
-    } else {
-      setGameState('result'); // 全問終了でリザルト画面へ
-    }
-  }, [currentProblemIdx, activeCategory]);
-
-  const triggerSuccess = useCallback(() => {
-    setFeedbackState('correct'); playSound('success');
-    setCombo(prev => {
-      const newCombo = prev + 1;
-      const bonus = newCombo >= 3 ? newCombo * 50 : 0;
-      setScore(s => s + 100 + bonus);
-      return newCombo;
-    });
-    setTimeout(() => {
-      setFeedbackState('idle'); setSelectedIndices([]); nextProblem();
-    }, 1000);
-  }, [nextProblem]);
-
-  const triggerFail = useCallback(() => {
-    setFeedbackState('wrong'); playSound('fail');
-    setCombo(0);
-    setTimeout(() => {
-      setFeedbackState('idle'); setSelectedIndices([]); nextProblem();
-    }, 1000);
-  }, [nextProblem]);
-
-  const handlePointerDown = useCallback((e, index) => {
-    initAudio();
-    if (feedbackState !== 'idle' || gameState !== 'playing') return;
-
+  const handlePointerDown = (e, idx) => {
+    if (feedbackState !== 'idle') return;
     setIsDragging(true);
-    setSelectedIndices([index]);
+    const isCurrentlySelected = selectedIndices.includes(idx);
+    const newDragMode = isCurrentlySelected ? 'deselect' : 'select';
+    setDragMode(newDragMode);
+    updateSelection(idx, newDragMode);
+  };
 
-    if (!activeProblem.targetIndices.includes(index)) {
-      setIsDragging(false);
-      triggerFail();
-    } else {
-      playSound('tick');
-    }
-  }, [activeProblem, feedbackState, gameState, triggerFail]);
-
-  const handlePointerMove = useCallback((e) => {
+  const handlePointerMove = (e) => {
     if (!isDragging || feedbackState !== 'idle') return;
-    
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
     const element = document.elementFromPoint(clientX, clientY);
 
     if (element && element.hasAttribute('data-token-idx')) {
       const idx = parseInt(element.getAttribute('data-token-idx'), 10);
-      
-      setSelectedIndices(prev => {
-        if (!prev.includes(idx)) {
-          if (!activeProblem.targetIndices.includes(idx)) {
-            setIsDragging(false);
-            triggerFail();
-            return [...prev, idx];
-          }
-          playSound('tick');
-          return [...prev, idx].sort((a, b) => a - b);
-        }
-        return prev;
-      });
+      updateSelection(idx, dragMode);
     }
-  }, [isDragging, feedbackState, activeProblem, triggerFail]);
+  };
 
-  const handlePointerUp = useCallback((e) => {
-    if (!isDragging || feedbackState !== 'idle') return;
+  const handlePointerUp = () => {
     setIsDragging(false);
-    
-    const isCorrect = selectedIndices.length === activeProblem.targetIndices.length;
-    isCorrect ? triggerSuccess() : triggerFail();
-  }, [isDragging, feedbackState, selectedIndices, activeProblem, triggerSuccess, triggerFail]);
+  };
+
+  const updateSelection = (idx, mode) => {
+    setSelectedIndices(prev => {
+      if (mode === 'select' && !prev.includes(idx)) {
+        playTraceSound(prev.length);
+        return [...prev, idx].sort((a, b) => a - b);
+      } else if (mode === 'deselect' && prev.includes(idx)) {
+        playTraceSound(0, true);
+        return prev.filter(i => i !== idx);
+      }
+      return prev;
+    });
+  };
+
+  const submitAnswer = () => {
+    if (selectedIndices.length === 0 || feedbackState !== 'idle') return;
+
+    const correctIndices = activeProblem.targetIndices;
+    const isCorrect = JSON.stringify(selectedIndices) === JSON.stringify(correctIndices);
+
+    if (isCorrect) {
+      setCorrectCount(prev => prev + 1); // 正解数を追加
+      const timeTaken = (Date.now() - startTime) / 1000;
+      let speedBonus = 0;
+      if (timeTaken <= 3) speedBonus = 50;
+      else if (timeTaken <= 6) speedBonus = 30;
+      else if (timeTaken <= 10) speedBonus = 10;
+
+      const newCombo = combo + 1;
+      const comboBonus = newCombo >= 3 ? 50 : 0;
+
+      const earnedPoints = 100 + speedBonus + comboBonus;
+      setScore(prev => prev + earnedPoints);
+      setCombo(newCombo);
+      setLastBonus({ speed: speedBonus, combo: comboBonus, points: earnedPoints });
+      setFeedbackState('correct');
+    } else {
+      setCombo(0);
+      setLastBonus(null);
+      setFeedbackState('wrong');
+    }
+
+    setTimeout(() => {
+      if (currentProblemIdx + 1 < filteredProblems.length) {
+        setCurrentProblemIdx(prev => prev + 1);
+        setSelectedIndices([]);
+        setFeedbackState('idle');
+        setStartTime(Date.now());
+      } else {
+        setGameState('result');
+      }
+    }, 1500);
+  };
 
   return {
-    gameState, availableCategories: categories, activeCategory, activeProblem, 
-    currentProblemIdx, score, combo, selectedIndices, feedbackState, mainContainerRef,
-    startGame, backToMenu, handlePointerDown, handlePointerMove, handlePointerUp
+    gameState, availableCategories: categories, activeCategory, activeProblem,
+    currentProblemIdx, score, combo, correctCount, selectedIndices, feedbackState, mainContainerRef,
+    lastBonus, elapsedTime, selectedLevel, filteredProblems,
+    selectCategory, startGame, backToMenu, handlePointerDown, handlePointerMove, handlePointerUp, submitAnswer
   };
-};
+}

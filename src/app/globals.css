@@ -1,13 +1,39 @@
+/* ▼ 1行目：Googleフォントの読み込みを絶対に一番上にします */
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;900&display=swap');
+
+/* ▼ 2行目：そのあとに Tailwind を読み込みます */
 @import "tailwindcss";
 
 body {
+  font-family: 'M PLUS Rounded 1c', sans-serif;
   color: #334155;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
 }
 
-/* ▼ いただいた CSS Pattern Background */
+/* ... 以下はこれまでのコードと同じです ... */
+
+::selection {
+  background-color: rgba(6, 182, 212, 0.2);
+  color: #0891b2;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(203, 213, 225, 0.6);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(148, 163, 184, 0.8);
+}
+
 .pattern-bg {
   background-color: #ffffff;
   background-image: 
@@ -17,8 +43,6 @@ body {
   background-position: 0 0, 12px 12px;
 }
 
-/* ▼ いただいた ニューモーフィズムデザイン */
-/* ※どんな文字数・サイズのカードにもフィットするように width/height は外しています */
 .box {
   background-color: #e0e5ec;
   border-radius: 24px;
@@ -28,7 +52,6 @@ body {
   transition: all 0.2s ease;
 }
 
-/* ▼ なぞった時（選択時）のへこむデザイン（内側に影を落とす） */
 .box-pressed {
   background-color: #e0e5ec;
   border-radius: 24px;
