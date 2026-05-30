@@ -1,15 +1,17 @@
 import { useState, useRef, useEffect } from 'react';
 
 export function useTrace(categories) {
-  const [gameState, setGameState] = useState('select'); // 'select' | 'level_select' | 'play' | 'result'
-  const [activeCategory, setActiveCategory] = useState(null);
+  // ★ 変更：初期状態を 'main_select'（5大カテゴリ選択）に変更
+  const [gameState, setGameState] = useState('main_select'); 
+  const [activeMain, setActiveMain] = useState(null); // 'SUBJECT', 'MODIFIER' など
+  const [activeCategory, setActiveCategory] = useState(null); // サブカテゴリのデータ
   const [selectedLevel, setSelectedLevel] = useState(null); // 1 | 2 | 3
-  const [filteredProblems, setFilteredProblems] = useState([]); // レベルで絞り込んだ問題
+  const [filteredProblems, setFilteredProblems] = useState([]); 
   const [currentProblemIdx, setCurrentProblemIdx] = useState(0);
   
   const [score, setScore] = useState(0);
   const [combo, setCombo] = useState(0);
-  const [correctCount, setCorrectCount] = useState(0); // ★ 追加：正解数
+  const [correctCount, setCorrectCount] = useState(0); 
   
   const [selectedIndices, setSelectedIndices] = useState([]);
   const [feedbackState, setFeedbackState] = useState('idle');
@@ -17,12 +19,12 @@ export function useTrace(categories) {
   const [isDragging, setIsDragging] = useState(false);
   const [dragMode, setDragMode] = useState('select'); 
   const [startTime, setStartTime] = useState(0);
-  const [elapsedTime, setElapsedTime] = useState(0); // ★ 追加：トータル経過時間（秒）
+  const [elapsedTime, setElapsedTime] = useState(0); 
   const [lastBonus, setLastBonus] = useState(null);
 
   const mainContainerRef = useRef(null);
   const audioCtxRef = useRef(null);
-  const timerIntervalRef = useRef(null); // ★ タイマー用
+  const timerIntervalRef = useRef(null); 
 
   const activeProblem = filteredProblems[currentProblemIdx];
 
@@ -54,17 +56,20 @@ export function useTrace(categories) {
     }
   };
 
-  // ★ 変更：カテゴリを選んだら、まずレベル選択画面へ進む
-  const selectCategory = (category) => {
+  // ★ 追加：大カテゴリを選択
+  const selectMainCategory = (mainId) => {
+    setActiveMain(mainId);
+    setGameState('sub_select');
+  };
+
+  // ★ 追加：サブカテゴリ（クエスト）を選択
+  const selectSubCategory = (category) => {
     setActiveCategory(category);
     setGameState('level_select');
   };
 
-  // ★ 変更：レベルを選んだら、問題を絞り込んでゲームスタート
   const startGame = (level) => {
     setSelectedLevel(level);
-    
-    // idに含まれるキーワードで初級(-b-)、中級(-i-)、上級(-a-)を判定
     const levelKey = level === 1 ? '-b-' : level === 2 ? '-i-' : '-a-';
     const filtered = activeCategory.problems.filter(p => p.id.includes(levelKey));
     
@@ -81,7 +86,6 @@ export function useTrace(categories) {
     setLastBonus(null);
   };
 
-  // ★ 追加：プレイ中のリアルタイムタイマー監視
   useEffect(() => {
     if (gameState === 'play') {
       timerIntervalRef.current = setInterval(() => {
@@ -95,11 +99,20 @@ export function useTrace(categories) {
     };
   }, [gameState]);
 
-  const backToMenu = () => {
-    setGameState('select');
+  // ★ 戻るボタンの細分化
+  const backToMain = () => {
+    setGameState('main_select');
+    setActiveMain(null);
+  };
+
+  const backToSub = () => {
+    setGameState('sub_select');
     setActiveCategory(null);
     setSelectedLevel(null);
-    setFilteredProblems([]);
+  };
+
+  const backToLevelSelect = () => {
+    setGameState('level_select');
     if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
   };
 
@@ -148,7 +161,7 @@ export function useTrace(categories) {
     const isCorrect = JSON.stringify(selectedIndices) === JSON.stringify(correctIndices);
 
     if (isCorrect) {
-      setCorrectCount(prev => prev + 1); // 正解数を追加
+      setCorrectCount(prev => prev + 1);
       const timeTaken = (Date.now() - startTime) / 1000;
       let speedBonus = 0;
       if (timeTaken <= 3) speedBonus = 50;
@@ -182,9 +195,11 @@ export function useTrace(categories) {
   };
 
   return {
-    gameState, availableCategories: categories, activeCategory, activeProblem,
+    gameState, availableCategories: categories, activeMain, activeCategory, activeProblem,
     currentProblemIdx, score, combo, correctCount, selectedIndices, feedbackState, mainContainerRef,
     lastBonus, elapsedTime, selectedLevel, filteredProblems,
-    selectCategory, startGame, backToMenu, handlePointerDown, handlePointerMove, handlePointerUp, submitAnswer
+    selectMainCategory, selectSubCategory, startGame, 
+    backToMain, backToSub, backToLevelSelect, // ★ 戻る関数を追加
+    handlePointerDown, handlePointerMove, handlePointerUp, submitAnswer
   };
 }
