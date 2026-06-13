@@ -191,7 +191,7 @@ export function useTrace(categories) {
       } else {
         setGameState('result');
       }
-    }, 1500);
+    }, 600);
   };
 
   return {

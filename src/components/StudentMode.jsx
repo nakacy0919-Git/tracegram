@@ -4,29 +4,24 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Award, ArrowLeft, Zap, CheckCircle2, Mic, Volume2, Timer, XCircle, BarChart2 } from 'lucide-react';
 import { useTrace } from '../hooks/useTrace';
 
-// ▼ 追加：文型要素（S, V, O, C, M）に応じたテーマカラーを判定する関数
+// 文型要素（S, V, O, C, M）に応じたテーマカラーを判定する関数
 const getElementColor = (role) => {
   if (!role) return { bg: "bg-cyan-200", text: "text-cyan-900", shadow: "shadow-[0_0_15px_rgba(165,243,252,0.8)]" };
   
   const r = role.toUpperCase();
   
-  // 🔘 S (主語) -> グレー
   if (r.startsWith('S') || r.includes('主語')) {
     return { bg: "bg-slate-300", text: "text-slate-800", shadow: "shadow-[0_0_15px_rgba(203,213,225,0.8)]" };
   }
-  // 🍑 V (動詞) -> 肌色 (オレンジ系)
   if (r.startsWith('V') || r.includes('動詞')) {
     return { bg: "bg-orange-200", text: "text-orange-900", shadow: "shadow-[0_0_15px_rgba(253,186,116,0.8)]" };
   }
-  // 🟢 O (目的語) -> 薄い緑
   if (r.startsWith('O') || r.includes('目的語')) {
     return { bg: "bg-green-200", text: "text-green-900", shadow: "shadow-[0_0_15px_rgba(187,247,208,0.8)]" };
   }
-  // 🔵 C (補語) -> 青 (今まで通りのシアン)
   if (r.startsWith('C') || r.includes('補語')) {
     return { bg: "bg-cyan-200", text: "text-cyan-900", shadow: "shadow-[0_0_15px_rgba(165,243,252,0.8)]" };
   }
-  // 🟣 M (修飾語) -> 薄い紫
   if (r.startsWith('M') || r.includes('修飾') || r.includes('副詞') || r.includes('形容詞') || r.includes('分詞')) {
     return { bg: "bg-purple-200", text: "text-purple-900", shadow: "shadow-[0_0_15px_rgba(233,213,255,0.8)]" };
   }
@@ -279,35 +274,32 @@ export default function StudentMode({ categories }) {
               const feedback = speechFeedback[prob.id];
               const isListening = listeningId === prob.id;
               
-              // ★ 追加：リザルト画面での正解部分の色分け
               const roleColors = getElementColor(prob.targetRole);
 
               return (
-                <motion.div key={prob.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }} className="bg-white/60 border border-slate-200 rounded-3xl p-6 md:p-8 shadow-sm flex flex-col gap-4">
+                <motion.div key={prob.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }} className="bg-white/60 border border-slate-200 rounded-3xl p-6 md:p-8 shadow-sm flex flex-col gap-4 w-full">
                   <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
-                    <div className="flex-1">
-                      <div className="text-2xl md:text-3xl font-black text-slate-700 leading-relaxed mb-4">
+                    <div className="flex-1 w-full">
+                      <div className="text-2xl md:text-3xl lg:text-4xl font-black text-slate-700 leading-relaxed mb-4 break-words">
                         {prob.tokens.map((token, i) => {
                           const isTarget = prob.targetIndices.includes(i);
                           const isModified = prob.modifiedIndices ? prob.modifiedIndices.includes(i) : prob.modifiedIndex === i;
                           
                           let hlClass = "";
                           if (isTarget) {
-                            // ★ 変更：S, V, O, C, M に応じたカラーリングを適用
                             hlClass = `${roleColors.bg} ${roleColors.text} px-1 rounded-md shadow-sm`;
                           } else if (isModified) {
-                            hlClass = "bg-amber-100 text-amber-800 px-1 rounded-md"; // 修飾される語はアンバー(黄色)に統一
+                            hlClass = "bg-amber-100 text-amber-800 px-1 rounded-md"; 
                           }
-                          return <span key={i} className={`mr-2 inline-block ${hlClass}`}>{token}</span>;
+                          return <span key={i} className={`mr-1.5 md:mr-2 inline-block ${hlClass}`}>{token}</span>;
                         })}
                       </div>
                       <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4">
-                        {/* ★ 変更：構造のテキスト色も連動させる */}
                         <p className={`font-black mb-1 ${roleColors.text}`}>【構造】 {prob.targetRole}</p>
-                        <p className="text-slate-600 font-medium">{prob.translation}</p>
+                        <p className="text-slate-600 font-medium text-lg">{prob.translation}</p>
                       </div>
                     </div>
-                    <div className="flex flex-col items-center justify-center min-w-[160px] bg-slate-50/50 rounded-2xl p-4 border border-slate-100">
+                    <div className="flex flex-col items-center justify-center min-w-[160px] bg-slate-50/50 rounded-2xl p-4 border border-slate-100 shrink-0">
                       <button onClick={() => startListening(prob.id, fullSentence)} disabled={isListening} className={`w-16 h-16 rounded-full flex items-center justify-center mb-3 transition-all ${isListening ? "bg-rose-500 text-white animate-pulse shadow-[0_0_20px_rgba(244,63,94,0.6)]" : "box text-cyan-600 hover:scale-110 active:scale-95"}`}>
                         {isListening ? <Volume2 size={28} /> : <Mic size={28} />}
                       </button>
@@ -325,97 +317,155 @@ export default function StudentMode({ categories }) {
     );
   }
 
+  // ★ プレイ画面
   if (!activeProblem) return null;
 
+  const cleanHint = activeProblem.hint.replace(/【.*?】/, '').trim();
+  const roleColors = getElementColor(activeProblem.targetRole);
+  const roleInitial = activeProblem.targetRole.charAt(0).toUpperCase();
+
   return (
-    <div className="flex-1 flex flex-col relative touch-none z-10" ref={mainContainerRef} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onTouchMove={handlePointerMove} onTouchEnd={handlePointerUp}>
-      <div className="flex justify-between items-end px-6 md:px-10 py-4 border-b border-slate-200/50 bg-white/30 backdrop-blur-sm">
+    <div className="flex-1 flex flex-col relative touch-none z-10 w-full overflow-hidden" ref={mainContainerRef} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onTouchMove={handlePointerMove} onTouchEnd={handlePointerUp}>
+      
+      {/* ヘッダーエリア */}
+      <div className="flex justify-between items-end px-4 md:px-10 py-4 border-b border-slate-200/50 bg-white/30 backdrop-blur-sm w-full z-20">
         <div className="flex items-center gap-4">
           <button onClick={backToLevelSelect} className="box p-2 text-rose-500 hover:scale-105 active:scale-95 transition-transform flex items-center justify-center" title="途中でやめる">
             <XCircle size={22} />
           </button>
           <div>
             <div className="text-sm text-slate-400 mb-1 font-black tracking-wider">{activeCategory.title} [Lv.{selectedLevel}]</div>
-            <div className="text-2xl font-black text-slate-700">Q. {currentProblemIdx + 1} <span className="text-base text-slate-400">/ {filteredProblems.length}</span></div>
+            <div className="text-xl md:text-2xl font-black text-slate-700">Q. {currentProblemIdx + 1} <span className="text-base text-slate-400">/ {filteredProblems.length}</span></div>
           </div>
         </div>
-        <div className="flex items-end gap-6 text-right">
-          <div className="box-pressed px-3 py-1.5 flex items-center gap-1.5 text-slate-600 font-black text-md">
+        <div className="flex items-end gap-4 md:gap-6 text-right">
+          <div className="hidden md:flex box-pressed px-3 py-1.5 items-center gap-1.5 text-slate-600 font-black text-md">
             <Timer size={18} className="text-slate-500" />
             <span>{formatTime(elapsedTime)}</span>
           </div>
           <div>
             <div className="h-6 mb-1 flex justify-end">
               <AnimatePresence>
-                {combo >= 2 && <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} className="text-purple-600 text-lg font-black italic flex items-center gap-1 drop-shadow-[0_2px_2px_rgba(168,85,247,0.3)]"><Zap size={18} className="fill-current" /> {combo} COMBO!</motion.div>}
+                {combo >= 2 && <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} className="text-purple-600 text-base md:text-lg font-black italic flex items-center gap-1 drop-shadow-[0_2px_2px_rgba(168,85,247,0.3)]"><Zap size={16} className="fill-current" /> {combo} COMBO!</motion.div>}
               </AnimatePresence>
             </div>
-            <div className="text-4xl md:text-5xl font-black text-cyan-600 drop-shadow-[0_4px_4px_rgba(8,145,178,0.2)] tracking-tighter">{score}</div>
+            <div className="text-3xl md:text-5xl font-black text-cyan-600 drop-shadow-[0_4px_4px_rgba(8,145,178,0.2)] tracking-tighter">{score}</div>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-between p-6 md:p-12">
-        <div className="w-full max-w-5xl">
-          <div className="mb-12 pl-5 border-l-8 border-cyan-400">
-            <h2 className="text-xl md:text-2xl text-slate-800 font-black mb-3">{activeProblem.hint}</h2>
-            {activeProblem.translation && <p className="text-base md:text-lg text-slate-500 font-bold">{activeProblem.translation}</p>}
-          </div>
-          <div className="w-full p-6 relative bg-white/40 rounded-3xl border border-slate-100 shadow-inner">
-            <AnimatePresence>
-              {feedbackState === 'correct' && combo >= 3 && <motion.div initial={{ scale: 0, opacity: 0, rotate: -15 }} animate={{ scale: 1, opacity: 1, rotate: -5 }} exit={{ scale: 1.5, opacity: 0 }} className="absolute inset-0 flex items-center justify-center z-50 pointer-events-none"><span className="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 drop-shadow-[0_10px_10px_rgba(0,0,0,0.1)]">{combo} COMBO!!</span></motion.div>}
-            </AnimatePresence>
-
-            <div className="text-left leading-[4rem] md:leading-[5.5rem]">
-              {activeProblem.tokens.map((token, idx) => {
-                const isSelected = selectedIndices.includes(idx);
-                const isGlowing = activeProblem.modifiedIndices ? activeProblem.modifiedIndices.includes(idx) : activeProblem.modifiedIndex === idx;
-                
-                let bgClass = "bg-transparent text-slate-700";
-                
-                if (isSelected) {
-                  if (feedbackState === 'wrong') {
-                    // ミスした時は赤色に
-                    bgClass = "bg-rose-300 text-rose-900 shadow-[0_0_15px_rgba(253,164,175,0.6)]";
-                  } else {
-                    // ★ 変更：選択中（および正解時）は、S,V,O,C,Mに応じた専用カラーに染まる
-                    const roleColors = getElementColor(activeProblem.targetRole);
-                    bgClass = `${roleColors.bg} ${roleColors.text} ${roleColors.shadow}`;
-                    if (feedbackState === 'correct') {
-                      bgClass += " scale-105 z-10 transition-transform duration-150"; // 正解時はちょっとだけフワッと浮き上がる
-                    }
-                  }
-                } else if (isGlowing) {
-                  bgClass = "bg-amber-100 text-amber-700 shadow-[0_0_10px_rgba(254,243,199,0.5)] animate-pulse";
-                }
-
-                return (
-                  <motion.span key={idx} data-token-idx={idx} onPointerDown={(e) => handlePointerDown(e, idx)} className={`inline-block text-3xl md:text-5xl font-black px-2 mx-1 rounded-lg cursor-pointer select-none transition-all duration-150 ${bgClass}`}>{token}</motion.span>
-                );
-              })}
-            </div>
-          </div>
+      {/* メインプレイエリア */}
+      <div className="flex-1 flex flex-col items-center justify-between p-4 md:p-8 w-full max-w-[1400px] mx-auto overflow-hidden relative">
+        
+        {/* ★ 指示エリア（固定化：targetRoleが変わった時だけスライド） */}
+        <div className="w-full flex justify-center mb-6 md:mb-10 text-center z-10">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`instruction-${activeProblem.targetRole}`} // ← 品詞が変わった時のみアニメーション
+              initial={{ x: 1000, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -1000, opacity: 0 }}
+              transition={{ type: "tween", duration: 0.3, ease: "easeOut" }}
+              className="flex items-center justify-center gap-3 md:gap-6"
+            >
+              {/* ふわふわ浮遊する丸いアイコン */}
+              <motion.div
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                className={`w-16 h-16 md:w-24 md:h-24 rounded-full flex items-center justify-center text-4xl md:text-6xl font-black shadow-md border-4 border-white ${roleColors.bg} ${roleColors.text} shrink-0`}
+              >
+                {roleInitial}
+              </motion.div>
+              
+              <p className={`text-xl md:text-3xl lg:text-4xl font-black ${roleColors.text} drop-shadow-sm px-2 text-left`}>
+                {cleanHint}
+              </p>
+            </motion.div>
+          </AnimatePresence>
         </div>
 
-        <div className="w-full max-w-5xl flex flex-col items-center mt-10 min-h-[100px]">
+        {/* ★ 英文なぞりエリア（超高速スライドアニメーション） */}
+        <div className="w-full relative bg-white/60 rounded-3xl border border-slate-100 shadow-inner p-4 md:p-10 mb-4 md:mb-8 flex items-center justify-center min-h-[160px] md:min-h-[200px] overflow-hidden">
+          
+          <AnimatePresence mode="wait">
+            <motion.div 
+              key={`sentence-${currentProblemIdx}`}
+              initial={{ x: 800, opacity: 0 }} 
+              animate={{ x: 0, opacity: 1 }}    
+              exit={{ x: -800, opacity: 0 }}   
+              transition={{ type: "tween", duration: 0.2, ease: "easeOut" }} // ← 0.2秒の超高速移動
+              className="w-full"
+            >
+              <div className="text-center leading-[3.5rem] md:leading-[5rem] lg:leading-[6rem]">
+                {activeProblem.tokens.map((token, idx) => {
+                  const isSelected = selectedIndices.includes(idx);
+                  const isGlowing = activeProblem.modifiedIndices ? activeProblem.modifiedIndices.includes(idx) : activeProblem.modifiedIndex === idx;
+                  
+                  let bgClass = "bg-transparent text-slate-700";
+                  
+                  if (isSelected) {
+                    if (feedbackState === 'wrong') {
+                      bgClass = "bg-rose-300 text-rose-900 shadow-[0_0_15px_rgba(253,164,175,0.6)]";
+                    } else {
+                      bgClass = `${roleColors.bg} ${roleColors.text} ${roleColors.shadow}`;
+                      if (feedbackState === 'correct') {
+                        bgClass += " scale-105 z-10 transition-transform duration-150";
+                      }
+                    }
+                  } else if (isGlowing) {
+                    bgClass = "bg-amber-100 text-amber-700 shadow-[0_0_10px_rgba(254,243,199,0.5)] animate-pulse";
+                  }
+
+                  return (
+                    <motion.span 
+                      key={idx} 
+                      data-token-idx={idx} 
+                      onPointerDown={(e) => handlePointerDown(e, idx)} 
+                      className={`inline-block text-2xl md:text-4xl lg:text-5xl font-black px-1.5 md:px-2 mx-0.5 md:mx-1 rounded-lg cursor-pointer select-none transition-all duration-150 ${bgClass}`}
+                    >
+                      {token}
+                    </motion.span>
+                  );
+                })}
+              </div>
+              
+              {/* 和訳エリア（英文と一緒に高速スライド） */}
+              {activeProblem.translation && (
+                <div className="w-full text-center mt-6 md:mt-10 px-4">
+                  <p className="text-base md:text-xl text-slate-500 font-bold bg-white/70 inline-block px-6 py-3 rounded-2xl shadow-sm border border-slate-100">
+                    {activeProblem.translation}
+                  </p>
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
+
+          <AnimatePresence>
+            {feedbackState === 'correct' && combo >= 3 && <motion.div initial={{ scale: 0, opacity: 0, rotate: -15 }} animate={{ scale: 1, opacity: 1, rotate: -5 }} exit={{ scale: 1.5, opacity: 0 }} className="absolute inset-0 flex items-center justify-center z-50 pointer-events-none"><span className="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 drop-shadow-[0_10px_10px_rgba(0,0,0,0.1)]">{combo} COMBO!!</span></motion.div>}
+          </AnimatePresence>
+        </div>
+
+        {/* Answerボタンエリア */}
+        <div className="w-full flex flex-col items-center min-h-[90px] md:min-h-[120px] z-10">
           <AnimatePresence mode="wait">
             {feedbackState === 'idle' ? (
-              <motion.button key="answer-btn" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9 }} onClick={submitAnswer} disabled={selectedIndices.length === 0} className={`box flex items-center justify-center gap-3 font-black text-3xl px-16 py-6 rounded-3xl transition-all duration-200 ${selectedIndices.length === 0 ? "opacity-50 cursor-not-allowed text-slate-400" : "text-cyan-600 hover:scale-105 active:scale-95 cursor-pointer"}`}>
+              <motion.button key="answer-btn" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9 }} onClick={submitAnswer} disabled={selectedIndices.length === 0} className={`box flex items-center justify-center gap-3 font-black text-2xl md:text-3xl px-12 md:px-16 py-4 md:py-6 rounded-3xl transition-all duration-200 ${selectedIndices.length === 0 ? "opacity-50 cursor-not-allowed text-slate-400" : "text-cyan-600 hover:scale-105 active:scale-95 cursor-pointer"}`}>
                 <CheckCircle2 size={32} /> Answer!
               </motion.button>
             ) : feedbackState === 'correct' && lastBonus ? (
-              <motion.div key="bonus-display" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-wrap justify-center gap-4 items-center">
-                <span className="text-emerald-500 font-black text-4xl drop-shadow-md">+{lastBonus.points} pts</span>
-                {lastBonus.speed > 0 && <span className="box-pressed px-4 py-2 text-cyan-600 text-lg font-black">Speed +{lastBonus.speed}</span>}
-                {lastBonus.combo > 0 && <span className="box-pressed px-4 py-2 text-purple-600 text-lg font-black">Combo +{lastBonus.combo}</span>}
+              <motion.div key="bonus-display" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-wrap justify-center gap-2 md:gap-4 items-center">
+                <span className="text-emerald-500 font-black text-3xl md:text-4xl drop-shadow-md">+{lastBonus.points} pts</span>
+                {lastBonus.speed > 0 && <span className="box-pressed px-3 md:px-4 py-1.5 md:py-2 text-cyan-600 text-sm md:text-lg font-black">Speed +{lastBonus.speed}</span>}
+                {lastBonus.combo > 0 && <span className="box-pressed px-3 md:px-4 py-1.5 md:py-2 text-purple-600 text-sm md:text-lg font-black">Combo +{lastBonus.combo}</span>}
               </motion.div>
             ) : feedbackState === 'wrong' ? (
-              <motion.div key="wrong-display" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="text-rose-500 font-black text-4xl drop-shadow-md">
+              <motion.div key="wrong-display" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="text-rose-500 font-black text-3xl md:text-4xl drop-shadow-md">
                 Miss...
               </motion.div>
             ) : null}
           </AnimatePresence>
         </div>
+
       </div>
     </div>
   );
