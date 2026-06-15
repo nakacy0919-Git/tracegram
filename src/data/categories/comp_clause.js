@@ -1,4 +1,4 @@
-export const compCausativeCategory = {
+export const compClauseCategory = {
   categoryId: "compCausative",
   title: "Sub-3: 知覚・使役動詞の補語",
   description: "Oの後にくる 原形不定詞 や 分詞(ing/ed)",

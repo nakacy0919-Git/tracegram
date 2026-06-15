@@ -91,9 +91,16 @@ export default function StudentMode({ categories }) {
     recognition.start();
   };
 
+  const hasAnyProblems = (mainId) => {
+    return availableCategories.some(cat => 
+      SUB_MAPPING[mainId].includes(cat.categoryId) && cat.problems && cat.problems.length > 0
+    );
+  };
+
   if (gameState === 'main_select') {
     const MAIN_CATEGORIES = [
-      { id: 'BASIC', title: '基礎マスター', desc: '英語の仕組みをイチから学ぶ', bg: "bg-[#fca5a5]", text: "text-[#7f1d1d]", badge: "🔰 迷ったらココ！" },
+      // ▼ BASICの最後についていた defaultBadge: "🔰 迷ったらココ！" を削除しました
+      { id: 'BASIC', title: '基礎マスター', desc: '英語の仕組みをイチから学ぶ', bg: "bg-[#fca5a5]", text: "text-[#7f1d1d]" },
       { id: 'SUBJECT', title: '主語マスター', desc: '文の主役を見つけ出せ！', bg: "bg-[#d8b4f8]", text: "text-[#581c87]" },
       { id: 'VERB', title: '動詞マスター', desc: '文の心臓部を捉えろ！', bg: "bg-[#fbb6d6]", text: "text-[#9d174d]" },
       { id: 'OBJECT', title: '目的語マスター', desc: '動作の対象を見極めろ！', bg: "bg-[#fbbf24]", text: "text-[#78350f]" },
@@ -108,31 +115,42 @@ export default function StudentMode({ categories }) {
             鍛えたい要素を選んでください
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {MAIN_CATEGORIES.map((cat) => (
-              <motion.div 
-                key={cat.id} 
-                whileHover={{ scale: 1.03, y: -4 }} whileTap={{ scale: 0.95 }} 
-                onClick={() => selectMainCategory(cat.id)}
-                className={`relative group p-1.5 rounded-[32px] cursor-pointer shadow-[0_8px_15px_rgba(0,0,0,0.1)] hover:shadow-[0_12px_20px_rgba(0,0,0,0.15)] transition-all duration-300 ${cat.bg}`}
-              >
-                <div className="border-4 border-white border-dashed rounded-[26px] py-10 px-6 h-full flex flex-col items-center justify-center text-center relative">
-                  {cat.badge && (
-                    <div className="absolute -top-4 -right-2 bg-yellow-400 text-yellow-900 font-black text-sm px-4 py-2 rounded-full shadow-lg border-2 border-white transform rotate-3 animate-pulse">
-                      {cat.badge}
-                    </div>
-                  )}
-                  <h3 className="text-4xl md:text-5xl font-black text-white mb-2 tracking-widest drop-shadow-md">
-                    {cat.id}
-                  </h3>
-                  <p className={`text-lg font-black ${cat.text} mb-2 bg-white/40 px-4 py-1 rounded-full`}>
-                    {cat.title}
-                  </p>
-                  <p className={`text-sm font-bold ${cat.text} leading-relaxed`}>
-                    {cat.desc}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
+            {MAIN_CATEGORIES.map((cat) => {
+              const isAvailable = hasAnyProblems(cat.id);
+              const badgeText = isAvailable ? cat.defaultBadge : "🔒 準備中";
+
+              return (
+                <motion.div 
+                  key={cat.id} 
+                  whileHover={isAvailable ? { scale: 1.03, y: -4 } : {}} 
+                  whileTap={isAvailable ? { scale: 0.95 } : {}} 
+                  onClick={() => isAvailable && selectMainCategory(cat.id)}
+                  className={`relative group p-1.5 rounded-[32px] shadow-[0_8px_15px_rgba(0,0,0,0.1)] transition-all duration-300 ${isAvailable ? 'cursor-pointer ' + cat.bg : 'cursor-not-allowed bg-slate-300 opacity-60'}`}
+                >
+                  <div className="border-4 border-white border-dashed rounded-[26px] py-10 px-6 h-full flex flex-col items-center justify-center text-center relative overflow-hidden">
+                    {badgeText && (
+                      <div className={`absolute -top-4 -right-2 font-black text-sm px-4 py-2 rounded-full shadow-lg border-2 border-white transform rotate-3 ${isAvailable ? 'bg-yellow-400 text-yellow-900 animate-pulse' : 'bg-slate-500 text-white'}`}>
+                        {badgeText}
+                      </div>
+                    )}
+                    
+                    {/* ★ 修正：文字数（length）が長いものはフォントサイズを縮小してはみ出しを防ぐ */}
+                    <h3 className={`font-black text-white mb-2 drop-shadow-md whitespace-nowrap ${
+                      cat.id.length >= 8 ? 'text-2xl md:text-3xl lg:text-2xl xl:text-4xl tracking-wider' : 'text-4xl md:text-5xl tracking-widest'
+                    }`}>
+                      {cat.id}
+                    </h3>
+
+                    <p className={`text-lg font-black mb-2 bg-white/40 px-4 py-1 rounded-full ${isAvailable ? cat.text : 'text-slate-700'}`}>
+                      {cat.title}
+                    </p>
+                    <p className={`text-sm font-bold leading-relaxed ${isAvailable ? cat.text : 'text-slate-600'}`}>
+                      {isAvailable ? cat.desc : "現在、問題データを生成中です。"}
+                    </p>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -140,7 +158,10 @@ export default function StudentMode({ categories }) {
   }
 
   if (gameState === 'sub_select') {
-    const subCategories = availableCategories.filter(cat => SUB_MAPPING[activeMain].includes(cat.categoryId));
+    const subCategories = availableCategories.filter(cat => 
+      SUB_MAPPING[activeMain].includes(cat.categoryId) && cat.problems && cat.problems.length > 0
+    );
+
     const mainTitleMapping = {
       'BASIC': '基礎マスター',
       'SUBJECT': '主語(S)マスター',
@@ -166,7 +187,7 @@ export default function StudentMode({ categories }) {
           <div className="flex flex-col gap-6">
             {subCategories.length === 0 ? (
               <div className="text-center text-slate-400 font-bold p-10 box border border-dashed border-slate-300">
-                このテーマは現在開発中（COMING SOON）です！
+                このジャンルは現在開発中（COMING SOON）です！
               </div>
             ) : (
               subCategories.map((sub) => (
@@ -357,18 +378,17 @@ export default function StudentMode({ categories }) {
       {/* メインプレイエリア */}
       <div className="flex-1 flex flex-col items-center justify-between p-4 md:p-8 w-full max-w-[1400px] mx-auto overflow-hidden relative">
         
-        {/* ★ 指示エリア（固定化：targetRoleが変わった時だけスライド） */}
+        {/* 指示エリア（固定化：targetRoleが変わった時だけスライド） */}
         <div className="w-full flex justify-center mb-6 md:mb-10 text-center z-10">
           <AnimatePresence mode="wait">
             <motion.div
-              key={`instruction-${activeProblem.targetRole}`} // ← 品詞が変わった時のみアニメーション
+              key={`instruction-${activeProblem.targetRole}`}
               initial={{ x: 1000, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -1000, opacity: 0 }}
               transition={{ type: "tween", duration: 0.3, ease: "easeOut" }}
               className="flex items-center justify-center gap-3 md:gap-6"
             >
-              {/* ふわふわ浮遊する丸いアイコン */}
               <motion.div
                 animate={{ y: [0, -6, 0] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
@@ -384,7 +404,7 @@ export default function StudentMode({ categories }) {
           </AnimatePresence>
         </div>
 
-        {/* ★ 英文なぞりエリア（超高速スライドアニメーション） */}
+        {/* 英文なぞりエリア（超高速スライドアニメーション） */}
         <div className="w-full relative bg-white/60 rounded-3xl border border-slate-100 shadow-inner p-4 md:p-10 mb-4 md:mb-8 flex items-center justify-center min-h-[160px] md:min-h-[200px] overflow-hidden">
           
           <AnimatePresence mode="wait">
@@ -393,7 +413,7 @@ export default function StudentMode({ categories }) {
               initial={{ x: 800, opacity: 0 }} 
               animate={{ x: 0, opacity: 1 }}    
               exit={{ x: -800, opacity: 0 }}   
-              transition={{ type: "tween", duration: 0.2, ease: "easeOut" }} // ← 0.2秒の超高速移動
+              transition={{ type: "tween", duration: 0.2, ease: "easeOut" }}
               className="w-full"
             >
               <div className="text-center leading-[3.5rem] md:leading-[5rem] lg:leading-[6rem]">
