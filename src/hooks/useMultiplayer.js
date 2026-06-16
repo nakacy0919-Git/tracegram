@@ -8,12 +8,22 @@ export const useMultiplayer = () => {
   const [connectionStatus, setConnectionStatus] = useState('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const [playersData, setPlayersData] = useState({});
-  const [battleConfig, setBattleConfig] = useState(null); // ★追加：スタート時の問題データ
+  const [battleConfig, setBattleConfig] = useState(null);
 
   const peerRef = useRef(null);
   const connectionsRef = useRef([]);
   const hostConnectionRef = useRef(null);
   const myPeerIdRef = useRef('');
+
+  // 🌟 追加：Googleの無料STUNサーバー（道案内役）を設定して通信を劇的に安定させる
+  const peerOptions = {
+    config: {
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        { urls: 'stun:stun1.l.google.com:19302' },
+      ]
+    }
+  };
 
   const createRoom = useCallback(async () => {
     setConnectionStatus('connecting');
@@ -23,7 +33,8 @@ export const useMultiplayer = () => {
     const newRoomId = Math.floor(100000 + Math.random() * 900000).toString();
     const peerId = `tracegram-room-${newRoomId}`;
     
-    const peer = new Peer(peerId);
+    // 🌟 変更：オプションを渡してPeerを作成
+    const peer = new Peer(peerId, peerOptions);
     peerRef.current = peer;
     myPeerIdRef.current = peerId;
 
@@ -85,7 +96,8 @@ export const useMultiplayer = () => {
     setErrorMessage('');
 
     const { default: Peer } = await import('peerjs');
-    const peer = new Peer();
+    // 🌟 変更：オプションを渡してPeerを作成
+    const peer = new Peer(peerOptions);
     peerRef.current = peer;
 
     peer.on('open', (id) => {
@@ -106,7 +118,6 @@ export const useMultiplayer = () => {
           setPlayersData(payload.data);
         }
         if (payload.type === 'BATTLE_START') {
-          // ★追加：ホストからスタートの合図と「どの問題か」を受け取る
           setBattleConfig(payload.config);
         }
       });
@@ -122,7 +133,7 @@ export const useMultiplayer = () => {
       setConnectionStatus('error');
       setErrorMessage('ルームが見つかりません。IDを確認してください。');
     });
-  }, []); // ← 依存配列から exitMultiplayer を外してエラーを防止
+  }, []);
 
   const broadcast = useCallback((payload, specificConn = null) => {
     if (specificConn) {
@@ -153,7 +164,6 @@ export const useMultiplayer = () => {
     }
   }, [isMultiplayer, isHost, broadcast, sendToHost]);
 
-  // ★追加：ホストがゲームを開始する関数
   const startBattle = useCallback((config) => {
     broadcast({ type: 'BATTLE_START', config });
   }, [broadcast]);
