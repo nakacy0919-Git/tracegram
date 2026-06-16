@@ -177,7 +177,7 @@ export default function StudentMode({ categories }) {
   }
 
   // ==========================================
-  // 📺 2. ロビー待機画面（最大4人の座席表示）
+  // 📺 2. ロビー待機画面
   // ==========================================
   if (appScreen === 'lobby') {
     const sortedPlayers = Object.values(playersData || {}).sort((a, b) => a.name.localeCompare(b.name));
@@ -258,7 +258,7 @@ export default function StudentMode({ categories }) {
   }
 
   // ==========================================
-  // 📺 3. ゲーム・メニュー画面
+  // 📺 3. メニュー画面
   // ==========================================
   if (gameState === 'main_select') {
     const MAIN_CATEGORIES = [
@@ -344,17 +344,78 @@ export default function StudentMode({ categories }) {
     );
   }
 
+  // ==========================================
+  // 📺 4. 待望のリザルト（ランキング）画面
+  // ==========================================
   if (gameState === 'result') {
+    const sortedPlayers = Object.values(playersData || {}).sort((a, b) => b.score - a.score);
+
     return (
-      <div className="flex-1 flex flex-col items-center p-6 md:p-12 z-10 relative overflow-y-auto">
-        <div className="max-w-5xl w-full text-center">
-          <h2 className="text-5xl font-black text-slate-700 mb-10">🏆 MISSION CLEAR!</h2>
+      <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-12 z-10 relative overflow-y-auto">
+        <div className="max-w-3xl w-full text-center">
+          <motion.h2 
+            initial={{ scale: 0.8, opacity: 0 }} 
+            animate={{ scale: 1, opacity: 1 }} 
+            className="text-4xl md:text-6xl font-black text-slate-700 mb-8"
+          >
+            🏆 RESULT
+          </motion.h2>
+          
+          {isMultiplayer && sortedPlayers.length > 0 ? (
+            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 md:p-10 shadow-xl border-2 border-slate-100 mb-10">
+              <h3 className="text-2xl font-black text-slate-600 mb-6 tracking-widest">最終ランキング</h3>
+              <div className="flex flex-col gap-4">
+                {sortedPlayers.map((player, index) => {
+                  const isMe = player.id === myPeerId;
+                  const isTop = index === 0;
+                  
+                  return (
+                    <motion.div 
+                      key={player.id}
+                      initial={{ opacity: 0, x: -50 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.15 }}
+                      className={`flex items-center justify-between p-4 md:p-6 rounded-2xl border-2 ${
+                        index === 0 ? 'bg-gradient-to-r from-yellow-100 to-yellow-50 border-yellow-400 shadow-md' :
+                        index === 1 ? 'bg-slate-50 border-slate-300' :
+                        index === 2 ? 'bg-orange-50 border-orange-300' :
+                        'bg-white border-slate-200'
+                      } ${isMe ? 'ring-4 ring-cyan-400 ring-opacity-50' : ''}`}
+                    >
+                      <div className="flex items-center gap-4">
+                        <span className={`text-3xl md:text-5xl font-black italic w-10 text-left ${
+                          index === 0 ? 'text-yellow-500 drop-shadow-sm' :
+                          index === 1 ? 'text-slate-400' :
+                          index === 2 ? 'text-orange-400' :
+                          'text-slate-300'
+                        }`}>
+                          {index + 1}
+                        </span>
+                        <span className={`text-xl md:text-3xl font-bold ${isMe ? 'text-cyan-700' : 'text-slate-700'}`}>
+                          {player.name === 'Host (You)' && isMe ? 'あなた' : player.name}
+                        </span>
+                        {isTop && <Crown className="text-yellow-500 ml-2 animate-bounce" size={32} />}
+                      </div>
+                      <span className="text-4xl md:text-6xl font-black tracking-tighter text-slate-800">
+                        {player.score} <span className="text-lg md:text-2xl text-slate-400 font-bold tracking-normal">pts</span>
+                      </span>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-12 shadow-xl border-2 border-slate-100 mb-10 flex flex-col items-center">
+              <span className="text-slate-400 font-bold mb-2 tracking-widest text-xl">FINAL SCORE</span>
+              <span className="text-8xl md:text-9xl font-black text-cyan-600 drop-shadow-md">{score}</span>
+            </div>
+          )}
+
           <button onClick={() => {
-            if(isMultiplayer && isHost) setAppScreen('lobby');
-            else if (isMultiplayer && !isHost) setAppScreen('lobby');
+            if(isMultiplayer) setAppScreen('lobby');
             else backToLevelSelect();
-          }} className="mb-10 mx-auto box p-4 font-black text-xl flex items-center justify-center gap-2">
-            <ArrowLeft /> {isMultiplayer ? "ロビーに戻る" : "レベル選択へ戻る"}
+          }} className="mx-auto px-8 py-5 font-black text-2xl flex items-center justify-center gap-3 bg-white hover:bg-slate-50 text-slate-700 transition-transform hover:scale-105 active:scale-95 rounded-2xl shadow-md border-2 border-slate-200">
+            <ArrowLeft size={28} /> {isMultiplayer ? "ロビーに戻る" : "レベル選択へ戻る"}
           </button>
         </div>
       </div>
@@ -372,7 +433,7 @@ export default function StudentMode({ categories }) {
   return (
     <div className="flex-1 flex flex-col relative touch-none z-10 w-full overflow-hidden" ref={mainContainerRef} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onTouchMove={handlePointerMove} onTouchEnd={handlePointerUp}>
       
-      {/* ＝＝＝ 修正：横並び（ピル型）の上部中央ランキングボード ＝＝＝ */}
+      {/* 上部中央ランキングボード */}
       {isMultiplayer && sortedPlayers.length > 0 && (
         <div className="absolute top-[80px] md:top-[90px] left-0 w-full z-40 flex flex-row flex-wrap justify-center gap-2 md:gap-4 px-2 pointer-events-none">
           {sortedPlayers.map((player, index) => {
@@ -395,7 +456,7 @@ export default function StudentMode({ categories }) {
         </div>
       )}
 
-      {/* ＝＝＝ ヘッダー＆ゲームエリア ＝＝＝ */}
+      {/* ヘッダー＆ゲームエリア */}
       <div className="flex justify-between items-end px-4 md:px-10 py-4 border-b border-slate-200/50 bg-white/30 backdrop-blur-sm w-full z-20">
         <div className="flex items-center gap-4">
           <button onClick={() => { if(isMultiplayer) setAppScreen('lobby'); else backToLevelSelect(); }} className="box p-2 text-rose-500"><XCircle size={22} /></button>
@@ -427,8 +488,17 @@ export default function StudentMode({ categories }) {
                   const isSelected = selectedIndices.includes(idx);
                   let bgClass = "bg-transparent text-slate-700";
                   if (isSelected) bgClass = feedbackState === 'wrong' ? "bg-rose-300 text-rose-900" : `${roleColors.bg} ${roleColors.text} ${roleColors.shadow}`;
-                  {/* ★修正：transition-all を外し、遅延ゼロの反応速度に変更 */}
-                  return <motion.span key={idx} onPointerDown={(e) => handlePointerDown(e, idx)} className={`inline-block text-2xl md:text-4xl lg:text-5xl font-black px-1.5 md:px-2 mx-0.5 md:mx-1 rounded-lg cursor-pointer select-none transition-transform duration-75 active:scale-95 ${bgClass}`}>{token}</motion.span>;
+                  
+                  {/* ★修正: もっさり感の原因だった motion.span を純粋な HTML の span に変更し、transition を全削除！これで指の動きに100%追従します */}
+                  return (
+                    <span 
+                      key={idx} 
+                      onPointerDown={(e) => handlePointerDown(e, idx)} 
+                      className={`inline-block text-2xl md:text-4xl lg:text-5xl font-black px-1.5 md:px-2 mx-0.5 md:mx-1 rounded-lg cursor-pointer select-none ${bgClass}`}
+                    >
+                      {token}
+                    </span>
+                  );
                 })}
               </div>
             </motion.div>
