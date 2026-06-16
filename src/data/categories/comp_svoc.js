@@ -2,7 +2,7 @@ export const compSvocCategory = {
   categoryId: "compSvoc",
   title: "Sub-2: 第5文型 (SVOC)",
   description: "目的語の役職や状態を表す名詞・形容詞",
-  problems: [
+ problems: [
     { 
       id: "compSvoc-b-1", 
       tokens: ["I", "make", "him", "happy."], 
@@ -10,7 +10,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【初級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "私は彼を幸せにする。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-b-2", 
@@ -19,7 +20,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【初級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "私たちは彼をケンと呼ぶ。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["noun"]
     },
     { 
       id: "compSvoc-b-3", 
@@ -28,7 +30,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【初級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "彼女は部屋をきれいに保った。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-b-4", 
@@ -37,7 +40,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【初級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "彼はその本が面白いとわかった。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-b-5", 
@@ -46,7 +50,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【初級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "彼らはその犬をポチと名付けた。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["noun"]
     },
     { 
       id: "compSvoc-b-6", 
@@ -55,7 +60,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【初級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "その知らせは私を悲しくさせた。", 
-      modifiedIndices: [3] 
+      modifiedIndices: [3],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-b-7", 
@@ -64,7 +70,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【初級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "私はドアを開けっ放しにしておいた。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-b-8", 
@@ -73,7 +80,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【初級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "私たちは彼を大統領に選んだ。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["noun"]
     },
     { 
       id: "compSvoc-b-9", 
@@ -82,7 +90,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【初級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "あなたは私を夢中にさせる（またはイライラさせる）。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-b-10", 
@@ -91,7 +100,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【初級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "彼女は髪を赤く染めた。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-b-11", 
@@ -100,7 +110,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【初級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "彼は壁を白く塗った。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-b-12", 
@@ -109,7 +120,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【初級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "私はその箱が空だとわかった。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-b-13", 
@@ -118,7 +130,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【初級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "彼らは彼を一人にしておいた。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-b-14", 
@@ -127,7 +140,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【初級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "私たちは彼を天才だと見なしている。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["noun"]
     },
     { 
       id: "compSvoc-b-15", 
@@ -136,7 +150,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【初級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "その音楽は私をリラックスさせる。", 
-      modifiedIndices: [3] 
+      modifiedIndices: [3],
+      grammarPoints: ["past_participle", "adjective"]
     },
     { 
       id: "compSvoc-i-1", 
@@ -145,7 +160,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【中級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "暖かい天候が花を美しくする。", 
-      modifiedIndices: [4, 5] 
+      modifiedIndices: [4, 5],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-i-2", 
@@ -154,7 +170,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【中級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "私たちはその眠っている赤ちゃんが可愛いとわかった。", 
-      modifiedIndices: [2, 3, 4] 
+      modifiedIndices: [2, 3, 4],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-i-3", 
@@ -163,7 +180,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【中級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "彼女は自分の犬を家族の一員だと考えている。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["noun"]
     },
     { 
       id: "compSvoc-i-4", 
@@ -172,7 +190,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【中級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "彼らはその古い家をきれいに保った。", 
-      modifiedIndices: [2, 3, 4] 
+      modifiedIndices: [2, 3, 4],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-i-5", 
@@ -181,7 +200,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【中級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "彼は新しいボートをシーバード号と名付けた。", 
-      modifiedIndices: [2, 3, 4] 
+      modifiedIndices: [2, 3, 4],
+      grammarPoints: ["noun"]
     },
     { 
       id: "compSvoc-i-6", 
@@ -190,7 +210,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【中級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "その長い旅は彼らをとても疲れさせた。", 
-      modifiedIndices: [4] 
+      modifiedIndices: [4],
+      grammarPoints: ["past_participle", "adjective"]
     },
     { 
       id: "compSvoc-i-7", 
@@ -199,7 +220,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【中級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "私たちは彼を野球チームのキャプテンに選んだ。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["noun"]
     },
     { 
       id: "compSvoc-i-8", 
@@ -208,7 +230,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【中級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "私はその数学の問題が難しすぎるとわかった。", 
-      modifiedIndices: [2, 3, 4] 
+      modifiedIndices: [2, 3, 4],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-i-9", 
@@ -217,7 +240,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【中級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "水を出したままにしてはいけません。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["present_participle"]
     },
     { 
       id: "compSvoc-i-10", 
@@ -226,7 +250,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【中級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "彼女は爪を明るいピンク色に塗った。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-i-11", 
@@ -235,7 +260,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【中級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "彼はコーヒーをブラックで飲むのが好きだ。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-i-12", 
@@ -244,7 +270,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【中級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "彼らはその噂が嘘だと証明した。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-i-13", 
@@ -253,7 +280,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【中級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "私たちは彼がその犯罪に関して無実だと信じている。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-i-14", 
@@ -262,7 +290,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【中級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "その悪い知らせは部屋にいる全員を静かにさせた。", 
-      modifiedIndices: [4, 5, 6, 7] 
+      modifiedIndices: [4, 5, 6, 7],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-i-15", 
@@ -271,7 +300,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【中級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "私はその映画が本より面白いとわかった。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-a-1", 
@@ -280,7 +310,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【上級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "委員会はスミス氏を会長に選んだ。", 
-      modifiedIndices: [3, 4] 
+      modifiedIndices: [3, 4],
+      grammarPoints: ["noun"]
     },
     { 
       id: "compSvoc-a-2", 
@@ -289,7 +320,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【上級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "彼女の絶え間ない不満は、オフィスの全員をイライラさせる。", 
-      modifiedIndices: [4, 5, 6, 7] 
+      modifiedIndices: [4, 5, 6, 7],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-a-3", 
@@ -298,7 +330,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【上級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "私たちは貧しい人々を助けるのが義務だと考えている。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["noun", "formal_it"]
     },
     { 
       id: "compSvoc-a-4", 
@@ -307,7 +340,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【上級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "私は先生による説明がとても役立つとわかった。", 
-      modifiedIndices: [2, 3, 4, 5, 6, 7] 
+      modifiedIndices: [2, 3, 4, 5, 6, 7],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-a-5", 
@@ -316,7 +350,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【上級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "彼らはプロジェクトの真の目的を秘密にしておいた。", 
-      modifiedIndices: [2, 3, 4, 5, 6, 7] 
+      modifiedIndices: [2, 3, 4, 5, 6, 7],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-a-6", 
@@ -325,7 +360,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【上級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "彼は重要な書類を金庫に鍵をかけてしまっておいた。", 
-      modifiedIndices: [2, 3, 4] 
+      modifiedIndices: [2, 3, 4],
+      grammarPoints: ["past_participle"]
     },
     { 
       id: "compSvoc-a-7", 
@@ -334,7 +370,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【上級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "突然の騒音で、眠っていた子どもは目を覚ました。", 
-      modifiedIndices: [4, 5, 6] 
+      modifiedIndices: [4, 5, 6],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-a-8", 
@@ -343,7 +380,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【上級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "私たちはついに彼の複雑な理論が間違っていると証明した。", 
-      modifiedIndices: [2, 3, 4] 
+      modifiedIndices: [2, 3, 4],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-a-9", 
@@ -352,7 +390,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【上級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "彼女は新しく発見された星を希望と名付けた。", 
-      modifiedIndices: [2, 3, 4, 5] 
+      modifiedIndices: [2, 3, 4, 5],
+      grammarPoints: ["noun"]
     },
     { 
       id: "compSvoc-a-10", 
@@ -361,7 +400,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【上級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "裁判官はその男をすべての容疑で有罪と宣告した。", 
-      modifiedIndices: [3, 4] 
+      modifiedIndices: [3, 4],
+      grammarPoints: ["adjective"]
     },
     { 
       id: "compSvoc-a-11", 
@@ -370,7 +410,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【上級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "私はステーキをミディアムレアに焼いてもらうのが好きだ。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["past_participle"]
     },
     { 
       id: "compSvoc-a-12", 
@@ -379,7 +420,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【上級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "彼らは彼を新部門のマネージャーに任命した。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["noun"]
     },
     { 
       id: "compSvoc-a-13", 
@@ -388,7 +430,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【上級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "彼の懸命な努力が、彼を成功した実業家にした。", 
-      modifiedIndices: [4] 
+      modifiedIndices: [4],
+      grammarPoints: ["noun"]
     },
     { 
       id: "compSvoc-a-14", 
@@ -397,7 +440,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【上級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "私たちはその古い城が完全に廃墟になっているとわかった。", 
-      modifiedIndices: [2, 3, 4] 
+      modifiedIndices: [2, 3, 4],
+      grammarPoints: ["past_participle", "adjective"]
     },
     { 
       id: "compSvoc-a-15", 
@@ -406,7 +450,8 @@ export const compSvocCategory = {
       targetRole: "C (目的格補語)", 
       hint: "【上級】光っている目的語（O）の状態や身分を説明している補語（C）をなぞってください。", 
       translation: "コーチは選手たちに大一番に向けた準備をさせた。", 
-      modifiedIndices: [3, 4] 
+      modifiedIndices: [3, 4],
+      grammarPoints: ["adjective"]
     }
   ]
-};
+  };
