@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Gamepad2, Crown, LogIn, ArrowRight } from 'lucide-react';
 
 export default function TitleScreen({
+  hasSeenSplash, // ← ★追加
+  onSplashComplete, // ← ★追加
   onSinglePlayer,
   onCreateRoom,
   joinPin,
@@ -11,22 +13,20 @@ export default function TitleScreen({
   connectionStatus,
   errorMessage
 }) {
-  const [step, setStep] = useState('splash');
+  // ▼ 変更：既に見たことがあれば最初から 'menu' にする
+  const [step, setStep] = useState(hasSeenSplash ? 'menu' : 'splash');
 
   return (
     <AnimatePresence mode="wait">
       {step === 'splash' ? (
-        /* ＝＝＝ 🌟 新設：オープニング画面 ＝＝＝ */
         <motion.div 
           key="splash"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
-          // ★ fixed と z-[100] でヘッダーを完全に覆い隠す
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden bg-slate-900 w-full h-full"
+          className="!fixed inset-0 !z-[9999] flex flex-col items-center justify-center overflow-hidden bg-slate-900 w-full h-full"
         >
-          {/* 上品に動く光のオーブ（グラデーション表現） */}
           <motion.div 
             animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }} 
             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
@@ -52,7 +52,6 @@ export default function TitleScreen({
               />
             </motion.div>
 
-            {/* タイトルロゴ */}
             <motion.h1 
               initial={{ opacity: 0, letterSpacing: "0px" }}
               animate={{ opacity: 1, letterSpacing: "8px" }}
@@ -62,14 +61,17 @@ export default function TitleScreen({
               TraceGram
             </motion.h1>
 
-            {/* Startボタン */}
             <motion.button
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(34,211,238,0.4)" }}
               whileTap={{ scale: 0.95 }}
               transition={{ duration: 0.8, delay: 1.4 }}
-              onClick={() => setStep('menu')}
+              onClick={() => {
+                // ▼ 変更：メニューへ移行すると同時に、「見たよ！」という記憶を保存する
+                setStep('menu');
+                if (onSplashComplete) onSplashComplete();
+              }}
               className="px-10 py-5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md text-white font-bold text-xl md:text-2xl tracking-[0.2em] hover:bg-white/20 transition-all flex items-center gap-4 group shadow-2xl"
             >
               Start TraceGram
@@ -84,7 +86,6 @@ export default function TitleScreen({
           </div>
         </motion.div>
       ) : (
-        /* ＝＝＝ 🎮 メニュー画面 ＝＝＝ */
         <motion.div 
           key="menu"
           initial={{ opacity: 0, scale: 0.95 }}

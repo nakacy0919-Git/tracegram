@@ -3,12 +3,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useTrace } from '../hooks/useTrace';
 import { useMultiplayer } from '../hooks/useMultiplayer';
 
-// ★ 各画面のコンポーネントをインポート
 import TitleScreen from './student/TitleScreen';
 import LobbyScreen from './student/LobbyScreen';
 import MenuScreen from './student/MenuScreen';
 import ResultScreen from './student/ResultScreen';
-import GameScreen from './student/GameScreen'; // ← ★最後に追加！
+import GameScreen from './student/GameScreen';
 
 export default function StudentMode({ categories }) {
   const {
@@ -17,8 +16,7 @@ export default function StudentMode({ categories }) {
     selectedLevel, filteredProblems, setGameState,
     selectMainCategory, selectSubCategory, startGame, 
     backToMain, backToSub, backToLevelSelect,
-    handlePointerDown, handlePointerMove, handlePointerUp, submitAnswer,
-    nextProblem // ← ★ これを末尾に追加！
+    handlePointerDown, handlePointerMove, handlePointerUp, submitAnswer, nextProblem
   } = useTrace(categories);
 
   const {
@@ -32,9 +30,11 @@ export default function StudentMode({ categories }) {
   const [battleSetup, setBattleSetup] = useState(null);
   const [pendingBattle, setPendingBattle] = useState(null);
 
+  // ▼ 追加：オープニング（スプラッシュ）を既に見終わったかを記憶する
+  const [hasSeenSplash, setHasSeenSplash] = useState(false);
+
   const processedBattleRef = useRef(null);
 
-  // 正解サウンド生成システム
   useEffect(() => {
     if (feedbackState === 'correct') {
       try {
@@ -92,13 +92,12 @@ export default function StudentMode({ categories }) {
     setGameState('main_select');
   };
 
-  // ==========================================
-  // 📺 画面のルーティング（切り替え）
-  // ==========================================
-
   if (appScreen === 'title') {
     return (
       <TitleScreen 
+        // ▼ 追加：記憶をTitleScreenに渡す
+        hasSeenSplash={hasSeenSplash}
+        onSplashComplete={() => setHasSeenSplash(true)}
         onSinglePlayer={() => setAppScreen('game')}
         onCreateRoom={() => { createRoom(); setAppScreen('game'); }}
         joinPin={joinPin}
@@ -163,7 +162,6 @@ export default function StudentMode({ categories }) {
     );
   }
 
- // いずれにも当てはまらない場合（＝ゲーム本編）
   return (
     <GameScreen
       isMultiplayer={isMultiplayer}
@@ -184,8 +182,7 @@ export default function StudentMode({ categories }) {
       handlePointerUp={handlePointerUp}
       submitAnswer={submitAnswer}
       onExit={() => { if(isMultiplayer) setAppScreen('lobby'); else backToLevelSelect(); }}
-      // ▼ ここに1行追加！（useTraceに手動で次へ進む関数を追加してもらうまでの仮設定）
-      onNextProblem={nextProblem} //
+      onNextProblem={nextProblem}
     />
   );
 }
