@@ -480,16 +480,17 @@ export default function StudentMode({ categories }) {
           </AnimatePresence>
         </div>
 
-        <div className="w-full relative bg-white/60 rounded-3xl border border-slate-100 shadow-inner p-4 md:p-10 mb-4 flex items-center justify-center min-h-[160px] overflow-hidden">
+        {/* ▼ ここを修正：justify-centerを外して、文章が左から始まるように調整 */}
+        <div className="w-full relative bg-white/60 rounded-3xl border border-slate-100 shadow-inner p-6 md:p-12 mb-4 flex items-center min-h-[160px] overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.div key={`sentence-${currentProblemIdx}`} initial={{ x: 800, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -800, opacity: 0 }} transition={{ type: "tween", duration: 0.2 }} className="w-full">
-              <div className="text-center leading-[3.5rem] md:leading-[5rem]">
+              {/* ▼ ここを text-center から text-left に変更 */}
+              <div className="text-left leading-[3.5rem] md:leading-[5rem] w-full">
                 {activeProblem.tokens.map((token, idx) => {
                   const isSelected = selectedIndices.includes(idx);
                   let bgClass = "bg-transparent text-slate-700";
                   if (isSelected) bgClass = feedbackState === 'wrong' ? "bg-rose-300 text-rose-900" : `${roleColors.bg} ${roleColors.text} ${roleColors.shadow}`;
                   
-                  {/* ★ここが一番の修正点です！消してしまった data-token-idx を復活させ、元の滑らかなアニメーションを持った motion.span に戻しました！ */}
                   return (
                     <motion.span 
                       key={idx} 
