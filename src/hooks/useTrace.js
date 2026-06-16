@@ -195,7 +195,7 @@ export function useTrace(categories) {
   };
 
   return {
-    gameState, availableCategories: categories, activeMain, activeCategory, activeProblem,
+    gameState, setGameState,availableCategories: categories, activeMain, activeCategory, activeProblem,
     currentProblemIdx, score, combo, correctCount, selectedIndices, feedbackState, mainContainerRef,
     lastBonus, elapsedTime, selectedLevel, filteredProblems,
     selectMainCategory, selectSubCategory, startGame, 
