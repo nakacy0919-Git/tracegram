@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { XCircle, CheckCircle2, ArrowRight } from 'lucide-react';
+// 🌟 追加：先ほど作った音読ミッションのコンポーネントを読み込む
+import PronunciationMission from './PronunciationMission'; 
 
 const getElementColor = (role) => {
   if (!role) return { bg: "bg-cyan-200", text: "text-cyan-900", shadow: "shadow-[0_0_15px_rgba(165,243,252,0.8)]" };
@@ -42,7 +44,7 @@ export default function GameScreen({
   const sortedPlayers = Object.values(playersData || {}).sort((a, b) => b.score - a.score);
 
   return (
-    <div className="flex-1 flex flex-col relative touch-none z-10 w-full overflow-hidden" ref={mainContainerRef} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onTouchMove={handlePointerMove} onTouchEnd={handlePointerUp}>
+    <div className="flex-1 flex flex-col relative touch-none z-10 w-full overflow-y-auto overflow-x-hidden" ref={mainContainerRef} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onTouchMove={handlePointerMove} onTouchEnd={handlePointerUp}>
       {/* リアルタイムランキング */}
       {isMultiplayer && sortedPlayers.length > 0 && (
         <div className="absolute top-[80px] md:top-[90px] left-0 w-full z-40 flex flex-row flex-wrap justify-center gap-2 md:gap-4 px-2 pointer-events-none">
@@ -70,15 +72,14 @@ export default function GameScreen({
           </div>
         </div>
         <div className="flex items-end gap-4 text-right">
-          {/* 特大スコア表示 */}
           <div><div className="text-6xl md:text-8xl font-black text-cyan-600 tracking-tighter drop-shadow-sm">{score}</div></div>
         </div>
       </div>
 
       {/* メインエリア */}
-      <div className="flex-1 flex flex-col items-center justify-between p-4 md:p-6 w-full max-w-[1400px] mx-auto overflow-hidden relative">
+      <div className="flex-1 flex flex-col items-center justify-start p-4 md:p-6 w-full max-w-[1400px] mx-auto pb-20 relative">
         
-        {/* 指示文（左寄せ、アニメーションなし） */}
+        {/* 指示文 */}
         <div className="w-full flex justify-start mb-4 md:mb-6 text-left z-10 pt-2 md:pt-4 px-2">
           <div className="flex items-center gap-3">
             <div className={`w-12 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center text-3xl md:text-4xl font-black shadow-md border-4 border-white flex-shrink-0 ${roleColors.bg} ${roleColors.text}`}>{roleInitial}</div>
@@ -86,7 +87,7 @@ export default function GameScreen({
           </div>
         </div>
 
-        {/* 英文エリア（アニメーションあり） */}
+        {/* 英文エリア */}
         <div className="w-full relative bg-white/60 rounded-3xl border border-slate-100 shadow-inner p-5 md:p-10 mb-4 flex flex-col justify-center min-h-[140px] overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.div key={`sentence-${currentProblemIdx}`} initial={{ x: 800, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -800, opacity: 0 }} transition={{ type: "tween", duration: 0.2 }} className="w-full">
@@ -114,7 +115,7 @@ export default function GameScreen({
           </AnimatePresence>
         </div>
 
-        {/* アクションエリア：iPad/PCでも押しやすいようにコンパクト化 */}
+        {/* アクションエリア */}
         <div className="w-full flex flex-col items-center min-h-[140px] z-20">
           <AnimatePresence mode="wait">
             {feedbackState === 'idle' ? (
@@ -132,31 +133,31 @@ export default function GameScreen({
                 EXCELLENT!
               </motion.div>
             ) : (
-              <motion.div key="wrong-display" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center w-full gap-4">
-                {/* ミス表示と「次へ」ボタンを一番押しやすい位置に */}
-                <div className="flex items-center gap-6">
-                  <span className="text-rose-500 font-black text-3xl italic animate-pulse">Miss...</span>
-                  <button 
-                    onClick={onNextProblem} 
-                    className="flex items-center gap-3 bg-slate-800 hover:bg-slate-700 text-white px-12 py-5 rounded-full font-black text-2xl transition-all hover:scale-105 active:scale-95 shadow-xl ring-4 ring-rose-200"
-                  >
-                    GO NEXT <ArrowRight size={28} />
-                  </button>
-                </div>
+              /* 🌟 変更点：間違えた場合のアクションエリア */
+              <motion.div key="wrong-display" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center w-full max-w-3xl gap-4">
                 
-                {/* 正解ヒントを一番下に配置（スクロール不要なサイズに調整） */}
-                <div className="w-full max-w-2xl bg-emerald-50/90 backdrop-blur-sm p-4 rounded-2xl border-2 border-emerald-200 shadow-sm flex flex-col items-center">
-                   <div className="text-center leading-[2.5rem] w-full">
-                    {activeProblem.tokens.map((token, idx) => {
-                      const isTarget = activeProblem.targetIndices.includes(idx);
-                      return (
-                        <span key={`ans-${idx}`} className={`inline-block text-lg md:text-2xl font-black px-1 mx-0.5 ${isTarget ? 'bg-emerald-200 text-emerald-900 border-b-2 border-emerald-400' : 'text-slate-300'}`}>
-                          {token}
-                        </span>
-                      );
-                    })}
-                  </div>
+                {/* 構造の正解表示（音読のヒントとして一番上に配置） */}
+                <div className="w-full bg-emerald-50/90 backdrop-blur-sm p-4 rounded-2xl border-2 border-emerald-200 shadow-sm flex flex-col items-center">
+                  <p className="text-emerald-600 font-black text-sm mb-2 opacity-80">正しい構造はこちら</p>
+                  <div className="text-center leading-[2.5rem] w-full">
+                   {activeProblem.tokens.map((token, idx) => {
+                     const isTarget = activeProblem.targetIndices.includes(idx);
+                     return (
+                       <span key={`ans-${idx}`} className={`inline-block text-lg md:text-2xl font-black px-1 mx-0.5 ${isTarget ? 'bg-emerald-200 text-emerald-900 border-b-2 border-emerald-400' : 'text-slate-400'}`}>
+                         {token}
+                       </span>
+                     );
+                   })}
+                 </div>
                 </div>
+
+                {/* 🌟 呼び出し：音読ミッションコンポーネント */}
+                {/* propsとして、英文全体（joinして結合）と、合格した時の次へ進む関数（onNextProblem）を渡す */}
+                <PronunciationMission 
+                  targetSentence={activeProblem.tokens.join(' ')} 
+                  onComplete={onNextProblem} 
+                />
+                
               </motion.div>
             )}
           </AnimatePresence>

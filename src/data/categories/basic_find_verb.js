@@ -10,7 +10,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【初級】この文の述語動詞（V）をなぞってください。", 
       translation: "私は速く走る。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-b-2", 
@@ -19,7 +20,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【初級】この文の述語動詞（V）をなぞってください。", 
       translation: "彼女は学生です。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-b-3", 
@@ -28,7 +30,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【初級】この文の述語動詞（V）をなぞってください。", 
       translation: "彼はリンゴが大好きです。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-b-4", 
@@ -37,7 +40,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【初級】この文の述語動詞（V）をなぞってください。", 
       translation: "彼らは野球をします。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-b-5", 
@@ -46,7 +50,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【初級】この文の述語動詞（V）をなぞってください。", 
       translation: "私たちは英語を勉強しました。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-b-6", 
@@ -55,7 +60,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【初級】この文の述語動詞（V）をなぞってください。", 
       translation: "その犬は大きな声で吠えた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-b-7", 
@@ -64,7 +70,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【初級】この文の述語動詞（V）をなぞってください。", 
       translation: "トムは車を買った。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-b-8", 
@@ -73,7 +80,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【初級】この文の述語動詞（V）をなぞってください。", 
       translation: "その花は美しく見える。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-b-9", 
@@ -82,7 +90,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【初級】この文の述語動詞（V）をなぞってください。", 
       translation: "私は水が欲しいです。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-b-10", 
@@ -91,7 +100,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【初級】この文の述語動詞（V）をなぞってください。", 
       translation: "彼女は私に微笑んだ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-b-11", 
@@ -100,7 +110,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【初級】この文の述語動詞（V）をなぞってください。", 
       translation: "太陽が明るく輝いている。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-b-12", 
@@ -109,7 +120,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【初級】この文の述語動詞（V）をなぞってください。", 
       translation: "彼はドアを開けた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-b-13", 
@@ -118,7 +130,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【初級】この文の述語動詞（V）をなぞってください。", 
       translation: "母はケーキを作った。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-b-14", 
@@ -127,7 +140,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【初級】この文の述語動詞（V）をなぞってください。", 
       translation: "電車は早く到着した。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-b-15", 
@@ -136,7 +150,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【初級】この文の述語動詞（V）をなぞってください。", 
       translation: "鳥は空を飛ぶ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-i-1", 
@@ -145,7 +160,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【中級】この文の述語動詞（V）をなぞってください。", 
       translation: "机の上の本は私のものです。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-i-2", 
@@ -154,7 +170,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【中級】この文の述語動詞（V）をなぞってください。", 
       translation: "本を読むことは楽しい。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "basicFindVerb-i-3", 
@@ -163,7 +180,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【中級】この文の述語動詞（V）をなぞってください。", 
       translation: "英語を学ぶには時間がかかる。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "basicFindVerb-i-4", 
@@ -172,7 +190,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【中級】この文の述語動詞（V）をなぞってください。", 
       translation: "あそこに立っている男性は疲れているように見える。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["present_participle"] 
     },
     { 
       id: "basicFindVerb-i-5", 
@@ -181,7 +200,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【中級】この文の述語動詞（V）をなぞってください。", 
       translation: "たくさんの人がその会議に出席した。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-i-6", 
@@ -190,7 +210,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【中級】この文の述語動詞（V）をなぞってください。", 
       translation: "庭を走っている犬が骨を見つけた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["present_participle"] 
     },
     { 
       id: "basicFindVerb-i-7", 
@@ -199,7 +220,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【中級】この文の述語動詞（V）をなぞってください。", 
       translation: "あの高い木はよい日陰を提供してくれる。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-i-8", 
@@ -208,7 +230,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【中級】この文の述語動詞（V）をなぞってください。", 
       translation: "私のクラスの何人かの生徒は数学が好きだ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-i-9", 
@@ -217,7 +240,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【中級】この文の述語動詞（V）をなぞってください。", 
       translation: "彼についての噂はすぐに広まった。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-i-10", 
@@ -226,7 +250,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【中級】この文の述語動詞（V）をなぞってください。", 
       translation: "コーヒーを飲みすぎることは睡眠障害を引き起こす。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "basicFindVerb-i-11", 
@@ -235,7 +260,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【中級】この文の述語動詞（V）をなぞってください。", 
       translation: "私の友人からの手紙が昨日到着した。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-i-12", 
@@ -244,7 +270,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【中級】この文の述語動詞（V）をなぞってください。", 
       translation: "世界中の人々がこの歌を愛している。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-i-13", 
@@ -253,7 +280,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【中級】この文の述語動詞（V）をなぞってください。", 
       translation: "突然の天候の変化が私たちを驚かせた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-i-14", 
@@ -262,7 +290,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【中級】この文の述語動詞（V）をなぞってください。", 
       translation: "駅への道は森を抜けている。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-i-15", 
@@ -271,7 +300,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【中級】この文の述語動詞（V）をなぞってください。", 
       translation: "長い髪の少女は私の妹です。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-a-1", 
@@ -280,7 +310,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【上級】この文の述語動詞（V）をなぞってください。", 
       translation: "彼が昨日言ったことは全員を驚かせた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["noun_clause", "relative_pronoun"] 
     },
     { 
       id: "basicFindVerb-a-2", 
@@ -289,7 +320,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【上級】この文の述語動詞（V）をなぞってください。", 
       translation: "生徒たちだけでなく先生も笑った。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: [] 
     },
     { 
       id: "basicFindVerb-a-3", 
@@ -298,7 +330,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【上級】この文の述語動詞（V）をなぞってください。", 
       translation: "こんなに美しい夕日を見たことがない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "basicFindVerb-a-4", 
@@ -307,7 +340,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【上級】この文の述語動詞（V）をなぞってください。", 
       translation: "彼はサプライズパーティーについて全く知らなかった。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "basicFindVerb-a-5", 
@@ -316,7 +350,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【上級】この文の述語動詞（V）をなぞってください。", 
       translation: "彼が試験に合格したという事実は私を驚かせた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["noun_clause"] 
     },
     { 
       id: "basicFindVerb-a-6", 
@@ -325,7 +360,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【上級】この文の述語動詞（V）をなぞってください。", 
       translation: "客の中には有名な作家がいた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "basicFindVerb-a-7", 
@@ -334,7 +370,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【上級】この文の述語動詞（V）をなぞってください。", 
       translation: "私たちが待っていたバスが来た。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion", "relative_pronoun"] 
     },
     { 
       id: "basicFindVerb-a-8", 
@@ -343,7 +380,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【上級】この文の述語動詞（V）をなぞってください。", 
       translation: "メアリーと話している男性は私の叔父です。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["relative_pronoun"] 
     },
     { 
       id: "basicFindVerb-a-9", 
@@ -352,7 +390,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【上級】この文の述語動詞（V）をなぞってください。", 
       translation: "さらに悪いことに、激しい雨が降り始めた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "basicFindVerb-a-10", 
@@ -361,7 +400,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【上級】この文の述語動詞（V）をなぞってください。", 
       translation: "その時になって初めて彼女は自分の間違いに気づいた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "basicFindVerb-a-11", 
@@ -370,7 +410,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【上級】この文の述語動詞（V）をなぞってください。", 
       translation: "もし彼が真実を知っていたら、彼は心を変えていただろう。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "basicFindVerb-a-12", 
@@ -379,7 +420,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【上級】この文の述語動詞（V）をなぞってください。", 
       translation: "友人たちに囲まれて、彼は幸せを感じた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["past_participle"] 
     },
     { 
       id: "basicFindVerb-a-13", 
@@ -388,7 +430,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【上級】この文の述語動詞（V）をなぞってください。", 
       translation: "解決されるべき多くの問題が残っている。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "basicFindVerb-a-14", 
@@ -397,7 +440,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【上級】この文の述語動詞（V）をなぞってください。", 
       translation: "我々が行くかどうかは天気次第だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["noun_clause"] 
     },
     { 
       id: "basicFindVerb-a-15", 
@@ -406,7 +450,8 @@ export const basicFindVerbCategory = {
       targetRole: "V (動詞)", 
       hint: "【上級】この文の述語動詞（V）をなぞってください。", 
       translation: "状況がとても奇妙だったので、私は話すことができなかった。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     }
   ]
 };
