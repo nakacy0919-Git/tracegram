@@ -60,3 +60,15 @@ body {
     inset -6px -6px 12px 0px rgba(255, 255, 255, 1);
   transition: all 0.2s ease;
 }
+
+/* src/app/globals.css の一番下に追加 */
+
+/* 開発中に左下に表示される Vercel/Turbopack の開発ツールを強制非表示 */
+div#__next_turbo_dev_overlay,
+#__next_turbopack_overlay {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  z-index: -9999 !important;
+}

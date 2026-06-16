@@ -11,7 +11,6 @@ export default function TitleScreen({
   connectionStatus,
   errorMessage
 }) {
-  // ★追加: 'splash' (オープニング) と 'menu' (メニュー) を切り替えるステート
   const [step, setStep] = useState('splash');
 
   return (
@@ -24,7 +23,8 @@ export default function TitleScreen({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
-          className="absolute inset-0 z-50 flex flex-col items-center justify-center overflow-hidden bg-slate-900 w-full h-full"
+          // ★ fixed と z-[100] でヘッダーを完全に覆い隠す
+          className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden bg-slate-900 w-full h-full"
         >
           {/* 上品に動く光のオーブ（グラデーション表現） */}
           <motion.div 
@@ -39,7 +39,6 @@ export default function TitleScreen({
           />
 
           <div className="relative z-10 flex flex-col items-center">
-            {/* ★修正: 灰色の枠や背景を完全削除！画像のみを美しく浮かび上がらせる */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -63,7 +62,7 @@ export default function TitleScreen({
               TraceGram
             </motion.h1>
 
-            {/* Startボタン（グラスモーフィズム風） */}
+            {/* Startボタン */}
             <motion.button
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -85,7 +84,7 @@ export default function TitleScreen({
           </div>
         </motion.div>
       ) : (
-        /* ＝＝＝ 🎮 メニュー画面（Startを押した後に表示される） ＝＝＝ */
+        /* ＝＝＝ 🎮 メニュー画面 ＝＝＝ */
         <motion.div 
           key="menu"
           initial={{ opacity: 0, scale: 0.95 }}
