@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { XCircle, CheckCircle2 } from 'lucide-react';
+import { XCircle, CheckCircle2, ArrowRight } from 'lucide-react';
 
 const getElementColor = (role) => {
   if (!role) return { bg: "bg-cyan-200", text: "text-cyan-900", shadow: "shadow-[0_0_15px_rgba(165,243,252,0.8)]" };
@@ -31,7 +31,8 @@ export default function GameScreen({
   handlePointerMove,
   handlePointerUp,
   submitAnswer,
-  onExit
+  onExit,
+  onNextProblem
 }) {
   if (!activeProblem) return null;
 
@@ -42,6 +43,7 @@ export default function GameScreen({
 
   return (
     <div className="flex-1 flex flex-col relative touch-none z-10 w-full overflow-hidden" ref={mainContainerRef} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onTouchMove={handlePointerMove} onTouchEnd={handlePointerUp}>
+      {/* リアルタイムランキング */}
       {isMultiplayer && sortedPlayers.length > 0 && (
         <div className="absolute top-[80px] md:top-[90px] left-0 w-full z-40 flex flex-row flex-wrap justify-center gap-2 md:gap-4 px-2 pointer-events-none">
           {sortedPlayers.map((player, index) => {
@@ -58,6 +60,7 @@ export default function GameScreen({
         </div>
       )}
 
+      {/* ヘッダーエリア */}
       <div className="flex justify-between items-end px-4 md:px-10 py-4 border-b border-slate-200/50 bg-white/30 backdrop-blur-sm w-full z-20">
         <div className="flex items-center gap-4">
           <button onClick={onExit} className="box p-2 text-rose-500"><XCircle size={22} /></button>
@@ -67,24 +70,27 @@ export default function GameScreen({
           </div>
         </div>
         <div className="flex items-end gap-4 text-right">
-          <div><div className="text-3xl md:text-5xl font-black text-cyan-600 tracking-tighter">{score}</div></div>
+          {/* 特大スコア表示 */}
+          <div><div className="text-6xl md:text-8xl font-black text-cyan-600 tracking-tighter drop-shadow-sm">{score}</div></div>
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-between p-4 md:p-8 w-full max-w-[1400px] mx-auto overflow-hidden relative">
-        <div className="w-full flex justify-center mb-6 md:mb-10 text-center z-10 pt-4 md:pt-8">
-          <AnimatePresence mode="wait">
-            <motion.div key={`instruction-${activeProblem.targetRole}`} initial={{ x: 1000, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -1000, opacity: 0 }} transition={{ type: "tween", duration: 0.3 }} className="flex items-center gap-3">
-              <div className={`w-16 h-16 rounded-full flex items-center justify-center text-4xl font-black shadow-md border-4 border-white ${roleColors.bg} ${roleColors.text}`}>{roleInitial}</div>
-              <p className={`text-xl md:text-3xl font-black ${roleColors.text} drop-shadow-sm`}>{cleanHint}</p>
-            </motion.div>
-          </AnimatePresence>
+      {/* メインエリア */}
+      <div className="flex-1 flex flex-col items-center justify-between p-4 md:p-6 w-full max-w-[1400px] mx-auto overflow-hidden relative">
+        
+        {/* 指示文（左寄せ、アニメーションなし） */}
+        <div className="w-full flex justify-start mb-4 md:mb-6 text-left z-10 pt-2 md:pt-4 px-2">
+          <div className="flex items-center gap-3">
+            <div className={`w-12 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center text-3xl md:text-4xl font-black shadow-md border-4 border-white flex-shrink-0 ${roleColors.bg} ${roleColors.text}`}>{roleInitial}</div>
+            <p className={`text-xl md:text-3xl font-black ${roleColors.text} drop-shadow-sm leading-tight`}>{cleanHint}</p>
+          </div>
         </div>
 
-        <div className="w-full relative bg-white/60 rounded-3xl border border-slate-100 shadow-inner p-6 md:p-12 mb-4 flex flex-col justify-center min-h-[160px] overflow-hidden">
+        {/* 英文エリア（アニメーションあり） */}
+        <div className="w-full relative bg-white/60 rounded-3xl border border-slate-100 shadow-inner p-5 md:p-10 mb-4 flex flex-col justify-center min-h-[140px] overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.div key={`sentence-${currentProblemIdx}`} initial={{ x: 800, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -800, opacity: 0 }} transition={{ type: "tween", duration: 0.2 }} className="w-full">
-              <div className="text-left leading-[3.5rem] md:leading-[5rem] w-full">
+              <div className="text-left leading-[3rem] md:leading-[5rem] w-full">
                 {activeProblem.tokens.map((token, idx) => {
                   const isSelected = selectedIndices.includes(idx);
                   const isGlowing = activeProblem.modifiedIndices ? activeProblem.modifiedIndices.includes(idx) : activeProblem.modifiedIndex === idx;
@@ -100,23 +106,62 @@ export default function GameScreen({
                 })}
               </div>
               {activeProblem.translation && (
-                <div className="w-full text-left mt-6 md:mt-8">
-                  <p className="text-base md:text-xl text-slate-500 font-bold bg-white/70 inline-block px-6 py-3 rounded-2xl shadow-sm border border-slate-100">{activeProblem.translation}</p>
+                <div className="w-full text-left mt-4 md:mt-6">
+                  <p className="text-base md:text-lg text-slate-500 font-bold bg-white/70 inline-block px-5 py-2 rounded-xl shadow-sm border border-slate-100 italic">{activeProblem.translation}</p>
                 </div>
               )}
             </motion.div>
           </AnimatePresence>
         </div>
 
-        <div className="w-full flex flex-col items-center min-h-[90px] z-10">
+        {/* アクションエリア：iPad/PCでも押しやすいようにコンパクト化 */}
+        <div className="w-full flex flex-col items-center min-h-[140px] z-20">
           <AnimatePresence mode="wait">
             {feedbackState === 'idle' ? (
-              <motion.button key="answer-btn" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9 }} onClick={submitAnswer} disabled={selectedIndices.length === 0} className={`box flex items-center gap-3 font-black text-2xl px-12 py-4 rounded-3xl transition-transform ${selectedIndices.length === 0 ? "opacity-50 cursor-not-allowed" : "text-cyan-600 hover:scale-105"}`}><CheckCircle2 size={32} /> Answer!</motion.button>
+              <motion.button 
+                key="answer-btn" 
+                initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} 
+                onClick={submitAnswer} 
+                disabled={selectedIndices.length === 0} 
+                className={`flex items-center gap-3 font-black text-2xl px-16 py-5 rounded-3xl shadow-lg border-b-4 border-slate-200 transition-all ${selectedIndices.length === 0 ? "bg-slate-100 text-slate-300 cursor-not-allowed" : "bg-white text-cyan-600 hover:scale-105 active:scale-95 active:border-b-0"}`}
+              >
+                <CheckCircle2 size={32} /> Answer!
+              </motion.button>
             ) : feedbackState === 'correct' ? (
-              <motion.div key="bonus-display" className="text-emerald-500 font-black text-3xl">+{lastBonus?.points || 0} pts</motion.div>
-            ) : <motion.div key="wrong-display" className="text-rose-500 font-black text-3xl">Miss...</motion.div>}
+              <motion.div key="correct-display" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-emerald-500 font-black text-4xl md:text-6xl tracking-widest drop-shadow-md">
+                EXCELLENT!
+              </motion.div>
+            ) : (
+              <motion.div key="wrong-display" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center w-full gap-4">
+                {/* ミス表示と「次へ」ボタンを一番押しやすい位置に */}
+                <div className="flex items-center gap-6">
+                  <span className="text-rose-500 font-black text-3xl italic animate-pulse">Miss...</span>
+                  <button 
+                    onClick={onNextProblem} 
+                    className="flex items-center gap-3 bg-slate-800 hover:bg-slate-700 text-white px-12 py-5 rounded-full font-black text-2xl transition-all hover:scale-105 active:scale-95 shadow-xl ring-4 ring-rose-200"
+                  >
+                    GO NEXT <ArrowRight size={28} />
+                  </button>
+                </div>
+                
+                {/* 正解ヒントを一番下に配置（スクロール不要なサイズに調整） */}
+                <div className="w-full max-w-2xl bg-emerald-50/90 backdrop-blur-sm p-4 rounded-2xl border-2 border-emerald-200 shadow-sm flex flex-col items-center">
+                   <div className="text-center leading-[2.5rem] w-full">
+                    {activeProblem.tokens.map((token, idx) => {
+                      const isTarget = activeProblem.targetIndices.includes(idx);
+                      return (
+                        <span key={`ans-${idx}`} className={`inline-block text-lg md:text-2xl font-black px-1 mx-0.5 ${isTarget ? 'bg-emerald-200 text-emerald-900 border-b-2 border-emerald-400' : 'text-slate-300'}`}>
+                          {token}
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
+              </motion.div>
+            )}
           </AnimatePresence>
         </div>
+
       </div>
     </div>
   );

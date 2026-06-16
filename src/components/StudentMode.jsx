@@ -17,7 +17,8 @@ export default function StudentMode({ categories }) {
     selectedLevel, filteredProblems, setGameState,
     selectMainCategory, selectSubCategory, startGame, 
     backToMain, backToSub, backToLevelSelect,
-    handlePointerDown, handlePointerMove, handlePointerUp, submitAnswer
+    handlePointerDown, handlePointerMove, handlePointerUp, submitAnswer,
+    nextProblem // ← ★ これを末尾に追加！
   } = useTrace(categories);
 
   const {
@@ -162,7 +163,7 @@ export default function StudentMode({ categories }) {
     );
   }
 
-  // いずれにも当てはまらない場合（＝ゲーム本編）
+ // いずれにも当てはまらない場合（＝ゲーム本編）
   return (
     <GameScreen
       isMultiplayer={isMultiplayer}
@@ -183,6 +184,8 @@ export default function StudentMode({ categories }) {
       handlePointerUp={handlePointerUp}
       submitAnswer={submitAnswer}
       onExit={() => { if(isMultiplayer) setAppScreen('lobby'); else backToLevelSelect(); }}
+      // ▼ ここに1行追加！（useTraceに手動で次へ進む関数を追加してもらうまでの仮設定）
+      onNextProblem={nextProblem} //
     />
   );
 }

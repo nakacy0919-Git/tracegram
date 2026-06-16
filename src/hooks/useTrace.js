@@ -1,11 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 
 export function useTrace(categories) {
-  // ★ 変更：初期状態を 'main_select'（5大カテゴリ選択）に変更
   const [gameState, setGameState] = useState('main_select'); 
-  const [activeMain, setActiveMain] = useState(null); // 'SUBJECT', 'MODIFIER' など
-  const [activeCategory, setActiveCategory] = useState(null); // サブカテゴリのデータ
-  const [selectedLevel, setSelectedLevel] = useState(null); // 1 | 2 | 3
+  const [activeMain, setActiveMain] = useState(null); 
+  const [activeCategory, setActiveCategory] = useState(null); 
+  const [selectedLevel, setSelectedLevel] = useState(null); 
   const [filteredProblems, setFilteredProblems] = useState([]); 
   const [currentProblemIdx, setCurrentProblemIdx] = useState(0);
   
@@ -56,13 +55,11 @@ export function useTrace(categories) {
     }
   };
 
-  // ★ 追加：大カテゴリを選択
   const selectMainCategory = (mainId) => {
     setActiveMain(mainId);
     setGameState('sub_select');
   };
 
-  // ★ 追加：サブカテゴリ（クエスト）を選択
   const selectSubCategory = (category) => {
     setActiveCategory(category);
     setGameState('level_select');
@@ -99,7 +96,6 @@ export function useTrace(categories) {
     };
   }, [gameState]);
 
-  // ★ 戻るボタンの細分化
   const backToMain = () => {
     setGameState('main_select');
     setActiveMain(null);
@@ -154,6 +150,18 @@ export function useTrace(categories) {
     });
   };
 
+  // ★ 追加：手動で次の問題へ進む処理
+  const nextProblem = () => {
+    if (currentProblemIdx + 1 < filteredProblems.length) {
+      setCurrentProblemIdx(prev => prev + 1);
+      setSelectedIndices([]);
+      setFeedbackState('idle');
+      setStartTime(Date.now());
+    } else {
+      setGameState('result');
+    }
+  };
+
   const submitAnswer = () => {
     if (selectedIndices.length === 0 || feedbackState !== 'idle') return;
 
@@ -176,30 +184,27 @@ export function useTrace(categories) {
       setCombo(newCombo);
       setLastBonus({ speed: speedBonus, combo: comboBonus, points: earnedPoints });
       setFeedbackState('correct');
+      
+      // ★ 修正：正解時は今まで通り自動で次へ進む
+      setTimeout(() => {
+        nextProblem();
+      }, 600);
+
     } else {
       setCombo(0);
       setLastBonus(null);
       setFeedbackState('wrong');
+      // ★ 修正：不正解時は自動で進めず、ボタンが押されるまで待機する
     }
-
-    setTimeout(() => {
-      if (currentProblemIdx + 1 < filteredProblems.length) {
-        setCurrentProblemIdx(prev => prev + 1);
-        setSelectedIndices([]);
-        setFeedbackState('idle');
-        setStartTime(Date.now());
-      } else {
-        setGameState('result');
-      }
-    }, 600);
   };
 
   return {
-    gameState, setGameState,availableCategories: categories, activeMain, activeCategory, activeProblem,
+    gameState, setGameState, availableCategories: categories, activeMain, activeCategory, activeProblem,
     currentProblemIdx, score, combo, correctCount, selectedIndices, feedbackState, mainContainerRef,
     lastBonus, elapsedTime, selectedLevel, filteredProblems,
     selectMainCategory, selectSubCategory, startGame, 
-    backToMain, backToSub, backToLevelSelect, // ★ 戻る関数を追加
-    handlePointerDown, handlePointerMove, handlePointerUp, submitAnswer
+    backToMain, backToSub, backToLevelSelect, 
+    handlePointerDown, handlePointerMove, handlePointerUp, submitAnswer,
+    nextProblem // ★ 外部から「次へ」ボタンを使えるようにエクスポート
   };
 }
