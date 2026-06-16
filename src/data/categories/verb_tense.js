@@ -1,7 +1,8 @@
 export const verbTenseCategory = {
-  categoryId: "verbTense",
-  title: "Sub-2: 時制と相のカタマリ",
-  description: "have been studying のように複数語で1つのVとなるもの",
+  categoryId: "verb_tense",
+  // ▼ タイトルと説明文を生徒向けに修正
+  title: "動詞のカタマリ（完了・進行形）",
+  description: "have been studying のように、2語以上でセットになって働く「動詞(V)」を正確にまとめてなぞろう！",
   problems: [
     { 
       id: "verbTense-b-1", 

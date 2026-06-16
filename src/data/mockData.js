@@ -48,7 +48,7 @@ export const PROBLEM_SETS = [
 
   // 🟠 2. VERB (動詞) マスター
   { categoryId: 'verb_transitive', title: 'Sub-1: 自動詞と他動詞', description: '目的語をとるかどうかの見極め', problems: verbCategory.problems },
-  { categoryId: 'verb_tense', title: 'Sub-2: 時制と相のカタマリ', description: 'have been studying のように複数語で1つのVとなるもの', problems: verbTenseCategory.problems },
+  { categoryId: 'verb_tense', title: 'Sub-2: 動詞のカタマリ（完了・進行形）', description: 'have been studying のように2語以上でセットになる動詞を見抜く', problems: verbTenseCategory.problems },
   { categoryId: 'verb_passive', title: 'Sub-3: 受動態のカタマリ', description: 'is known to / has been made などの受動態', problems: verbPassiveCategory.problems },
   { categoryId: 'verb_phrasal', title: 'Sub-4: 助動詞と群動詞', description: '句動詞 look forward to などを1つのVとしてなぞる', problems: verbPhrasalCategory.problems },
 
