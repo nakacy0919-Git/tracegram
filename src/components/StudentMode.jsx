@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react'; // ← ★ useRef を追加
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Award, ArrowLeft, Zap, CheckCircle2, Mic, Volume2, Timer, XCircle, BarChart2, Users, Gamepad2, Crown, LogIn, UserPlus } from 'lucide-react';
 import { useTrace } from '../hooks/useTrace';
@@ -48,17 +48,24 @@ export default function StudentMode({ categories }) {
   const [listeningId, setListeningId] = useState(null);
   const [speechFeedback, setSpeechFeedback] = useState({});
 
+  // ★追加：受信した合図を記憶して、無限ループを防ぐ魔法の箱
+  const processedBattleRef = useRef(null);
+
   useEffect(() => {
     if (isMultiplayer) syncMyScore(score, combo);
   }, [score, combo, isMultiplayer, syncMyScore]);
 
+  // ★修正：ゲスト側の自動スタート処理（無限ループ・点滅を完全にブロック）
   useEffect(() => {
-    if (battleConfig) {
+    // 新しいスタート合図が来て、かつまだ処理していない場合のみ実行
+    if (battleConfig && processedBattleRef.current !== battleConfig) {
+      processedBattleRef.current = battleConfig; // 「この合図は処理したよ」と記録
+      
       selectMainCategory(battleConfig.mainId);
       selectSubCategory(battleConfig.subCategory);
       setPendingBattle(battleConfig.level);
     }
-  }, [battleConfig, selectMainCategory, selectSubCategory]);
+  }, [battleConfig]); // 余分な監視対象を削除してループを防止
 
   useEffect(() => {
     if (pendingBattle !== null && activeCategory?.categoryId === battleConfig?.subCategory?.categoryId) {
@@ -66,7 +73,7 @@ export default function StudentMode({ categories }) {
       setPendingBattle(null);
       setAppScreen('game');
     }
-  }, [activeCategory, pendingBattle, battleConfig, startGame]);
+  }, [activeCategory, pendingBattle, battleConfig]);
 
   const handleExitToTitle = () => {
     exitMultiplayer();
@@ -145,12 +152,9 @@ export default function StudentMode({ categories }) {
   // 📺 2. ロビー待機画面（最大4人の座席表示）
   // ==========================================
   if (appScreen === 'lobby') {
-    // 参加者を配列化（最大4人）
     const sortedPlayers = Object.values(playersData || {}).sort((a, b) => a.name.localeCompare(b.name));
-    // 4つの空席スロットを用意
     const MAX_PLAYERS = 4;
     const slots = Array.from({ length: MAX_PLAYERS });
-
     const isReadyToStart = sortedPlayers.length >= 2;
 
     return (
@@ -171,12 +175,10 @@ export default function StudentMode({ categories }) {
             </div>
           </div>
 
-          {/* ★ 4つの座席をハッキリと表示 */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 max-w-3xl mx-auto">
             {slots.map((_, index) => {
               const p = sortedPlayers[index];
               if (p) {
-                // 座席が埋まっている場合
                 return (
                   <motion.div key={p.id} initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className={`p-4 rounded-2xl border-4 shadow-md font-black text-lg flex flex-col items-center justify-center gap-3 h-40 ${p.id === myPeerId ? 'bg-cyan-50 border-cyan-400 text-cyan-800' : 'bg-white border-slate-200 text-slate-600'}`}>
                     {p.id === Object.keys(playersData)[0] ? <Crown size={36} className="text-yellow-500"/> : <Users size={36} className="text-emerald-400"/>}
@@ -187,7 +189,6 @@ export default function StudentMode({ categories }) {
                   </motion.div>
                 );
               } else {
-                // 座席が空いている場合
                 return (
                   <div key={`empty-${index}`} className="p-4 rounded-2xl border-4 border-dashed border-slate-200 bg-slate-50/50 text-slate-400 font-bold text-sm flex flex-col items-center justify-center gap-3 h-40 opacity-70">
                     <UserPlus size={36} className="text-slate-300" />
@@ -198,7 +199,6 @@ export default function StudentMode({ categories }) {
             })}
           </div>
 
-          {/* ホストのスタートボタン（2人以上で押せるようになる） */}
           {isHost ? (
             <motion.button 
               whileHover={isReadyToStart ? { scale: 1.05 } : {}} 
