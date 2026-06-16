@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from 'react'; // ← ★ useRef を追加
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Award, ArrowLeft, Zap, CheckCircle2, Mic, Volume2, Timer, XCircle, BarChart2, Users, Gamepad2, Crown, LogIn, UserPlus } from 'lucide-react';
 import { useTrace } from '../hooks/useTrace';
@@ -48,24 +48,20 @@ export default function StudentMode({ categories }) {
   const [listeningId, setListeningId] = useState(null);
   const [speechFeedback, setSpeechFeedback] = useState({});
 
-  // ★追加：受信した合図を記憶して、無限ループを防ぐ魔法の箱
   const processedBattleRef = useRef(null);
 
   useEffect(() => {
     if (isMultiplayer) syncMyScore(score, combo);
   }, [score, combo, isMultiplayer, syncMyScore]);
 
-  // ★修正：ゲスト側の自動スタート処理（無限ループ・点滅を完全にブロック）
   useEffect(() => {
-    // 新しいスタート合図が来て、かつまだ処理していない場合のみ実行
     if (battleConfig && processedBattleRef.current !== battleConfig) {
-      processedBattleRef.current = battleConfig; // 「この合図は処理したよ」と記録
-      
+      processedBattleRef.current = battleConfig; 
       selectMainCategory(battleConfig.mainId);
       selectSubCategory(battleConfig.subCategory);
       setPendingBattle(battleConfig.level);
     }
-  }, [battleConfig]); // 余分な監視対象を削除してループを防止
+  }, [battleConfig, selectMainCategory, selectSubCategory]);
 
   useEffect(() => {
     if (pendingBattle !== null && activeCategory?.categoryId === battleConfig?.subCategory?.categoryId) {
@@ -73,7 +69,7 @@ export default function StudentMode({ categories }) {
       setPendingBattle(null);
       setAppScreen('game');
     }
-  }, [activeCategory, pendingBattle, battleConfig]);
+  }, [activeCategory, pendingBattle, battleConfig, startGame]);
 
   const handleExitToTitle = () => {
     exitMultiplayer();
@@ -87,7 +83,39 @@ export default function StudentMode({ categories }) {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const startListening = (problemId, targetSentence) => { /* ...省略... */ };
+  const startListening = (problemId, targetSentence) => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("お使いのブラウザは音声認識に対応していません。（Chromeブラウザをおすすめします）");
+      return;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognition.onstart = () => {
+      setListeningId(problemId);
+      setSpeechFeedback(prev => ({ ...prev, [problemId]: { status: 'listening', text: '' } }));
+    };
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      const cleanTarget = targetSentence.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim();
+      const cleanTranscript = transcript.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim();
+      const isCorrect = cleanTarget === cleanTranscript || cleanTarget.includes(cleanTranscript) || cleanTranscript.includes(cleanTarget);
+      setSpeechFeedback(prev => ({ 
+        ...prev, 
+        [problemId]: { status: isCorrect ? 'correct' : 'wrong', text: transcript } 
+      }));
+    };
+    recognition.onerror = () => {
+      setListeningId(null);
+      setSpeechFeedback(prev => ({ ...prev, [problemId]: { status: 'error', text: '音声を認識できませんでした' } }));
+    };
+    recognition.onend = () => {
+      setListeningId(null);
+    };
+    recognition.start();
+  };
 
   const hasAnyProblems = (mainId) => {
     return availableCategories.some(cat => SUB_MAPPING[mainId].includes(cat.categoryId) && cat.problems && cat.problems.length > 0);
@@ -344,25 +372,23 @@ export default function StudentMode({ categories }) {
   return (
     <div className="flex-1 flex flex-col relative touch-none z-10 w-full overflow-hidden" ref={mainContainerRef} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onTouchMove={handlePointerMove} onTouchEnd={handlePointerUp}>
       
-      {/* ＝＝＝ リアルタイム・ランキングボード ＝＝＝ */}
+      {/* ＝＝＝ 修正：横並び（ピル型）の上部中央ランキングボード ＝＝＝ */}
       {isMultiplayer && sortedPlayers.length > 0 && (
-        <div className="absolute top-24 right-4 z-50 flex flex-col gap-2 w-48 md:w-64 pointer-events-none">
+        <div className="absolute top-[80px] md:top-[90px] left-0 w-full z-40 flex flex-row flex-wrap justify-center gap-2 md:gap-4 px-2 pointer-events-none">
           {sortedPlayers.map((player, index) => {
             const isMe = player.id === myPeerId;
             const rankColors = index === 0 ? "bg-yellow-400 text-yellow-900 border-yellow-300" :
-                               index === 1 ? "bg-slate-300 text-slate-700 border-slate-200" :
-                               index === 2 ? "bg-amber-600 text-amber-100 border-amber-500" :
-                               "bg-white/80 text-slate-600 border-slate-200";
+                               index === 1 ? "bg-slate-200 text-slate-700 border-slate-300" :
+                               index === 2 ? "bg-amber-600 text-amber-50 border-amber-500" :
+                               "bg-white/90 text-slate-600 border-slate-200";
 
             return (
-              <motion.div key={player.id} layout initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} className={`flex items-center justify-between p-2 md:p-3 rounded-2xl border-2 shadow-lg backdrop-blur-sm ${rankColors} ${isMe ? 'ring-4 ring-cyan-400 ring-opacity-50' : ''}`}>
-                <div className="flex items-center gap-2 overflow-hidden">
-                  <span className="font-black text-lg md:text-xl italic w-6">{index + 1}</span>
-                  <div className="flex flex-col">
-                    <span className="font-bold text-xs md:text-sm truncate max-w-[80px] md:max-w-[100px]">{player.name === 'Host (You)' && isMe ? 'あなた' : player.name}</span>
-                  </div>
-                </div>
-                <span className="font-black text-lg md:text-2xl tracking-tighter">{player.score}</span>
+              <motion.div key={player.id} layout initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} 
+                className={`flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-full border-2 shadow-md backdrop-blur-md ${rankColors} ${isMe ? 'ring-2 ring-cyan-400 ring-offset-1' : ''}`}
+              >
+                <span className="font-black text-sm md:text-base italic">{index + 1}</span>
+                <span className="font-bold text-xs md:text-sm truncate max-w-[60px] md:max-w-[100px]">{player.name === 'Host (You)' && isMe ? 'あなた' : player.name}</span>
+                <span className="font-black text-sm md:text-lg tracking-tighter ml-1">{player.score}</span>
               </motion.div>
             );
           })}
@@ -384,7 +410,7 @@ export default function StudentMode({ categories }) {
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-between p-4 md:p-8 w-full max-w-[1400px] mx-auto overflow-hidden relative">
-        <div className="w-full flex justify-center mb-6 md:mb-10 text-center z-10">
+        <div className="w-full flex justify-center mb-6 md:mb-10 text-center z-10 pt-4 md:pt-8">
           <AnimatePresence mode="wait">
             <motion.div key={`instruction-${activeProblem.targetRole}`} initial={{ x: 1000, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -1000, opacity: 0 }} transition={{ type: "tween", duration: 0.3 }} className="flex items-center gap-3">
               <div className={`w-16 h-16 rounded-full flex items-center justify-center text-4xl font-black shadow-md border-4 border-white ${roleColors.bg} ${roleColors.text}`}>{roleInitial}</div>
@@ -401,7 +427,8 @@ export default function StudentMode({ categories }) {
                   const isSelected = selectedIndices.includes(idx);
                   let bgClass = "bg-transparent text-slate-700";
                   if (isSelected) bgClass = feedbackState === 'wrong' ? "bg-rose-300 text-rose-900" : `${roleColors.bg} ${roleColors.text} ${roleColors.shadow}`;
-                  return <motion.span key={idx} onPointerDown={(e) => handlePointerDown(e, idx)} className={`inline-block text-2xl md:text-4xl font-black px-1.5 mx-0.5 rounded-lg cursor-pointer select-none transition-all ${bgClass}`}>{token}</motion.span>;
+                  {/* ★修正：transition-all を外し、遅延ゼロの反応速度に変更 */}
+                  return <motion.span key={idx} onPointerDown={(e) => handlePointerDown(e, idx)} className={`inline-block text-2xl md:text-4xl lg:text-5xl font-black px-1.5 md:px-2 mx-0.5 md:mx-1 rounded-lg cursor-pointer select-none transition-transform duration-75 active:scale-95 ${bgClass}`}>{token}</motion.span>;
                 })}
               </div>
             </motion.div>
@@ -411,7 +438,7 @@ export default function StudentMode({ categories }) {
         <div className="w-full flex flex-col items-center min-h-[90px] z-10">
           <AnimatePresence mode="wait">
             {feedbackState === 'idle' ? (
-              <motion.button key="answer-btn" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9 }} onClick={submitAnswer} disabled={selectedIndices.length === 0} className={`box flex items-center gap-3 font-black text-2xl px-12 py-4 rounded-3xl transition-all ${selectedIndices.length === 0 ? "opacity-50 cursor-not-allowed" : "text-cyan-600 hover:scale-105"}`}><CheckCircle2 size={32} /> Answer!</motion.button>
+              <motion.button key="answer-btn" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9 }} onClick={submitAnswer} disabled={selectedIndices.length === 0} className={`box flex items-center gap-3 font-black text-2xl px-12 py-4 rounded-3xl transition-transform ${selectedIndices.length === 0 ? "opacity-50 cursor-not-allowed" : "text-cyan-600 hover:scale-105"}`}><CheckCircle2 size={32} /> Answer!</motion.button>
             ) : feedbackState === 'correct' ? (
               <motion.div key="bonus-display" className="text-emerald-500 font-black text-3xl">+{lastBonus?.points || 0} pts</motion.div>
             ) : <motion.div key="wrong-display" className="text-rose-500 font-black text-3xl">Miss...</motion.div>}
