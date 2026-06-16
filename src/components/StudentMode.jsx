@@ -489,15 +489,16 @@ export default function StudentMode({ categories }) {
                   let bgClass = "bg-transparent text-slate-700";
                   if (isSelected) bgClass = feedbackState === 'wrong' ? "bg-rose-300 text-rose-900" : `${roleColors.bg} ${roleColors.text} ${roleColors.shadow}`;
                   
-                  {/* ★修正: もっさり感の原因だった motion.span を純粋な HTML の span に変更し、transition を全削除！これで指の動きに100%追従します */}
+                  {/* ★ここが一番の修正点です！消してしまった data-token-idx を復活させ、元の滑らかなアニメーションを持った motion.span に戻しました！ */}
                   return (
-                    <span 
+                    <motion.span 
                       key={idx} 
+                      data-token-idx={idx} 
                       onPointerDown={(e) => handlePointerDown(e, idx)} 
-                      className={`inline-block text-2xl md:text-4xl lg:text-5xl font-black px-1.5 md:px-2 mx-0.5 md:mx-1 rounded-lg cursor-pointer select-none ${bgClass}`}
+                      className={`inline-block text-2xl md:text-4xl lg:text-5xl font-black px-1.5 md:px-2 mx-0.5 md:mx-1 rounded-lg cursor-pointer select-none transition-all duration-150 ${bgClass}`}
                     >
                       {token}
-                    </span>
+                    </motion.span>
                   );
                 })}
               </div>
