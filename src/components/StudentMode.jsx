@@ -50,7 +50,6 @@ export default function StudentMode({ categories }) {
 
   const processedBattleRef = useRef(null);
 
-  // ★追加：正解時に心地よいサウンドを鳴らす魔法（mp3ファイル不要！）
   useEffect(() => {
     if (feedbackState === 'correct') {
       try {
@@ -61,12 +60,12 @@ export default function StudentMode({ categories }) {
         const playNote = (freq, startTime, duration) => {
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
-          osc.type = 'sine'; // 丸みのある優しい音色
+          osc.type = 'sine'; 
           osc.frequency.setValueAtTime(freq, startTime);
           
           gain.gain.setValueAtTime(0, startTime);
-          gain.gain.linearRampToValueAtTime(0.2, startTime + 0.05); // ふんわり音が出る
-          gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration); // 余韻を残して消える
+          gain.gain.linearRampToValueAtTime(0.2, startTime + 0.05); 
+          gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration); 
           
           osc.connect(gain);
           gain.connect(ctx.destination);
@@ -75,7 +74,6 @@ export default function StudentMode({ categories }) {
         };
 
         const now = ctx.currentTime;
-        // 「キララーン♪」という心地よい和音のアルペジオ（A5 -> C#6）
         playNote(880, now, 0.4); 
         playNote(1108.73, now + 0.1, 0.6); 
       } catch (e) {
@@ -514,13 +512,13 @@ export default function StudentMode({ categories }) {
           </AnimatePresence>
         </div>
 
-        <div className="w-full relative bg-white/60 rounded-3xl border border-slate-100 shadow-inner p-6 md:p-12 mb-4 flex items-center min-h-[160px] overflow-hidden">
+        <div className="w-full relative bg-white/60 rounded-3xl border border-slate-100 shadow-inner p-6 md:p-12 mb-4 flex flex-col justify-center min-h-[160px] overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.div key={`sentence-${currentProblemIdx}`} initial={{ x: 800, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -800, opacity: 0 }} transition={{ type: "tween", duration: 0.2 }} className="w-full">
+              {/* ▼ 英文を text-left にして左寄せ */}
               <div className="text-left leading-[3.5rem] md:leading-[5rem] w-full">
                 {activeProblem.tokens.map((token, idx) => {
                   const isSelected = selectedIndices.includes(idx);
-                  // ★追加：失われていた「光るヒント問題」の判定を復活！
                   const isGlowing = activeProblem.modifiedIndices 
                     ? activeProblem.modifiedIndices.includes(idx) 
                     : activeProblem.modifiedIndex === idx;
@@ -532,7 +530,6 @@ export default function StudentMode({ categories }) {
                       ? "bg-rose-300 text-rose-900 shadow-[0_0_15px_rgba(253,164,175,0.6)]" 
                       : `${roleColors.bg} ${roleColors.text} ${roleColors.shadow}`;
                   } else if (isGlowing) {
-                    // 選ばれていない時だけ光る
                     bgClass = "bg-amber-100 text-amber-700 shadow-[0_0_10px_rgba(254,243,199,0.5)] animate-pulse";
                   }
                   
@@ -548,6 +545,16 @@ export default function StudentMode({ categories }) {
                   );
                 })}
               </div>
+
+              {/* ▼ 追加：和訳エリア（左寄せ） */}
+              {activeProblem.translation && (
+                <div className="w-full text-left mt-6 md:mt-8">
+                  <p className="text-base md:text-xl text-slate-500 font-bold bg-white/70 inline-block px-6 py-3 rounded-2xl shadow-sm border border-slate-100">
+                    {activeProblem.translation}
+                  </p>
+                </div>
+              )}
+
             </motion.div>
           </AnimatePresence>
         </div>
