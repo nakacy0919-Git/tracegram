@@ -1,4 +1,8 @@
-problems: [
+export const modParticipleCategory = {
+  categoryId: "mod_participle",
+  title: "修飾語(M) - 分詞構文",
+  description: "分詞構文（V-ing, V-ed）が作る修飾語のカタマリを正確に捉えよう。",
+  problems: [
     { 
       id: "modParticiple-b-1", 
       tokens: ["Seeing", "the", "police,", "he", "ran", "away."], 
@@ -450,3 +454,4 @@ problems: [
       grammarPoints: ["past_participle"] 
     }
   ]
+  };
