@@ -10,7 +10,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【初級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "テニスをしている少年はケンだ。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["present_participle"] 
     },
     { 
       id: "modAdj-b-2", 
@@ -19,7 +20,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【初級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "私は本を読んでいる少女を知っている。", 
-      modifiedIndices: [3] 
+      modifiedIndices: [3],
+      grammarPoints: ["relative_pronoun"] 
     },
     { 
       id: "modAdj-b-3", 
@@ -28,7 +30,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【初級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "これは彼によって撮られた写真だ。", 
-      modifiedIndices: [3] 
+      modifiedIndices: [3],
+      grammarPoints: ["past_participle"] 
     },
     { 
       id: "modAdj-b-4", 
@@ -37,7 +40,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【初級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "あそこを走っている犬は私のものだ。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["present_participle"] 
     },
     { 
       id: "modAdj-b-5", 
@@ -46,7 +50,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【初級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "雪で覆われたあの山を見なさい。", 
-      modifiedIndices: [3] 
+      modifiedIndices: [3],
+      grammarPoints: ["past_participle"] 
     },
     { 
       id: "modAdj-b-6", 
@@ -55,7 +60,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【初級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "私には東京に住んでいる友達がいる。", 
-      modifiedIndices: [3] 
+      modifiedIndices: [3],
+      grammarPoints: ["relative_pronoun"] 
     },
     { 
       id: "modAdj-b-7", 
@@ -64,7 +70,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【初級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "私が買った本は面白い。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["relative_pronoun"] 
     },
     { 
       id: "modAdj-b-8", 
@@ -73,7 +80,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【初級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "これが彼の生まれた家だ。", 
-      modifiedIndices: [3] 
+      modifiedIndices: [3],
+      grammarPoints: ["relative_pronoun"] 
     },
     { 
       id: "modAdj-b-9", 
@@ -82,7 +90,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【初級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "私は彼女によって歌われたその歌が好きだ。", 
-      modifiedIndices: [3] 
+      modifiedIndices: [3],
+      grammarPoints: ["past_participle"] 
     },
     { 
       id: "modAdj-b-10", 
@@ -91,7 +100,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【初級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "ドアのところに立っている男の人は私の父です。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["present_participle"] 
     },
     { 
       id: "modAdj-b-11", 
@@ -100,7 +110,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【初級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "彼女はスイス製の時計を持っている。", 
-      modifiedIndices: [3] 
+      modifiedIndices: [3],
+      grammarPoints: ["past_participle"] 
     },
     { 
       id: "modAdj-b-12", 
@@ -109,7 +120,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【初級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "英語で書かれた手紙は難しい。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["past_participle"] 
     },
     { 
       id: "modAdj-b-13", 
@@ -118,7 +130,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【初級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "私はあなたが昨日会った少年を知っています。", 
-      modifiedIndices: [3] 
+      modifiedIndices: [3],
+      grammarPoints: ["relative_pronoun"] 
     },
     { 
       id: "modAdj-b-14", 
@@ -127,7 +140,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【初級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "ソファで眠っている猫はかわいい。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["present_participle"] 
     },
     { 
       id: "modAdj-b-15", 
@@ -136,7 +150,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【初級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "彼は私に英語を教えてくれた人です。", 
-      modifiedIndices: [3] 
+      modifiedIndices: [3],
+      grammarPoints: ["relative_pronoun"] 
     },
     { 
       id: "modAdj-i-1", 
@@ -145,7 +160,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【中級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "図書館で勉強している学生たちはとても静かだ。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["present_participle"] 
     },
     { 
       id: "modAdj-i-2", 
@@ -154,7 +170,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【中級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "私は私たちが初めて会った日を覚えている。", 
-      modifiedIndices: [3] 
+      modifiedIndices: [3],
+      grammarPoints: ["relative_pronoun"] 
     },
     { 
       id: "modAdj-i-3", 
@@ -163,7 +180,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【中級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "私の母と話している女性は医者です。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["relative_pronoun"] 
     },
     { 
       id: "modAdj-i-4", 
@@ -172,7 +190,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【中級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "私たちが今日しなければならないことがたくさんある。", 
-      modifiedIndices: [3] 
+      modifiedIndices: [3],
+      grammarPoints: ["relative_pronoun"] 
     },
     { 
       id: "modAdj-i-5", 
@@ -181,7 +200,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【中級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "あの国で話されている言語はフランス語だ。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["past_participle"] 
     },
     { 
       id: "modAdj-i-6", 
@@ -190,7 +210,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【中級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "これが私たちがその問題を解決できる唯一の方法だ。", 
-      modifiedIndices: [4] 
+      modifiedIndices: [4],
+      grammarPoints: ["relative_pronoun"] 
     },
     { 
       id: "modAdj-i-7", 
@@ -199,7 +220,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【中級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "私たちは美しい海を見渡せるホテルに滞在した。", 
-      modifiedIndices: [4] 
+      modifiedIndices: [4],
+      grammarPoints: ["present_participle"] 
     },
     { 
       id: "modAdj-i-8", 
@@ -208,7 +230,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【中級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "家の前に停められている車は私の叔父のものです。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["past_participle"] 
     },
     { 
       id: "modAdj-i-9", 
@@ -217,7 +240,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【中級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "私は旅行中に出会った人々を忘れることができない。", 
-      modifiedIndices: [4] 
+      modifiedIndices: [4],
+      grammarPoints: ["relative_pronoun"] 
     },
     { 
       id: "modAdj-i-10", 
@@ -226,7 +250,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【中級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "彼が遅れた理由は明白だ。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["relative_pronoun"] 
     },
     { 
       id: "modAdj-i-11", 
@@ -235,7 +260,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【中級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "彼女はコンピューターゲームを作る会社で働いている。", 
-      modifiedIndices: [4] 
+      modifiedIndices: [4],
+      grammarPoints: ["relative_pronoun"] 
     },
     { 
       id: "modAdj-i-12", 
@@ -244,7 +270,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【中級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "車を盗まれたその男は警察に電話した。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["relative_pronoun"] 
     },
     { 
       id: "modAdj-i-13", 
@@ -253,7 +280,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【中級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "大きなカバンを運んでいる少女が部屋に入ってきた。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["present_participle"] 
     },
     { 
       id: "modAdj-i-14", 
@@ -262,7 +290,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【中級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "200年前に建てられたその橋はまだ丈夫だ。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["past_participle"] 
     },
     { 
       id: "modAdj-i-15", 
@@ -271,7 +300,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【中級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "私は日本の歴史に興味がある人々をたくさん知っている。", 
-      modifiedIndices: [5] 
+      modifiedIndices: [5],
+      grammarPoints: ["relative_pronoun"] 
     },
     { 
       id: "modAdj-a-1", 
@@ -280,7 +310,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【上級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "彼が私たちに嘘をついたという事実は許されない。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["that_clause", "noun_clause"] 
     },
     { 
       id: "modAdj-a-2", 
@@ -289,7 +320,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【上級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "私たちはそのプロジェクトは中止されるべきだという結論に至った。", 
-      modifiedIndices: [4] 
+      modifiedIndices: [4],
+      grammarPoints: ["that_clause", "noun_clause"] 
     },
     { 
       id: "modAdj-a-3", 
@@ -298,7 +330,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【上級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "私が子どもの頃に住んでいた家は取り壊されてしまった。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["relative_pronoun"] 
     },
     { 
       id: "modAdj-a-4", 
@@ -307,7 +340,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【上級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "私たちが直面している問題は即座の行動を要求している。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["relative_pronoun"] 
     },
     { 
       id: "modAdj-a-5", 
@@ -316,7 +350,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【上級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "彼こそ私がずっと探していた男だ。", 
-      modifiedIndices: [4] 
+      modifiedIndices: [4],
+      grammarPoints: ["relative_pronoun"] 
     },
     { 
       id: "modAdj-a-6", 
@@ -325,7 +360,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【上級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "私は彼が試験に合格したという知らせに驚いた。", 
-      modifiedIndices: [5] 
+      modifiedIndices: [5],
+      grammarPoints: ["that_clause", "noun_clause"] 
     },
     { 
       id: "modAdj-a-7", 
@@ -334,7 +370,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【上級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "彼がそのお金を盗んだという証拠はない。", 
-      modifiedIndices: [3] 
+      modifiedIndices: [3],
+      grammarPoints: ["that_clause", "noun_clause"] 
     },
     { 
       id: "modAdj-a-8", 
@@ -343,7 +380,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【上級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "私たちが新しい工場を建てるべきだという提案は受け入れられた。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["that_clause", "noun_clause"] 
     },
     { 
       id: "modAdj-a-9", 
@@ -352,7 +390,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【上級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "私は女優だと思う女性に会った。", 
-      modifiedIndices: [3] 
+      modifiedIndices: [3],
+      grammarPoints: ["relative_pronoun"] 
     },
     { 
       id: "modAdj-a-10", 
@@ -361,7 +400,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【上級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "この機械が作動するシステムはとても複雑だ。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["relative_pronoun"] 
     },
     { 
       id: "modAdj-a-11", 
@@ -370,7 +410,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【上級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "彼女は興味がないという印象を私に与えた。", 
-      modifiedIndices: [4] 
+      modifiedIndices: [4],
+      grammarPoints: ["that_clause", "noun_clause"] 
     },
     { 
       id: "modAdj-a-12", 
@@ -379,7 +420,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【上級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "その会議に出席していた人々は彼の計画を支持した。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["adjective"] 
     },
     { 
       id: "modAdj-a-13", 
@@ -388,7 +430,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【上級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "簡単な英語で書かれた本は初心者に向いている。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["past_participle"] 
     },
     { 
       id: "modAdj-a-14", 
@@ -397,7 +440,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【上級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "彼らがその問題をどの程度理解していたかは不明のままだ。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["relative_pronoun"] 
     },
     { 
       id: "modAdj-a-15", 
@@ -406,7 +450,8 @@ export const modAdjCategory = {
       targetRole: "M (形容詞句 / 形容詞節)", 
       hint: "【上級】光っている名詞を後ろから修飾している『形容詞のカタマリ（M）』をすべてなぞってください。", 
       translation: "お金がすべてだという考えに私は同意できない。", 
-      modifiedIndices: [5] 
+      modifiedIndices: [5],
+      grammarPoints: ["that_clause", "noun_clause"] 
     }
   ]
 };
