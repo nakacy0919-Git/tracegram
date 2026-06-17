@@ -10,7 +10,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【初級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "私はテニスをするのが好きです。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "objVerbal-b-2", 
@@ -19,7 +20,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【初級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼女は本を読んで楽しみます。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "objVerbal-b-3", 
@@ -28,7 +30,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【初級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼はそこへ行くことを決心した。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "objVerbal-b-4", 
@@ -37,7 +40,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【初級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼らは話すのをやめた。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "objVerbal-b-5", 
@@ -46,7 +50,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【初級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "私たちはあなたに会うことを望んでいます。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "objVerbal-b-6", 
@@ -55,7 +60,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【初級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "私は車を買いたい。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "objVerbal-b-7", 
@@ -64,7 +70,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【初級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼女は部屋の掃除を終えた。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "objVerbal-b-8", 
@@ -73,7 +80,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【初級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼は速く走り始めた。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "objVerbal-b-9", 
@@ -82,7 +90,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【初級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼らは野球をするのが好きです。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "objVerbal-b-10", 
@@ -91,7 +100,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【初級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "私は京都を訪れる計画を立てている。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "objVerbal-b-11", 
@@ -100,7 +110,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【初級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼女は私を手伝うと約束した。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "objVerbal-b-12", 
@@ -109,7 +120,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【初級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼はピアノを弾く練習をする。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "objVerbal-b-13", 
@@ -118,7 +130,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【初級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "私たちはドアを開けようとした。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "objVerbal-b-14", 
@@ -127,7 +140,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【初級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼らは映画を観るのが大好きです。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "objVerbal-b-15", 
@@ -136,7 +150,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【初級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "私は早く起きる必要がある。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "objVerbal-i-1", 
@@ -145,7 +160,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【中級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "先生が部屋に入ってきたとき、生徒たちは話すのをやめた。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "objVerbal-i-2", 
@@ -154,7 +170,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【中級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼女はカナダで英語を勉強することを決心した。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "objVerbal-i-3", 
@@ -163,7 +180,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【中級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "私は彼とその映画について話すのを楽しんだ。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "objVerbal-i-4", 
@@ -172,7 +190,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【中級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼は会議に遅刻しないと約束した。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "objVerbal-i-5", 
@@ -181,7 +200,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【中級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "私たちはすぐにまたあなたにお会いできることを願っています。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "objVerbal-i-6", 
@@ -190,7 +210,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【中級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "その少年は昨日窓を割ったことを認めた。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "objVerbal-i-7", 
@@ -199,7 +220,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【中級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼女はどうにかその難しい仕事を時間通りに終えた。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "objVerbal-i-8", 
@@ -208,7 +230,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【中級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "私は昨年パーティーで彼に会ったことを覚えている。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "objVerbal-i-9", 
@@ -217,7 +240,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【中級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼らは私たちの申し出を受け入れることを拒否した。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "objVerbal-i-10", 
@@ -226,7 +250,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【中級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼は私の質問に直接答えることを避けた。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "objVerbal-i-11", 
@@ -235,7 +260,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【中級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "私たちはハワイで休暇を過ごす計画を立てている。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "objVerbal-i-12", 
@@ -244,7 +270,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【中級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼女は机からお金を取ったことを否定した。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "objVerbal-i-13", 
@@ -253,7 +280,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【中級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "私は今日辞書を持ってくるのを忘れた。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "objVerbal-i-14", 
@@ -262,7 +290,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【中級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "その会社は今年売上を伸ばすことを期待している。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "objVerbal-i-15", 
@@ -271,7 +300,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【中級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼はコンサートでお気に入りの歌手を見る機会を逃した。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "objVerbal-a-1", 
@@ -280,7 +310,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【上級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "私は近い将来、転職することを検討している。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "objVerbal-a-2", 
@@ -289,7 +320,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【上級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼は彼女にそんなひどいことを言ったことを後悔している。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["gerund", "past_participle"] 
     },
     { 
       id: "objVerbal-a-3", 
@@ -298,7 +330,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【上級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼女はその状況の重要性を理解できなかった。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "objVerbal-a-4", 
@@ -307,7 +340,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【上級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "その政治家は会社から賄賂を受け取ったことを否定した。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["gerund", "past_participle"] 
     },
     { 
       id: "objVerbal-a-5", 
@@ -316,7 +350,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【上級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "私たちは今すぐ新しい家を買う余裕はない。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "objVerbal-a-6", 
@@ -325,7 +360,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【上級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "あなたが時間を割いて私を助けてくれることに感謝します。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["gerund", "infinitive"] 
     },
     { 
       id: "objVerbal-a-7", 
@@ -334,7 +370,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【上級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼らはその機密情報をマスコミに漏らすと脅迫した。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "objVerbal-a-8", 
@@ -343,7 +380,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【上級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼はその本を買うために私にいくらかお金を貸そうと申し出た。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "objVerbal-a-9", 
@@ -352,7 +390,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【上級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼女はその秘密の計画について何も知らないふりをしている。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "objVerbal-a-10", 
@@ -361,7 +400,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【上級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "私は父に動物園へ連れて行ってもらったことをはっきりと覚えている。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["gerund", "past_participle"] 
     },
     { 
       id: "objVerbal-a-11", 
@@ -370,7 +410,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【上級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼はその深刻な問題について冗談を言うのを我慢できなかった。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "objVerbal-a-12", 
@@ -379,7 +420,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【上級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "委員会は会議を来週まで延期することに同意した。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "objVerbal-a-13", 
@@ -388,7 +430,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【上級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼女は私が夜遅くに出かけることを厳しく禁じた。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "objVerbal-a-14", 
@@ -397,7 +440,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【上級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼らはそのプロジェクトに関する最終決定を下すのを延期した。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "objVerbal-a-15", 
@@ -406,7 +450,8 @@ export const objVerbalCategory = {
       targetRole: "O (to不定詞句 / 動名詞句)", 
       hint: "【上級】光っている動詞の目的語（O）となっている、準動詞のカタマリをすべてなぞってください。", 
       translation: "彼は昨日の朝、あなたにそのメールを送るつもりだった。", 
-      modifiedIndices: [1] 
+      modifiedIndices: [1],
+      grammarPoints: ["infinitive"] 
     }
   ]
 };
