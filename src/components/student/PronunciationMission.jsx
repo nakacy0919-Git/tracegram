@@ -33,7 +33,7 @@ export default function PronunciationMission({ targetSentence, onComplete }) {
         const playNote = (freq, startTime, duration) => {
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
-          osc.type = 'triangle';
+          osc.type = 'triangle'; 
           osc.frequency.setValueAtTime(freq, startTime);
           gain.gain.setValueAtTime(0, startTime);
           gain.gain.linearRampToValueAtTime(0.2, startTime + 0.05);
@@ -45,10 +45,10 @@ export default function PronunciationMission({ targetSentence, onComplete }) {
         };
 
         const now = ctx.currentTime;
-        playNote(523.25, now, 0.1);       // C5
-        playNote(659.25, now + 0.1, 0.1); // E5
-        playNote(783.99, now + 0.2, 0.2); // G5
-        playNote(1046.50, now + 0.3, 0.5);// C6
+        playNote(523.25, now, 0.1);       // C5 
+        playNote(659.25, now + 0.1, 0.1); // E5 
+        playNote(783.99, now + 0.2, 0.2); // G5 
+        playNote(1046.50, now + 0.3, 0.5);// C6 
       } catch (e) {
         console.error("Audio playback failed", e);
       }
@@ -110,8 +110,7 @@ export default function PronunciationMission({ targetSentence, onComplete }) {
     <motion.div 
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      // 🌟 余白(p-5)を(p-3)などに削り、高さを節約
-      className="bg-slate-800 text-white p-3 md:p-4 rounded-3xl shadow-2xl border-4 border-rose-400 flex flex-col items-center w-full relative"
+      className="bg-slate-800 text-white p-4 md:p-6 rounded-3xl shadow-lg flex flex-col items-center w-full relative"
     >
       <AnimatePresence>
         {accuracy !== null && accuracy >= 80 && (
@@ -127,66 +126,63 @@ export default function PronunciationMission({ targetSentence, onComplete }) {
         )}
       </AnimatePresence>
 
-      <h3 className="text-base md:text-lg font-black text-rose-300 mb-0.5 flex items-center gap-2">
-        <Mic size={18} /> 【必須】構造を意識して音読せよ！
+      <h3 className="text-lg md:text-xl font-black text-rose-300 mb-1 flex items-center gap-2">
+        <Mic size={20} /> 【必須】構造を意識して音読せよ！
       </h3>
-      <p className="text-slate-400 font-bold mb-2 text-center text-xs">
+      <p className="text-slate-400 font-bold mb-4 text-center text-xs md:text-sm">
         正しく発音し終えるまで次の問題には進めません。
       </p>
 
-      {/* ターゲット英文の余白も削減 */}
-      <div className="bg-slate-700 p-2 md:p-3 rounded-xl mb-2 w-full text-center">
-        <p className="text-lg md:text-xl font-black text-cyan-300">{targetSentence}</p>
-      </div>
+      {/* 🌟 ターゲット英文は削除されました */}
 
-      {/* 録音ボタンのパディングを削減 */}
+      {/* 録音ボタン / 結果表示 */}
       {accuracy === null ? (
         <button
           onClick={toggleRecording}
-          className={`flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 rounded-full font-black text-base md:text-lg transition-all shadow-lg w-full md:w-auto justify-center ${
+          className={`flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-full font-black text-lg md:text-xl transition-all shadow-lg w-full md:w-auto justify-center ${
             isRecording 
               ? 'bg-rose-500 hover:bg-rose-400 animate-pulse ring-4 ring-rose-300/50' 
               : 'bg-emerald-500 hover:bg-emerald-400 ring-4 ring-emerald-300/50'
           }`}
         >
-          {isRecording ? <Square size={18} fill="currentColor" /> : <Mic size={18} />}
+          {isRecording ? <Square size={20} fill="currentColor" /> : <Mic size={20} />}
           {isRecording ? 'タップして判定' : 'タップして音読開始'}
         </button>
       ) : (
         <div className="flex flex-col items-center w-full animate-in fade-in zoom-in duration-500">
-          <div className="flex items-center gap-4 mb-2">
+          <div className="flex items-center gap-4 mb-4">
             <div className="text-center">
-              <div className="text-4xl md:text-5xl font-black flex items-baseline gap-1 justify-center">
+              <div className="text-5xl md:text-6xl font-black flex items-baseline gap-1 justify-center">
                 <span className={accuracy >= 80 ? 'text-emerald-400 drop-shadow-md' : 'text-amber-400'}>
                   {accuracy}
                 </span>
-                <span className="text-lg text-slate-400">%</span>
+                <span className="text-xl text-slate-400">%</span>
               </div>
-              <p className="font-bold text-slate-400 text-xs mt-0.5">Accuracy</p>
+              <p className="font-bold text-slate-400 text-xs mt-1">Accuracy</p>
             </div>
           </div>
           
-          <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
+          <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
             <button
               onClick={() => { setTranscript(''); setAccuracy(null); }}
-              className="flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-slate-600 hover:bg-slate-500 font-bold transition-all w-full md:w-auto"
+              className="flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-slate-600 hover:bg-slate-500 font-bold transition-all w-full md:w-auto"
             >
-              <RefreshCw size={16} /> もう一度
+              <RefreshCw size={18} /> もう一度
             </button>
             <button
               onClick={onComplete}
-              className="flex items-center justify-center gap-2 px-6 py-2 rounded-full bg-cyan-500 hover:bg-cyan-400 font-black text-base md:text-lg transition-all shadow-[0_0_15px_rgba(6,182,212,0.5)] w-full md:w-auto"
+              className="flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-cyan-500 hover:bg-cyan-400 font-black text-lg transition-all shadow-[0_0_15px_rgba(6,182,212,0.5)] w-full md:w-auto"
             >
-              次の問題へ <ArrowRight size={18} />
+              次の問題へ <ArrowRight size={20} />
             </button>
           </div>
         </div>
       )}
 
-      {/* リアルタイム文字起こしの余白も削減 */}
+      {/* リアルタイム文字起こし */}
       {(transcript || isRecording) && accuracy === null && (
-        <div className="mt-2 w-full bg-slate-900/50 p-2 rounded-xl border border-slate-700 min-h-[40px] flex items-center justify-center">
-          <p className="text-sm md:text-base font-bold text-slate-300 text-center italic">
+        <div className="mt-4 w-full bg-slate-900/50 p-3 rounded-xl border border-slate-700 min-h-[60px] flex items-center justify-center">
+          <p className="text-base md:text-lg font-bold text-slate-300 text-center italic">
             {transcript || "Listening..."}
           </p>
         </div>
