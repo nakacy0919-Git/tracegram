@@ -32,6 +32,7 @@ export default function StudentMode({ categories }) {
 
   // ▼ 追加：オープニング（スプラッシュ）を既に見終わったかを記憶する
   const [hasSeenSplash, setHasSeenSplash] = useState(false);
+  const [gameMode, setGameMode] = useState('normal');
 
   const processedBattleRef = useRef(null);
 
@@ -131,6 +132,9 @@ export default function StudentMode({ categories }) {
   if (gameState === 'main_select' || gameState === 'sub_select' || gameState === 'level_select') {
     return (
       <MenuScreen
+      　// 🌟 ここに追加（2行）
+        gameMode={gameMode}
+        setGameMode={setGameMode}
         gameState={gameState}
         availableCategories={availableCategories}
         activeMain={activeMain}
@@ -171,6 +175,8 @@ export default function StudentMode({ categories }) {
 
   return (
     <GameScreen
+    　// 🌟 ここに追加（1行）
+      gameMode={gameMode}
       isMultiplayer={isMultiplayer}
       playersData={playersData}
       myPeerId={myPeerId}

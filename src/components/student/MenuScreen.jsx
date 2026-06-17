@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, BookOpen, Layers, BarChart3, AlertTriangle, CheckCircle2, TrendingUp, Award, HelpCircle } from 'lucide-react';
+import { ArrowLeft, BookOpen, Layers, BarChart3, AlertTriangle, CheckCircle2, TrendingUp, Award, HelpCircle, Bug, Crosshair } from 'lucide-react';
 
 const SUB_MAPPING = {
   'BASIC': ['basic_find_verb', 'basic_remove_m', 'basic_5patterns'],
@@ -23,6 +23,7 @@ const GRAMMAR_CATEGORIES = [
 ];
 
 export default function MenuScreen({
+  gameMode, setGameMode, // 🌟 この1行を追加！
   gameState, availableCategories, activeMain, activeCategory, isMultiplayer, isHost,
   setAppScreen, selectMainCategory, selectSubCategory, startGame,
   backToMain, backToSub, handleExitToTitle, setBattleSetup
@@ -350,7 +351,25 @@ export default function MenuScreen({
                </p>
             )}
           </div>
-
+　　　　　 <div className="bg-white/80 backdrop-blur-md p-2 rounded-2xl shadow-sm border border-slate-200 mb-10 flex justify-center mx-auto max-w-lg">
+            <button 
+              // ※注：propsで setGameMode を受け取るように MenuScreen の引数を追加するのをお忘れなく！
+              onClick={() => setGameMode('normal')}
+              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-black text-sm md:text-base transition-all ${
+                gameMode === 'normal' ? 'bg-cyan-500 text-white shadow-md' : 'text-slate-500 hover:bg-slate-100'
+              }`}
+            >
+              <Crosshair size={18} /> 通常トレース
+            </button>
+            <button 
+              onClick={() => setGameMode('bug_slash')}
+              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-black text-sm md:text-base transition-all ${
+                gameMode === 'bug_slash' ? 'bg-rose-500 text-white shadow-md' : 'text-slate-500 hover:bg-slate-100'
+              }`}
+            >
+              <Bug size={18} /> バグ・スラッシュ
+            </button>
+          </div>
           <div className="flex flex-col gap-6">
             {levels.map((lvl) => {
               const levelKey = lvl.num === 1 ? '-b-' : lvl.num === 2 ? '-i-' : '-a-';

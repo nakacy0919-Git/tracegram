@@ -133,8 +133,6 @@ export default function PronunciationMission({ targetSentence, onComplete }) {
         正しく発音し終えるまで次の問題には進めません。
       </p>
 
-      {/* 🌟 ターゲット英文は削除されました */}
-
       {/* 録音ボタン / 結果表示 */}
       {accuracy === null ? (
         <button
@@ -170,7 +168,7 @@ export default function PronunciationMission({ targetSentence, onComplete }) {
               <RefreshCw size={18} /> もう一度
             </button>
             <button
-              onClick={onComplete}
+              onClick={() => onComplete(accuracy || 0)} // 🌟 ここで正答率を渡す！
               className="flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-cyan-500 hover:bg-cyan-400 font-black text-lg transition-all shadow-[0_0_15px_rgba(6,182,212,0.5)] w-full md:w-auto"
             >
               次の問題へ <ArrowRight size={20} />

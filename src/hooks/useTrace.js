@@ -150,13 +150,25 @@ export function useTrace(categories) {
     });
   };
 
-  // ★ 追加：手動で次の問題へ進む処理
-  const nextProblem = () => {
+  // 🌟 NEW: 外部からボーナススコアを加算できる関数（バグ破壊時などに使用）
+  const addBonusScore = (points) => {
+    setScore(prev => prev + points);
+  };
+
+  // 🌟 修正：手動で次の問題へ進む処理（引数でaccuracyを受け取る）
+  const nextProblem = (accuracy = null) => {
+    // 音読ミッションからのリカバリー（引数に数字が入ってきた時だけ計算）
+    if (accuracy !== null && typeof accuracy === 'number') {
+      // 精度×10pt（最低保証300pt）
+      const recoveryScore = Math.max(300, Math.round(accuracy * 10));
+      setScore(prev => prev + recoveryScore);
+    }
+
     if (currentProblemIdx + 1 < filteredProblems.length) {
       setCurrentProblemIdx(prev => prev + 1);
       setSelectedIndices([]);
       setFeedbackState('idle');
-      setStartTime(Date.now());
+      setStartTime(Date.now()); // 次の問題のタイムリセット
     } else {
       setGameState('result');
     }
@@ -171,21 +183,28 @@ export function useTrace(categories) {
     if (isCorrect) {
       setCorrectCount(prev => prev + 1);
       const timeTaken = (Date.now() - startTime) / 1000;
+      
+      // 🌟 NEW: スピードボーナス計算（最大1500点。2秒以内でMAX、10秒で0点）
       let speedBonus = 0;
-      if (timeTaken <= 3) speedBonus = 50;
-      else if (timeTaken <= 6) speedBonus = 30;
-      else if (timeTaken <= 10) speedBonus = 10;
+      if (timeTaken <= 2) {
+        speedBonus = 1500;
+      } else if (timeTaken < 10) {
+        speedBonus = Math.round(1500 * ((10 - timeTaken) / 8));
+      }
 
+      // 🌟 NEW: コンボボーナス計算（1コンボにつき+100点）
       const newCombo = combo + 1;
-      const comboBonus = newCombo >= 3 ? 50 : 0;
+      const comboBonus = newCombo * 100;
 
-      const earnedPoints = 100 + speedBonus + comboBonus;
+      // 合計得点を加算
+      const basePoints = 1000;
+      const earnedPoints = basePoints + speedBonus + comboBonus;
+      
       setScore(prev => prev + earnedPoints);
       setCombo(newCombo);
       setLastBonus({ speed: speedBonus, combo: comboBonus, points: earnedPoints });
       setFeedbackState('correct');
       
-      // ★ 修正：正解時は今まで通り自動で次へ進む
       setTimeout(() => {
         nextProblem();
       }, 600);
@@ -194,7 +213,6 @@ export function useTrace(categories) {
       setCombo(0);
       setLastBonus(null);
       setFeedbackState('wrong');
-      // ★ 修正：不正解時は自動で進めず、ボタンが押されるまで待機する
     }
   };
 
@@ -205,6 +223,6 @@ export function useTrace(categories) {
     selectMainCategory, selectSubCategory, startGame, 
     backToMain, backToSub, backToLevelSelect, 
     handlePointerDown, handlePointerMove, handlePointerUp, submitAnswer,
-    nextProblem // ★ 外部から「次へ」ボタンを使えるようにエクスポート
+    nextProblem, addBonusScore // 🌟 エクスポートに追加
   };
 }
