@@ -1,4 +1,8 @@
-problems: [
+export const objectCategory = {
+  categoryId: "object",
+  title: "目的語（O1 / O2）マスター",
+  description: "単語から長い名詞節まで、「何を」「誰に」を表す目的語（O）をレベル別に見抜くトレーニング。",
+  problems: [
     // 🟢 【初級】基本的な目的語・第4文型（人・モノ）
     { id: "o-b-1", tokens: ["I", "bought", "a", "new", "car", "yesterday."], targetIndices: [2, 3, 4], targetRole: "O (目的語)", hint: "【初級】光っている動詞の目的語（何を）の塊をなぞってください。", translation: "私は昨日、新しい車を買った。", modifiedIndices: [1], grammarPoints: [] },
     { id: "o-b-2", tokens: ["She", "knows", "his", "phone", "number."], targetIndices: [2, 3, 4], targetRole: "O (目的語)", hint: "【初級】光っている動詞の目的語（何を）の塊をなぞってください。", translation: "彼女は彼の電話番号を知っている。", modifiedIndices: [1], grammarPoints: [] },
@@ -50,3 +54,4 @@ problems: [
     { id: "o-a-14", tokens: ["I", "found", "out", "exactly", "what", "they", "were", "planning", "in", "secret."], targetIndices: [4, 5, 6, 7, 8, 9], targetRole: "O (関係代名詞what)", hint: "【上級】光っている群動詞(found out)の目的語となる塊をすべてなぞってください。", translation: "私は彼らが秘密裏に何を計画していたのかを正確に突き止めた。", modifiedIndices: [1], grammarPoints: ["relative_pronoun", "noun_clause"] },
     { id: "o-a-15", tokens: ["We", "owe", "it", "to", "our", "parents", "that", "we", "are", "here", "today."], targetIndices: [6, 7, 8, 9, 10], targetRole: "真目的語 (that節)", hint: "【上級】光っている形式目的語(it)が指し示す「真の目的語」の塊をなぞってください。", translation: "私たちが今日ここにいるのは両親のおかげだ（今日ここにいることを両親に借りている）。", modifiedIndices: [2], grammarPoints: ["formal_it", "that_clause", "noun_clause"] }
   ]
+  };

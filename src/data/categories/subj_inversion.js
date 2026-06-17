@@ -2,7 +2,7 @@ export const subjInversionCategory = {
   categoryId: "subjInversion",
   title: "Sub-5: 倒置・無生物主語",
   description: "文頭のMに惑わされず、後ろに隠れたSを見つける特訓",
-  problems: [
+problems: [
     { 
       id: "subjInversion-b-1", 
       tokens: ["There", "is", "a", "book", "on", "the", "desk."], 
@@ -10,7 +10,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【初級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "机の上に本があります。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-b-2", 
@@ -19,7 +20,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【初級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "バスが来ましたよ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-b-3", 
@@ -28,7 +30,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【初級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "この都市にはたくさんの公園があります。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-b-4", 
@@ -37,7 +40,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【初級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "あなたのカバンはここにあります。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-b-5", 
@@ -46,7 +50,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【初級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "テーブルの上にリンゴがあります。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-b-6", 
@@ -55,7 +60,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【初級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "木の下に男の子が座っています。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-b-7", 
@@ -64,7 +70,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【初級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "ある老人が住んでいました。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-b-8", 
@@ -73,7 +80,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【初級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "ここにいくつかのリンゴがあります。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-b-9", 
@@ -82,7 +90,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【初級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "箱の中に猫がいます。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-b-10", 
@@ -91,7 +100,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【初級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "私たちの電車が行ってしまいます。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-b-11", 
@@ -100,7 +110,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【初級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "壁に絵が掛かっています。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-b-12", 
@@ -109,7 +120,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【初級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "父が来ましたよ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-b-13", 
@@ -118,7 +130,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【初級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "その国には王様がいました。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-b-14", 
@@ -127,7 +140,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【初級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "ドアのそばに少女が立っていました。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-b-15", 
@@ -136,7 +150,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【初級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "こちらがメニューです。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-i-1", 
@@ -145,7 +160,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【中級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "部屋の真ん中に大きなテーブルが置かれていました。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-i-2", 
@@ -154,7 +170,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【中級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "丘の頂上には古い城があります。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-i-3", 
@@ -163,7 +180,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【中級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "知恵を見つける人は幸せである。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion", "relative_pronoun"] 
     },
     { 
       id: "subjInversion-i-4", 
@@ -172,7 +190,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【中級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "客の中には有名な作家がいました。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-i-5", 
@@ -181,7 +200,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【中級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "通りを小さな犬が走っていきました。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-i-6", 
@@ -190,7 +210,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【中級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "窓から冷たい風が入ってきました。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-i-7", 
@@ -199,7 +220,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【中級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "駅の前には大きな銅像があります。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-i-8", 
@@ -208,7 +230,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【中級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "このメールに添付されているのがその書類です。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion", "past_participle"] 
     },
     { 
       id: "subjInversion-i-9", 
@@ -217,7 +240,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【中級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "森の中に秘密基地が隠されていました。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion", "past_participle"] 
     },
     { 
       id: "subjInversion-i-10", 
@@ -226,7 +250,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【中級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "窓からの景色は美しい。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-i-11", 
@@ -235,7 +260,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【中級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "建物からたくさんの人々が出てきました。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-i-12", 
@@ -244,7 +270,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【中級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "ベッドのそばに分厚い本が置かれていました。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-i-13", 
@@ -253,7 +280,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【中級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "壁にはいくつかの有名な絵画が掛かっていました。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-i-14", 
@@ -262,7 +290,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【中級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "彼がその知らせを聞いたときの驚きは大きかった。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-i-15", 
@@ -271,7 +300,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【中級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "私のすぐ後ろに先生が立っていました。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-a-1", 
@@ -280,7 +310,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【上級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "こんなに美しい夕日を見たことは一度もない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-a-2", 
@@ -289,7 +320,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【上級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "彼は一生懸命勉強しただけでなく、よく遊んだ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-a-3", 
@@ -298,7 +330,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【上級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "彼女はその計画についてほとんど知らなかった。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-a-4", 
@@ -307,7 +340,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【上級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "その時になって初めて私は自分の間違いに気づいた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-a-5", 
@@ -316,7 +350,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【上級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "私が家を出るか出ないかのうちに雨が降り始めた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion", "infinitive"] 
     },
     { 
       id: "subjInversion-a-6", 
@@ -325,7 +360,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【上級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "彼はとても忙しいのでテレビを見ることができない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion", "that_clause"] 
     },
     { 
       id: "subjInversion-a-7", 
@@ -334,7 +370,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【上級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "彼女のショックはとても大きく、話すことができなかった。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion", "that_clause"] 
     },
     { 
       id: "subjInversion-a-8", 
@@ -343,7 +380,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【上級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "なくなった鍵はどこにも見つからなかった。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion", "present_participle"] 
     },
     { 
       id: "subjInversion-a-9", 
@@ -352,7 +390,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【上級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "彼女が到着するやいなや電話が鳴った。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-a-10", 
@@ -361,7 +400,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【上級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "いかなる状況でもこのドアを開けてはならない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-a-11", 
@@ -370,7 +410,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【上級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "私たちが会った日のことを私はよく覚えている。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-a-12", 
@@ -379,7 +420,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【上級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "昨日になって初めて彼は私に真実を話した。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-a-13", 
@@ -388,7 +430,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【上級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "その事故はとても突然起きたので、誰も避けることができなかった。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion", "that_clause"] 
     },
     { 
       id: "subjInversion-a-14", 
@@ -397,7 +440,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【上級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "私たちはそんなに大きな鳥をめったに見ない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     },
     { 
       id: "subjInversion-a-15", 
@@ -406,7 +450,8 @@ export const subjInversionCategory = {
       targetRole: "S (倒置された主語)", 
       hint: "【上級】文頭の修飾語や動詞の後ろに隠れている、この文の本当の主語（S）をなぞってください。", 
       translation: "彼はめったに学校に遅刻したことがない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["inversion"] 
     }
   ]
 };

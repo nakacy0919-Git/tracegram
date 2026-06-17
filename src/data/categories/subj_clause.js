@@ -10,7 +10,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【初級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "彼が親切だというのは本当だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["that_clause", "noun_clause"] 
     },
     { 
       id: "subjClause-b-2", 
@@ -19,7 +20,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【初級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "あなたに必要なのはお金です。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["relative_pronoun", "noun_clause"] 
     },
     { 
       id: "subjClause-b-3", 
@@ -28,7 +30,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【初級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "雨が降るかどうかはわからない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["whether_if_clause", "noun_clause"] 
     },
     { 
       id: "subjClause-b-4", 
@@ -37,7 +40,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【初級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "彼女がどこに住んでいるかは秘密だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["interrogative", "noun_clause"] 
     },
     { 
       id: "subjClause-b-5", 
@@ -46,7 +50,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【初級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "彼がいつ来るかが重要だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["interrogative", "noun_clause"] 
     },
     { 
       id: "subjClause-b-6", 
@@ -55,7 +60,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【初級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "彼らがそれをどうやったのかは謎だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["interrogative", "noun_clause"] 
     },
     { 
       id: "subjClause-b-7", 
@@ -64,7 +70,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【初級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "彼女が犬好きだということは明らかだ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["that_clause", "noun_clause"] 
     },
     { 
       id: "subjClause-b-8", 
@@ -73,7 +80,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【初級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "彼が言ったことは間違っている。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["relative_pronoun", "interrogative", "noun_clause"] 
     },
     { 
       id: "subjClause-b-9", 
@@ -82,7 +90,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【初級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "彼がお金持ちかどうかは関係ない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["whether_if_clause", "noun_clause"] 
     },
     { 
       id: "subjClause-b-10", 
@@ -91,7 +100,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【初級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "彼女がなぜ泣いたのかはわからない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["interrogative", "noun_clause"] 
     },
     { 
       id: "subjClause-b-11", 
@@ -100,7 +110,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【初級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "誰が窓を割ったのかは不明だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["interrogative", "noun_clause"] 
     },
     { 
       id: "subjClause-b-12", 
@@ -109,7 +120,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【初級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "彼女が買ったのはバッグだ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["relative_pronoun", "noun_clause"] 
     },
     { 
       id: "subjClause-b-13", 
@@ -118,7 +130,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【初級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "地球が丸いということは事実だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["that_clause", "noun_clause"] 
     },
     { 
       id: "subjClause-b-14", 
@@ -127,7 +140,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【初級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "私たちが望むものは平和だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["relative_pronoun", "noun_clause"] 
     },
     { 
       id: "subjClause-b-15", 
@@ -136,7 +150,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【初級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "彼らが勝つか負けるかは問題ではない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["whether_if_clause", "noun_clause"] 
     },
     { 
       id: "subjClause-i-1", 
@@ -145,7 +160,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【中級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "彼が試験に合格するのは確実だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["that_clause", "noun_clause"] 
     },
     { 
       id: "subjClause-i-2", 
@@ -154,7 +170,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【中級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "私がしたいことは世界中を旅することだ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["relative_pronoun", "infinitive", "noun_clause"] 
     },
     { 
       id: "subjClause-i-3", 
@@ -163,7 +180,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【中級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "彼女がパーティーに来るかどうかは知られていない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["whether_if_clause", "noun_clause"] 
     },
     { 
       id: "subjClause-i-4", 
@@ -172,7 +190,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【中級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "明日私たちがどこへ行くべきかが問題だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["interrogative", "noun_clause"] 
     },
     { 
       id: "subjClause-i-5", 
@@ -181,7 +200,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【中級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "彼がその難しいパズルをどうやって解いたかは驚きだ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["interrogative", "noun_clause"] 
     },
     { 
       id: "subjClause-i-6", 
@@ -190,7 +210,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【中級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "彼女が手に持っているものは鍵だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["relative_pronoun", "noun_clause"] 
     },
     { 
       id: "subjClause-i-7", 
@@ -199,7 +220,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【中級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "その噂が本当だったことは全員を驚かせた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["that_clause", "noun_clause"] 
     },
     { 
       id: "subjClause-i-8", 
@@ -208,7 +230,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【中級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "彼がなぜ学校を休んだかは謎だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["interrogative", "noun_clause"] 
     },
     { 
       id: "subjClause-i-9", 
@@ -217,7 +240,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【中級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "最も重要なのはあなたの健康だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["relative_pronoun", "noun_clause"] 
     },
     { 
       id: "subjClause-i-10", 
@@ -226,7 +250,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【中級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "明日天気が良くなるかどうかは疑わしい。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["whether_if_clause", "noun_clause"] 
     },
     { 
       id: "subjClause-i-11", 
@@ -235,7 +260,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【中級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "最初に来た人は誰でもそのチケットを手に入れられる。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["relative_pronoun", "noun_clause"] 
     },
     { 
       id: "subjClause-i-12", 
@@ -244,7 +270,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【中級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "地球が太陽の周りを回っていることはよく知られている。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["that_clause", "noun_clause"] 
     },
     { 
       id: "subjClause-i-13", 
@@ -253,7 +280,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【中級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "彼が今言っていることは重要ではない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["relative_pronoun", "noun_clause"] 
     },
     { 
       id: "subjClause-i-14", 
@@ -262,7 +290,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【中級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "その鍵がどこに隠されていたかは謎のままだった。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["interrogative", "noun_clause"] 
     },
     { 
       id: "subjClause-i-15", 
@@ -271,7 +300,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【中級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "あなたが自分の時間をどう使うかはあなた次第だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["interrogative", "noun_clause"] 
     },
     { 
       id: "subjClause-a-1", 
@@ -280,7 +310,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【上級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "彼がそんな間違いをしたなんて信じられない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["that_clause", "noun_clause"] 
     },
     { 
       id: "subjClause-a-2", 
@@ -289,7 +320,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【上級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "不利に見えたことが、結果的には有利になった。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["relative_pronoun", "infinitive", "noun_clause"] 
     },
     { 
       id: "subjClause-a-3", 
@@ -298,7 +330,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【上級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "新しい計画が成功するか失敗するかはまだわからない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["whether_if_clause", "noun_clause"] 
     },
     { 
       id: "subjClause-a-4", 
@@ -307,7 +340,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【上級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "正確にいつ宇宙が創られたかは、いまだに議論の的だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["interrogative", "noun_clause"] 
     },
     { 
       id: "subjClause-a-5", 
@@ -316,7 +350,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【上級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "古代のピラミッドがどうやって建てられたかは、今でも科学者たちを魅了している。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["interrogative", "noun_clause"] 
     },
     { 
       id: "subjClause-a-6", 
@@ -325,7 +360,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【上級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "彼が持っていたなけなしのお金は本に費やされた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["relative_pronoun", "noun_clause"] 
     },
     { 
       id: "subjClause-a-7", 
@@ -334,7 +370,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【上級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "気候が急速に変化しているということは、世界的に認識されている。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["that_clause", "noun_clause"] 
     },
     { 
       id: "subjClause-a-8", 
@@ -343,7 +380,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【上級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "彼女がなぜ突然職を辞したのかはまだ説明されていない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["interrogative", "noun_clause"] 
     },
     { 
       id: "subjClause-a-9", 
@@ -352,7 +390,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【上級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "あなたが何をしようと決めても私は構わない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["relative_pronoun", "infinitive", "noun_clause"] 
     },
     { 
       id: "subjClause-a-10", 
@@ -361,7 +400,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【上級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "私たちが彼の言葉を信じられるかどうかは難しい問題だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["whether_if_clause", "noun_clause"] 
     },
     { 
       id: "subjClause-a-11", 
@@ -370,7 +410,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【上級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "最初は災難に見えたことが、結果的に私たちを救うことになった。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["relative_pronoun", "noun_clause"] 
     },
     { 
       id: "subjClause-a-12", 
@@ -379,7 +420,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【上級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "あのような悲惨な出来事がここで起こり得るということが、町全体にショックを与えた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["that_clause", "noun_clause"] 
     },
     { 
       id: "subjClause-a-13", 
@@ -388,7 +430,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【上級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "その経済危機がどれくらい続くかは誰にもわからない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["interrogative", "noun_clause"] 
     },
     { 
       id: "subjClause-a-14", 
@@ -397,7 +440,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【上級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "彼らが会議で話し合っていることは極秘だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["relative_pronoun", "interrogative", "noun_clause"] 
     },
     { 
       id: "subjClause-a-15", 
@@ -406,7 +450,8 @@ export const subjClauseCategory = {
       targetRole: "S (名詞節)", 
       hint: "【上級】主語（S）になっている名詞節（that節や疑問詞節など）の塊をすべてなぞってください。", 
       translation: "あなたが彼に賛成するかどうかは事実を変えない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["whether_if_clause", "noun_clause"] 
     }
   ]
 };

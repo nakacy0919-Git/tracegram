@@ -10,7 +10,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【初級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "テニスをすることは楽しい。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "subjVerbal-b-2", 
@@ -19,7 +20,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【初級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "本を読むことは面白い。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "subjVerbal-b-3", 
@@ -28,7 +30,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【初級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "英語を勉強することは重要だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "subjVerbal-b-4", 
@@ -37,7 +40,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【初級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "プールで泳ぐことは楽しい。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "subjVerbal-b-5", 
@@ -46,7 +50,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【初級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "英語を話すことは簡単ではない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "subjVerbal-b-6", 
@@ -55,7 +60,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【初級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "音楽を聴くことは私を幸せにする。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "subjVerbal-b-7", 
@@ -64,7 +70,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【初級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "自分自身を知ることは難しい。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "subjVerbal-b-8", 
@@ -73,7 +80,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【初級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "野菜を食べることは健康的だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "subjVerbal-b-9", 
@@ -82,7 +90,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【初級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "早く起きることは大変だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "subjVerbal-b-10", 
@@ -91,7 +100,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【初級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "散歩をすることはさわやかだ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "subjVerbal-b-11", 
@@ -100,7 +110,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【初級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "他人を助けることは良いことだ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "subjVerbal-b-12", 
@@ -109,7 +120,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【初級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "映画を見ることは私の趣味です。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "subjVerbal-b-13", 
@@ -118,7 +130,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【初級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "新しいことを学ぶのはワクワクする。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "subjVerbal-b-14", 
@@ -127,7 +140,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【初級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "ピアノを弾くことは練習を必要とする。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "subjVerbal-b-15", 
@@ -136,7 +150,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【初級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "食べすぎることは悪いことだ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "subjVerbal-i-1", 
@@ -145,7 +160,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【中級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "外国語を習得するには時間がかかる。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "subjVerbal-i-2", 
@@ -154,7 +170,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【中級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "世界中を旅することが私の夢だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "subjVerbal-i-3", 
@@ -163,7 +180,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【中級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "異なる国の友達を作ることは素晴らしい。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "subjVerbal-i-4", 
@@ -172,7 +190,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【中級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "1週間に1冊本を読むのが私の目標だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "subjVerbal-i-5", 
@@ -181,7 +200,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【中級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "英語で日記をつけることは書く力を向上させる。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "subjVerbal-i-6", 
@@ -190,7 +210,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【中級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "真実を語るには勇気が必要だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "subjVerbal-i-7", 
@@ -199,7 +220,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【中級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "朝早く起きることは良い習慣だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "subjVerbal-i-8", 
@@ -208,7 +230,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【中級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "彼の理論を完全に理解することはとても難しい。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "subjVerbal-i-9", 
@@ -217,7 +240,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【中級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "この数学の問題を解くことはほとんど不可能だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "subjVerbal-i-10", 
@@ -226,7 +250,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【中級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "最近では良い仕事を見つけるのは簡単ではない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "subjVerbal-i-11", 
@@ -235,7 +260,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【中級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "大都市に住むことはたくさんのお金がかかる。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "subjVerbal-i-12", 
@@ -244,7 +270,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【中級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "明日までにその仕事を終わらせることは不可能に思える。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "subjVerbal-i-13", 
@@ -253,7 +280,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【中級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "みんなに愛されることが彼女の最大の願いだ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund", "past_participle"] 
     },
     { 
       id: "subjVerbal-i-14", 
@@ -262,7 +290,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【中級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "再び同じ間違いをすることは愚かだろう。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "subjVerbal-i-15", 
@@ -271,7 +300,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【中級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "彼と政治について話すことは無駄だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "subjVerbal-a-1", 
@@ -280,7 +310,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【上級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "彼がその試験に合格することは奇跡だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "subjVerbal-a-2", 
@@ -289,7 +320,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【上級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "彼が会議に遅れてきたことが皆を苛立たせた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "subjVerbal-a-3", 
@@ -298,7 +330,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【上級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "何をすべきか分からないことはひどい気分だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund", "interrogative", "infinitive"] 
     },
     { 
       id: "subjVerbal-a-4", 
@@ -307,7 +340,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【上級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "プロジェクトを時間通りに終えられたことは大きな安堵だった。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["infinitive", "past_participle"] 
     },
     { 
       id: "subjVerbal-a-5", 
@@ -316,7 +350,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【上級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "彼女が私に怒っていることは全くもって理解できる。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "subjVerbal-a-6", 
@@ -325,7 +360,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【上級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "子どもがこの本を理解することは不可能だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "subjVerbal-a-7", 
@@ -334,7 +370,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【上級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "ひどいサービスについて不満を言っても何の解決にもならない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "subjVerbal-a-8", 
@@ -343,7 +380,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【上級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "食べ物を買う十分なお金がないことは深刻な問題だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund", "infinitive"] 
     },
     { 
       id: "subjVerbal-a-9", 
@@ -352,7 +390,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【上級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "会議で話すよう頼まれることは光栄なことだ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["infinitive", "past_participle"] 
     },
     { 
       id: "subjVerbal-a-10", 
@@ -361,7 +400,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【上級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "彼らが突然元の計画を変更したことが混乱を引き起こした。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund"] 
     },
     { 
       id: "subjVerbal-a-11", 
@@ -370,7 +410,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【上級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "私たちが合意に達するのに数日かかった。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["infinitive"] 
     },
     { 
       id: "subjVerbal-a-12", 
@@ -379,7 +420,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【上級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "留学したことがあると、より広い視野を得られる。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund", "past_participle"] 
     },
     { 
       id: "subjVerbal-a-13", 
@@ -388,7 +430,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【上級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "今まで一度も雪を見たことがなかったことが、彼をとても興奮させた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund", "past_participle"] 
     },
     { 
       id: "subjVerbal-a-14", 
@@ -397,7 +440,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【上級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "彼が天才だと言うのは控えめな表現だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["infinitive", "that_clause", "noun_clause"] 
     },
     { 
       id: "subjVerbal-a-15", 
@@ -406,7 +450,8 @@ export const subjVerbalCategory = {
       targetRole: "S (to不定詞句 / 動名詞句)", 
       hint: "【上級】主語（S）になっている準動詞（to不定詞・動名詞）のカタマリをすべてなぞってください。", 
       translation: "効果的にコミュニケーションを取れることは成功に不可欠だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["gerund", "infinitive"] 
     }
   ]
 };

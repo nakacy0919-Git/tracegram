@@ -10,7 +10,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【初級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "テニスをすることは楽しい。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "infinitive"] 
     },
     { 
       id: "subjIt-b-2", 
@@ -19,7 +20,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【初級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "これを使うのは簡単だ。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "infinitive"] 
     },
     { 
       id: "subjIt-b-3", 
@@ -28,7 +30,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【初級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "起きるのは大変だ。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "infinitive"] 
     },
     { 
       id: "subjIt-b-4", 
@@ -37,7 +40,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【初級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "彼が嘘をついたのは本当だ。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "that_clause", "noun_clause"] 
     },
     { 
       id: "subjIt-b-5", 
@@ -46,7 +50,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【初級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "あなたにお会いできて嬉しいです。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "infinitive"] 
     },
     { 
       id: "subjIt-b-6", 
@@ -55,7 +60,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【初級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "英語を勉強することは重要だ。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "infinitive"] 
     },
     { 
       id: "subjIt-b-7", 
@@ -64,7 +70,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【初級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "ここに滞在しても大丈夫だ。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "infinitive"] 
     },
     { 
       id: "subjIt-b-8", 
@@ -73,7 +80,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【初級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "雨が降る可能性がある。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "that_clause", "noun_clause"] 
     },
     { 
       id: "subjIt-b-9", 
@@ -82,7 +90,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【初級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "ここで泳ぐのは危険だ。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "infinitive"] 
     },
     { 
       id: "subjIt-b-10", 
@@ -91,7 +100,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【初級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "あなたに会えてよかった。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "infinitive"] 
     },
     { 
       id: "subjIt-b-11", 
@@ -100,7 +110,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【初級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "彼女が勝ったことは明らかだ。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "that_clause", "noun_clause"] 
     },
     { 
       id: "subjIt-b-12", 
@@ -109,7 +120,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【初級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "物を盗むのは間違っている。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "infinitive"] 
     },
     { 
       id: "subjIt-b-13", 
@@ -118,7 +130,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【初級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "よく眠ることは必要だ。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "infinitive"] 
     },
     { 
       id: "subjIt-b-14", 
@@ -127,7 +140,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【初級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "本を読むことは役立つ。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "infinitive"] 
     },
     { 
       id: "subjIt-b-15", 
@@ -136,7 +150,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【初級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "彼女が泣いたのは残念だ。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "that_clause", "noun_clause"] 
     },
     { 
       id: "subjIt-i-1", 
@@ -145,7 +160,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【中級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "彼が勝つのは簡単だ。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "infinitive"] 
     },
     { 
       id: "subjIt-i-2", 
@@ -154,7 +170,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【中級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "私が終えるのに3日かかった。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "infinitive"] 
     },
     { 
       id: "subjIt-i-3", 
@@ -163,7 +180,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【中級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "彼が怒るのは当然だ。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "that_clause", "noun_clause"] 
     },
     { 
       id: "subjIt-i-4", 
@@ -172,7 +190,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【中級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "休憩をとるのは良い考えだ。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "infinitive"] 
     },
     { 
       id: "subjIt-i-5", 
@@ -181,7 +200,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【中級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "新しい言語を学ぶことは難しい。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "infinitive"] 
     },
     { 
       id: "subjIt-i-6", 
@@ -190,7 +210,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【中級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "あなたがいくかどうかは問題ではない。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "whether_if_clause", "noun_clause"] 
     },
     { 
       id: "subjIt-i-7", 
@@ -199,7 +220,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【中級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "地球は温暖化していると言われている。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "that_clause", "noun_clause"] 
     },
     { 
       id: "subjIt-i-8", 
@@ -208,7 +230,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【中級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "私を手伝ってくれるなんて、あなたは親切ですね。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "infinitive"] 
     },
     { 
       id: "subjIt-i-9", 
@@ -217,7 +240,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【中級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "彼女が来ることは確実だ。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "that_clause", "noun_clause"] 
     },
     { 
       id: "subjIt-i-10", 
@@ -226,7 +250,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【中級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "友達と話すのは楽しい。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "infinitive"] 
     },
     { 
       id: "subjIt-i-11", 
@@ -235,7 +260,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【中級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "私がそれを説明するのは難しい。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "infinitive"] 
     },
     { 
       id: "subjIt-i-12", 
@@ -244,7 +270,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【中級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "友達を作るのはいつも簡単とは限らない。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "infinitive"] 
     },
     { 
       id: "subjIt-i-13", 
@@ -253,7 +280,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【中級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "こぼれた牛乳を嘆いても無駄だ。（覆水盆に返らず）", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "gerund"] 
     },
     { 
       id: "subjIt-i-14", 
@@ -262,7 +290,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【中級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "それを建てるにはたくさんのお金がかかるだろう。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "infinitive"] 
     },
     { 
       id: "subjIt-i-15", 
@@ -271,7 +300,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【中級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "誰も怪我をしなかったのは幸運だ。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "that_clause", "noun_clause"] 
     },
     { 
       id: "subjIt-a-1", 
@@ -280,7 +310,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【上級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "文化の違いを理解することは非常に重要だ。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "infinitive"] 
     },
     { 
       id: "subjIt-a-2", 
@@ -289,7 +320,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【上級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "その病気は不治だと思われていた。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "that_clause", "noun_clause"] 
     },
     { 
       id: "subjIt-a-3", 
@@ -298,7 +330,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【上級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "その計画が成功するかどうかはまだわからない。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "whether_if_clause", "noun_clause"] 
     },
     { 
       id: "subjIt-a-4", 
@@ -307,7 +340,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【上級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "私は財布を忘れたことに気がついた。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "that_clause", "noun_clause"] 
     },
     { 
       id: "subjIt-a-5", 
@@ -316,7 +350,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【上級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "ドアの鍵を開けっ放しにするなんて彼は不注意だった。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "infinitive"] 
     },
     { 
       id: "subjIt-a-6", 
@@ -325,7 +360,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【上級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "彼女が天才だと言っても過言ではない。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "infinitive"] 
     },
     { 
       id: "subjIt-a-7", 
@@ -334,7 +370,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【上級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "彼がその病気から回復するのには長い時間がかかった。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "infinitive"] 
     },
     { 
       id: "subjIt-a-8", 
@@ -343,7 +380,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【上級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "彼が私たちの申し出を受け入れるかは疑わしい。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "whether_if_clause", "noun_clause"] 
     },
     { 
       id: "subjIt-a-9", 
@@ -352,7 +390,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【上級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "宇宙は絶えず膨張していると考えられている。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "that_clause", "noun_clause"] 
     },
     { 
       id: "subjIt-a-10", 
@@ -361,7 +400,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【上級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "あなたがどの道を選ぼうと違いはない。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "interrogative", "noun_clause"] 
     },
     { 
       id: "subjIt-a-11", 
@@ -370,7 +410,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【上級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "たまたま今日は少し暇な時間がある。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "that_clause", "noun_clause"] 
     },
     { 
       id: "subjIt-a-12", 
@@ -379,7 +420,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【上級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "選挙が延期される可能性が極めて高い。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "that_clause", "noun_clause"] 
     },
     { 
       id: "subjIt-a-13", 
@@ -388,7 +430,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【上級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "少なくとも一度はその博物館を訪れる価値がある。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "gerund"] 
     },
     { 
       id: "subjIt-a-14", 
@@ -397,7 +440,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【上級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "彼の話は完全に嘘だと判明した。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "that_clause", "noun_clause"] 
     },
     { 
       id: "subjIt-a-15", 
@@ -406,7 +450,8 @@ export const subjItCategory = {
       targetRole: "S (真主語)", 
       hint: "【上級】光っている形式主語(it)が指し示す『真の主語（S）』の塊をなぞってください。", 
       translation: "結局のところ、あなたが勝つか負けるかは大して重要ではない。", 
-      modifiedIndices: [0] 
+      modifiedIndices: [0],
+      grammarPoints: ["formal_it", "whether_if_clause", "noun_clause"] 
     }
   ]
 };
