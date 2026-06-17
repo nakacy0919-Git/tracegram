@@ -10,7 +10,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【初級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "私は彼を泣かせた。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["causative_verb", "infinitive"] 
     },
     { 
       id: "compCausative-b-2", 
@@ -19,7 +20,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【初級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "彼女は私を行かせてくれた。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["causative_verb", "infinitive"] 
     },
     { 
       id: "compCausative-b-3", 
@@ -28,7 +30,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【初級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "彼は車を洗ってもらった。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["causative_verb", "past_participle"] 
     },
     { 
       id: "compCausative-b-4", 
@@ -37,7 +40,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【初級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "私は彼女が走るのを見た。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["perception_verb", "infinitive"] 
     },
     { 
       id: "compCausative-b-5", 
@@ -46,7 +50,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【初級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "私たちは彼が歌うのを聞いた。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["perception_verb", "infinitive"] 
     },
     { 
       id: "compCausative-b-6", 
@@ -55,7 +60,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【初級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "私は家が揺れるのを感じた。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["perception_verb", "infinitive"] 
     },
     { 
       id: "compCausative-b-7", 
@@ -64,7 +70,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【初級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "彼女はその鳥が飛ぶのを見た。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["perception_verb", "infinitive"] 
     },
     { 
       id: "compCausative-b-8", 
@@ -73,7 +80,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【初級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "私は彼が泣いているのを見た。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["perception_verb", "present_participle"] 
     },
     { 
       id: "compCausative-b-9", 
@@ -82,7 +90,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【初級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "彼は自分の名前が呼ばれるのを聞いた。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["perception_verb", "past_participle"] 
     },
     { 
       id: "compCausative-b-10", 
@@ -91,7 +100,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【初級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "母は私に勉強させた。", 
-      modifiedIndices: [3] 
+      modifiedIndices: [3],
+      grammarPoints: ["causative_verb", "infinitive"] 
     },
     { 
       id: "compCausative-b-11", 
@@ -100,7 +110,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【初級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "彼はその犬を寝かせておいた。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["causative_verb", "infinitive"] 
     },
     { 
       id: "compCausative-b-12", 
@@ -109,7 +120,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【初級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "私は髪を切ってもらった。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["causative_verb", "past_participle"] 
     },
     { 
       id: "compCausative-b-13", 
@@ -118,7 +130,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【初級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "彼女は自分の心臓が鼓動しているのを感じた。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["perception_verb", "present_participle"] 
     },
     { 
       id: "compCausative-b-14", 
@@ -127,7 +140,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【初級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "彼らは太陽が昇るのを見た。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["perception_verb", "infinitive"] 
     },
     { 
       id: "compCausative-b-15", 
@@ -136,7 +150,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【初級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "私は彼が立ち去るのに気づいた。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["perception_verb", "infinitive"] 
     },
     { 
       id: "compCausative-i-1", 
@@ -145,7 +160,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【中級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "先生は生徒たちに部屋の掃除をさせた。", 
-      modifiedIndices: [3, 4] 
+      modifiedIndices: [3, 4],
+      grammarPoints: ["causative_verb", "infinitive"] 
     },
     { 
       id: "compCausative-i-2", 
@@ -154,7 +170,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【中級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "私は隣の部屋で誰かがピアノを弾いているのを聞いた。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["perception_verb", "present_participle"] 
     },
     { 
       id: "compCausative-i-3", 
@@ -163,7 +180,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【中級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "彼女は電車でカバンを盗まれた。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["causative_verb", "past_participle"] 
     },
     { 
       id: "compCausative-i-4", 
@@ -172,7 +190,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【中級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "両親は私を一人で旅行させてくれないだろう。", 
-      modifiedIndices: [4] 
+      modifiedIndices: [4],
+      grammarPoints: ["causative_verb", "infinitive"] 
     },
     { 
       id: "compCausative-i-5", 
@@ -181,7 +200,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【中級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "私たちは警察官が泥棒を追いかけて走っているのを見た。", 
-      modifiedIndices: [2, 3, 4] 
+      modifiedIndices: [2, 3, 4],
+      grammarPoints: ["perception_verb", "present_participle"] 
     },
     { 
       id: "compCausative-i-6", 
@@ -190,7 +210,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【中級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "彼は人ごみの中で自分の声を届かせることができなかった。", 
-      modifiedIndices: [3, 4] 
+      modifiedIndices: [3, 4],
+      grammarPoints: ["causative_verb", "past_participle"] 
     },
     { 
       id: "compCausative-i-7", 
@@ -199,7 +220,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【中級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "私は暗闇で何かが私の肩に触れるのを感じた。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["perception_verb", "present_participle"] 
     },
     { 
       id: "compCausative-i-8", 
@@ -208,7 +230,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【中級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "彼女は子どもたちが公園で遊んでいるのを見た。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["perception_verb", "present_participle"] 
     },
     { 
       id: "compCausative-i-9", 
@@ -217,7 +240,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【中級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "私は明日までにコンピューターを修理してもらうつもりだ。", 
-      modifiedIndices: [3, 4] 
+      modifiedIndices: [3, 4],
+      grammarPoints: ["causative_verb", "past_participle"] 
     },
     { 
       id: "compCausative-i-10", 
@@ -226,7 +250,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【中級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "その面白い冗談は全員を大声で笑わせた。", 
-      modifiedIndices: [4] 
+      modifiedIndices: [4],
+      grammarPoints: ["causative_verb", "infinitive"] 
     },
     { 
       id: "compCausative-i-11", 
@@ -235,7 +260,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【中級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "彼は見知らぬ人がドアの近くに立っているのに気づいた。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["perception_verb", "present_participle"] 
     },
     { 
       id: "compCausative-i-12", 
@@ -244,7 +270,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【中級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "私は後ろから自分の名前が呼ばれるのを聞いた。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["perception_verb", "past_participle"] 
     },
     { 
       id: "compCausative-i-13", 
@@ -253,7 +280,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【中級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "あなたの新しい住所を私に知らせてください。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["causative_verb", "infinitive"] 
     },
     { 
       id: "compCausative-i-14", 
@@ -262,7 +290,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【中級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "彼女はその男が写真を撮っているのを見た。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["perception_verb", "present_participle"] 
     },
     { 
       id: "compCausative-i-15", 
@@ -271,7 +300,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【中級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "私は冷たい風が窓から吹き込んでくるのを感じた。", 
-      modifiedIndices: [2, 3, 4] 
+      modifiedIndices: [2, 3, 4],
+      grammarPoints: ["perception_verb", "present_participle"] 
     },
     { 
       id: "compCausative-a-1", 
@@ -280,7 +310,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【上級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "あなたは英語で自分を理解させなければならない。", 
-      modifiedIndices: [3] 
+      modifiedIndices: [3],
+      grammarPoints: ["causative_verb", "past_participle"] 
     },
     { 
       id: "compCausative-a-2", 
@@ -289,7 +320,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【上級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "私は昨日、大きな建物が取り壊されているところを見た。", 
-      modifiedIndices: [2, 3, 4] 
+      modifiedIndices: [2, 3, 4],
+      grammarPoints: ["perception_verb", "present_participle", "past_participle"] 
     },
     { 
       id: "compCausative-a-3", 
@@ -298,7 +330,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【上級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "マネージャーは会議が始まる前にその書類をコピーさせた。", 
-      modifiedIndices: [3, 4] 
+      modifiedIndices: [3, 4],
+      grammarPoints: ["causative_verb", "past_participle"] 
     },
     { 
       id: "compCausative-a-4", 
@@ -307,7 +340,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【上級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "彼女は涙が頬を伝って流れるのを感じた。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["perception_verb", "present_participle"] 
     },
     { 
       id: "compCausative-a-5", 
@@ -316,7 +350,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【上級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "彼はその物語を書いている間、想像力を自由奔放に働かせた。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["causative_verb", "infinitive"] 
     },
     { 
       id: "compCausative-a-6", 
@@ -325,7 +360,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【上級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "私は彼らがその秘密の計画について話しているのを偶然聞いてしまった。", 
-      modifiedIndices: [3] 
+      modifiedIndices: [3],
+      grammarPoints: ["perception_verb", "present_participle"] 
     },
     { 
       id: "compCausative-a-7", 
@@ -334,7 +370,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【上級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "母親は息子が大きなステージで演技するのを見守った。", 
-      modifiedIndices: [3, 4] 
+      modifiedIndices: [3, 4],
+      grammarPoints: ["perception_verb", "infinitive"] 
     },
     { 
       id: "compCausative-a-8", 
@@ -343,7 +380,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【上級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "私たちは強い台風によって屋根を吹き飛ばされた。", 
-      modifiedIndices: [2, 3] 
+      modifiedIndices: [2, 3],
+      grammarPoints: ["causative_verb", "past_participle"] 
     },
     { 
       id: "compCausative-a-9", 
@@ -352,7 +390,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【上級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "あなたはこれまでにそんな美しい星が空から落ちてくるのを見たことがありますか。", 
-      modifiedIndices: [4, 5, 6, 7] 
+      modifiedIndices: [4, 5, 6, 7],
+      grammarPoints: ["perception_verb", "present_participle"] 
     },
     { 
       id: "compCausative-a-10", 
@@ -361,7 +400,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【上級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "その面白いコメディアンは観客全体を爆笑させた。", 
-      modifiedIndices: [4, 5, 6] 
+      modifiedIndices: [4, 5, 6],
+      grammarPoints: ["causative_verb", "infinitive"] 
     },
     { 
       id: "compCausative-a-11", 
@@ -370,7 +410,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【上級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "私は興奮で自分の心臓が激しく鼓動しているのを感じることができた。", 
-      modifiedIndices: [3, 4] 
+      modifiedIndices: [3, 4],
+      grammarPoints: ["perception_verb", "present_participle"] 
     },
     { 
       id: "compCausative-a-12", 
@@ -379,7 +420,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【上級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "彼らは鍵のかかったドアが誰かによってわずかに開けられていることに気づいた。", 
-      modifiedIndices: [2, 3, 4] 
+      modifiedIndices: [2, 3, 4],
+      grammarPoints: ["perception_verb", "past_participle"] 
     },
     { 
       id: "compCausative-a-13", 
@@ -388,7 +430,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【上級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "私の欠席の本当の理由を説明させてください。", 
-      modifiedIndices: [2] 
+      modifiedIndices: [2],
+      grammarPoints: ["causative_verb", "infinitive"] 
     },
     { 
       id: "compCausative-a-14", 
@@ -397,7 +440,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【上級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "私はその歌がフランス語で歌われるのを以前に聞いたことがない。", 
-      modifiedIndices: [4, 5] 
+      modifiedIndices: [4, 5],
+      grammarPoints: ["perception_verb", "past_participle"] 
     },
     { 
       id: "compCausative-a-15", 
@@ -406,7 +450,8 @@ export const compCausativeCategory = {
       targetRole: "C (原形不定詞 / 分詞)", 
       hint: "【上級】光っている目的語（O）の動作や状態を表す補語（C：原形不定詞や分詞）をなぞってください。", 
       translation: "彼はエンジンの大きな音にかき消されて、自分の声を届かせることができなかった。", 
-      modifiedIndices: [4] 
+      modifiedIndices: [4],
+      grammarPoints: ["causative_verb", "past_participle"] 
     }
   ]
 };
