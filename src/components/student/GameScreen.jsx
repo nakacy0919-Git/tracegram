@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { XCircle, CheckCircle2, ArrowRight } from 'lucide-react';
-// 🌟 追加：先ほど作った音読ミッションのコンポーネントを読み込む
+// 🌟 音読ミッションのコンポーネントを読み込む
 import PronunciationMission from './PronunciationMission'; 
 
 const getElementColor = (role) => {
@@ -44,7 +44,9 @@ export default function GameScreen({
   const sortedPlayers = Object.values(playersData || {}).sort((a, b) => b.score - a.score);
 
   return (
-    <div className="flex-1 flex flex-col relative touch-none z-10 w-full overflow-y-auto overflow-x-hidden" ref={mainContainerRef} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onTouchMove={handlePointerMove} onTouchEnd={handlePointerUp}>
+    // 🌟 変更点1：一番外側の `touch-none` を削除し、iPadでスクロールできるように修正！
+    <div className="flex-1 flex flex-col relative z-10 w-full overflow-y-auto overflow-x-hidden" ref={mainContainerRef} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onTouchMove={handlePointerMove} onTouchEnd={handlePointerUp}>
+      
       {/* リアルタイムランキング */}
       {isMultiplayer && sortedPlayers.length > 0 && (
         <div className="absolute top-[80px] md:top-[90px] left-0 w-full z-40 flex flex-row flex-wrap justify-center gap-2 md:gap-4 px-2 pointer-events-none">
@@ -77,7 +79,8 @@ export default function GameScreen({
       </div>
 
       {/* メインエリア */}
-      <div className="flex-1 flex flex-col items-center justify-start p-4 md:p-6 w-full max-w-[1400px] mx-auto pb-20 relative">
+      {/* 🌟 変更点2：間違えた時(wrong)は下にたっぷりの余白(pb-80)を作って、固定メニューにテキストが隠れないようにする */}
+      <div className={`flex-1 flex flex-col items-center justify-start p-4 md:p-6 w-full max-w-[1400px] mx-auto ${feedbackState === 'wrong' ? 'pb-80' : 'pb-20'} relative`}>
         
         {/* 指示文 */}
         <div className="w-full flex justify-start mb-4 md:mb-6 text-left z-10 pt-2 md:pt-4 px-2">
@@ -88,7 +91,8 @@ export default function GameScreen({
         </div>
 
         {/* 英文エリア */}
-        <div className="w-full relative bg-white/60 rounded-3xl border border-slate-100 shadow-inner p-5 md:p-10 mb-4 flex flex-col justify-center min-h-[140px] overflow-hidden">
+        {/* 🌟 変更点3：文字をなぞるエリア「だけ」に touch-none を追加。これで選択もスクロールも両立します */}
+        <div className="w-full relative bg-white/60 rounded-3xl border border-slate-100 shadow-inner p-5 md:p-10 mb-4 flex flex-col justify-center min-h-[140px] overflow-hidden touch-none">
           <AnimatePresence mode="wait">
             <motion.div key={`sentence-${currentProblemIdx}`} initial={{ x: 800, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -800, opacity: 0 }} transition={{ type: "tween", duration: 0.2 }} className="w-full">
               <div className="text-left leading-[3rem] md:leading-[5rem] w-full">
@@ -133,10 +137,8 @@ export default function GameScreen({
                 EXCELLENT!
               </motion.div>
             ) : (
-              /* 🌟 変更点：間違えた場合のアクションエリア */
+              // 🌟 変更点4：間違えた場合は、ここには「正しい構造」だけを表示
               <motion.div key="wrong-display" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center w-full max-w-3xl gap-4">
-                
-                {/* 構造の正解表示（音読のヒントとして一番上に配置） */}
                 <div className="w-full bg-emerald-50/90 backdrop-blur-sm p-4 rounded-2xl border-2 border-emerald-200 shadow-sm flex flex-col items-center">
                   <p className="text-emerald-600 font-black text-sm mb-2 opacity-80">正しい構造はこちら</p>
                   <div className="text-center leading-[2.5rem] w-full">
@@ -148,22 +150,34 @@ export default function GameScreen({
                        </span>
                      );
                    })}
-                 </div>
+                  </div>
                 </div>
-
-                {/* 🌟 呼び出し：音読ミッションコンポーネント */}
-                {/* propsとして、英文全体（joinして結合）と、合格した時の次へ進む関数（onNextProblem）を渡す */}
-                <PronunciationMission 
-                  targetSentence={activeProblem.tokens.join(' ')} 
-                  onComplete={onNextProblem} 
-                />
-                
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
       </div>
+
+      {/* 🌟 変更点5：音読ミッションは、画面の最下部に固定（Fixed）させる */}
+      <AnimatePresence>
+        {feedbackState === 'wrong' && (
+          <motion.div 
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            className="fixed bottom-0 left-0 w-full p-2 md:p-4 bg-white/80 backdrop-blur-lg border-t border-slate-200 shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.1)] z-50 flex justify-center"
+          >
+            <div className="w-full max-w-3xl">
+              <PronunciationMission 
+                targetSentence={activeProblem.tokens.join(' ')} 
+                onComplete={onNextProblem} 
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 }
