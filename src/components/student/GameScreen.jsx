@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { XCircle, CheckCircle2, ArrowRight } from 'lucide-react';
-// 🌟 音読ミッションのコンポーネントを読み込む
 import PronunciationMission from './PronunciationMission'; 
 
 const getElementColor = (role) => {
@@ -44,9 +43,7 @@ export default function GameScreen({
   const sortedPlayers = Object.values(playersData || {}).sort((a, b) => b.score - a.score);
 
   return (
-    // 🌟 変更点1：一番外側の `touch-none` を削除し、iPadでスクロールできるように修正！
-    <div className="flex-1 flex flex-col relative z-10 w-full overflow-y-auto overflow-x-hidden" ref={mainContainerRef} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onTouchMove={handlePointerMove} onTouchEnd={handlePointerUp}>
-      
+    <div className="flex-1 flex flex-col relative touch-none z-10 w-full overflow-y-auto overflow-x-hidden" ref={mainContainerRef} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onTouchMove={handlePointerMove} onTouchEnd={handlePointerUp}>
       {/* リアルタイムランキング */}
       {isMultiplayer && sortedPlayers.length > 0 && (
         <div className="absolute top-[80px] md:top-[90px] left-0 w-full z-40 flex flex-row flex-wrap justify-center gap-2 md:gap-4 px-2 pointer-events-none">
@@ -64,8 +61,8 @@ export default function GameScreen({
         </div>
       )}
 
-      {/* ヘッダーエリア */}
-      <div className="flex justify-between items-end px-4 md:px-10 py-4 border-b border-slate-200/50 bg-white/30 backdrop-blur-sm w-full z-20">
+      {/* ヘッダーエリア：py-4をpy-2に変更して高さを節約 */}
+      <div className="flex justify-between items-end px-4 md:px-10 py-2 md:py-3 border-b border-slate-200/50 bg-white/30 backdrop-blur-sm w-full z-20">
         <div className="flex items-center gap-4">
           <button onClick={onExit} className="box p-2 text-rose-500"><XCircle size={22} /></button>
           <div>
@@ -74,28 +71,26 @@ export default function GameScreen({
           </div>
         </div>
         <div className="flex items-end gap-4 text-right">
-          <div><div className="text-6xl md:text-8xl font-black text-cyan-600 tracking-tighter drop-shadow-sm">{score}</div></div>
+          <div><div className="text-5xl md:text-7xl font-black text-cyan-600 tracking-tighter drop-shadow-sm">{score}</div></div>
         </div>
       </div>
 
-      {/* メインエリア */}
-      {/* 🌟 変更点2：間違えた時(wrong)は下にたっぷりの余白(pb-80)を作って、固定メニューにテキストが隠れないようにする */}
-      <div className={`flex-1 flex flex-col items-center justify-start p-4 md:p-6 w-full max-w-[1400px] mx-auto ${feedbackState === 'wrong' ? 'pb-80' : 'pb-20'} relative`}>
+      {/* メインエリア：p-6やpb-20などの余白をギュッと削減 */}
+      <div className="flex-1 flex flex-col items-center justify-start p-2 md:p-4 w-full max-w-[1400px] mx-auto pb-4 relative">
         
-        {/* 指示文 */}
-        <div className="w-full flex justify-start mb-4 md:mb-6 text-left z-10 pt-2 md:pt-4 px-2">
+        {/* 指示文：mb-6をmb-2に削減 */}
+        <div className="w-full flex justify-start mb-2 md:mb-3 text-left z-10 pt-1 md:pt-2 px-2">
           <div className="flex items-center gap-3">
-            <div className={`w-12 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center text-3xl md:text-4xl font-black shadow-md border-4 border-white flex-shrink-0 ${roleColors.bg} ${roleColors.text}`}>{roleInitial}</div>
-            <p className={`text-xl md:text-3xl font-black ${roleColors.text} drop-shadow-sm leading-tight`}>{cleanHint}</p>
+            <div className={`w-10 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center text-2xl md:text-3xl font-black shadow-md border-4 border-white flex-shrink-0 ${roleColors.bg} ${roleColors.text}`}>{roleInitial}</div>
+            <p className={`text-lg md:text-2xl font-black ${roleColors.text} drop-shadow-sm leading-tight`}>{cleanHint}</p>
           </div>
         </div>
 
-        {/* 英文エリア */}
-        {/* 🌟 変更点3：文字をなぞるエリア「だけ」に touch-none を追加。これで選択もスクロールも両立します */}
-        <div className="w-full relative bg-white/60 rounded-3xl border border-slate-100 shadow-inner p-5 md:p-10 mb-4 flex flex-col justify-center min-h-[140px] overflow-hidden touch-none">
+        {/* 英文エリア：パディング(p-10)を削減し、最小の高さ(min-h)も小さく */}
+        <div className="w-full relative bg-white/60 rounded-3xl border border-slate-100 shadow-inner p-4 md:p-6 mb-2 md:mb-3 flex flex-col justify-center min-h-[100px] overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.div key={`sentence-${currentProblemIdx}`} initial={{ x: 800, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -800, opacity: 0 }} transition={{ type: "tween", duration: 0.2 }} className="w-full">
-              <div className="text-left leading-[3rem] md:leading-[5rem] w-full">
+              <div className="text-left leading-[2.5rem] md:leading-[4rem] w-full">
                 {activeProblem.tokens.map((token, idx) => {
                   const isSelected = selectedIndices.includes(idx);
                   const isGlowing = activeProblem.modifiedIndices ? activeProblem.modifiedIndices.includes(idx) : activeProblem.modifiedIndex === idx;
@@ -111,16 +106,16 @@ export default function GameScreen({
                 })}
               </div>
               {activeProblem.translation && (
-                <div className="w-full text-left mt-4 md:mt-6">
-                  <p className="text-base md:text-lg text-slate-500 font-bold bg-white/70 inline-block px-5 py-2 rounded-xl shadow-sm border border-slate-100 italic">{activeProblem.translation}</p>
+                <div className="w-full text-left mt-2 md:mt-4">
+                  <p className="text-sm md:text-base text-slate-500 font-bold bg-white/70 inline-block px-4 py-1.5 rounded-xl shadow-sm border border-slate-100 italic">{activeProblem.translation}</p>
                 </div>
               )}
             </motion.div>
           </AnimatePresence>
         </div>
 
-        {/* アクションエリア */}
-        <div className="w-full flex flex-col items-center min-h-[140px] z-20">
+        {/* アクションエリア：min-hを縮小し、gapを小さく */}
+        <div className="w-full flex flex-col items-center min-h-[100px] z-20">
           <AnimatePresence mode="wait">
             {feedbackState === 'idle' ? (
               <motion.button 
@@ -128,56 +123,43 @@ export default function GameScreen({
                 initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} 
                 onClick={submitAnswer} 
                 disabled={selectedIndices.length === 0} 
-                className={`flex items-center gap-3 font-black text-2xl px-16 py-5 rounded-3xl shadow-lg border-b-4 border-slate-200 transition-all ${selectedIndices.length === 0 ? "bg-slate-100 text-slate-300 cursor-not-allowed" : "bg-white text-cyan-600 hover:scale-105 active:scale-95 active:border-b-0"}`}
+                className={`flex items-center gap-2 md:gap-3 font-black text-xl md:text-2xl px-12 md:px-16 py-4 md:py-5 rounded-3xl shadow-lg border-b-4 border-slate-200 transition-all ${selectedIndices.length === 0 ? "bg-slate-100 text-slate-300 cursor-not-allowed" : "bg-white text-cyan-600 hover:scale-105 active:scale-95 active:border-b-0"}`}
               >
-                <CheckCircle2 size={32} /> Answer!
+                <CheckCircle2 size={28} /> Answer!
               </motion.button>
             ) : feedbackState === 'correct' ? (
               <motion.div key="correct-display" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-emerald-500 font-black text-4xl md:text-6xl tracking-widest drop-shadow-md">
                 EXCELLENT!
               </motion.div>
             ) : (
-              // 🌟 変更点4：間違えた場合は、ここには「正しい構造」だけを表示
-              <motion.div key="wrong-display" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center w-full max-w-3xl gap-4">
-                <div className="w-full bg-emerald-50/90 backdrop-blur-sm p-4 rounded-2xl border-2 border-emerald-200 shadow-sm flex flex-col items-center">
-                  <p className="text-emerald-600 font-black text-sm mb-2 opacity-80">正しい構造はこちら</p>
-                  <div className="text-center leading-[2.5rem] w-full">
+              <motion.div key="wrong-display" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center w-full max-w-3xl gap-2 md:gap-3">
+                
+                {/* 構造の正解表示：パディングをp-4からp-3に削減 */}
+                <div className="w-full bg-emerald-50/90 backdrop-blur-sm p-2 md:p-3 rounded-2xl border-2 border-emerald-200 shadow-sm flex flex-col items-center">
+                  <p className="text-emerald-600 font-black text-xs md:text-sm mb-1 opacity-80">正しい構造はこちら</p>
+                  <div className="text-center leading-[2rem] md:leading-[2.5rem] w-full">
                    {activeProblem.tokens.map((token, idx) => {
                      const isTarget = activeProblem.targetIndices.includes(idx);
                      return (
-                       <span key={`ans-${idx}`} className={`inline-block text-lg md:text-2xl font-black px-1 mx-0.5 ${isTarget ? 'bg-emerald-200 text-emerald-900 border-b-2 border-emerald-400' : 'text-slate-400'}`}>
+                       <span key={`ans-${idx}`} className={`inline-block text-base md:text-xl font-black px-1 mx-0.5 ${isTarget ? 'bg-emerald-200 text-emerald-900 border-b-2 border-emerald-400' : 'text-slate-400'}`}>
                          {token}
                        </span>
                      );
                    })}
                   </div>
                 </div>
+
+                <PronunciationMission 
+                  targetSentence={activeProblem.tokens.join(' ')} 
+                  onComplete={onNextProblem} 
+                />
+                
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
       </div>
-
-      {/* 🌟 変更点5：音読ミッションは、画面の最下部に固定（Fixed）させる */}
-      <AnimatePresence>
-        {feedbackState === 'wrong' && (
-          <motion.div 
-            initial={{ y: 100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 100, opacity: 0 }}
-            className="fixed bottom-0 left-0 w-full p-2 md:p-4 bg-white/80 backdrop-blur-lg border-t border-slate-200 shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.1)] z-50 flex justify-center"
-          >
-            <div className="w-full max-w-3xl">
-              <PronunciationMission 
-                targetSentence={activeProblem.tokens.join(' ')} 
-                onComplete={onNextProblem} 
-              />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
     </div>
   );
 }
