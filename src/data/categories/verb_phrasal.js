@@ -10,7 +10,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【初級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "私はカバンを探すつもりだ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-b-2", 
@@ -19,7 +20,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【初級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "彼女はタバコを吸うのをやめた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-b-3", 
@@ -28,7 +30,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【初級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "あなたは靴を脱がなければならない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-b-4", 
@@ -37,7 +40,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【初級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "彼はコートを着た。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-b-5", 
@@ -46,7 +50,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【初級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "私はあなたを頼りにできる。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-b-6", 
@@ -55,7 +60,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【初級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "彼女は私を笑った。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-b-7", 
@@ -64,7 +70,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【初級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "彼はテレビを消した。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-b-8", 
@@ -73,7 +80,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【初級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "あなたはこれを見るべきだ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-b-9", 
@@ -82,7 +90,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【初級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "彼らは助けを求めた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-b-10", 
@@ -91,7 +100,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【初級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "私たちはそれについて話し合った。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-b-11", 
@@ -100,7 +110,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【初級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "彼女はそのクラブに所属している。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-b-12", 
@@ -109,7 +120,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【初級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "彼は東京で育った。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-b-13", 
@@ -118,7 +130,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【初級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "私はあなたに同意する。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-b-14", 
@@ -127,7 +140,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【初級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "その飛行機はまもなく離陸するだろう。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-b-15", 
@@ -136,7 +150,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【初級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "彼は速く逃げた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-i-1", 
@@ -145,7 +160,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【中級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "私はそのパーティーを楽しみにしている。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["progressive", "phrasal_verb", "idiom"] 
     },
     { 
       id: "verbPhrasal-i-2", 
@@ -154,7 +170,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【中級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "彼は妹の世話をしている。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["phrasal_verb", "idiom"] 
     },
     { 
       id: "verbPhrasal-i-3", 
@@ -163,7 +180,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【中級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "私たちはその会議を延期しなければならない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-i-4", 
@@ -172,7 +190,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【中級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "彼女は彼に追いついた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-i-5", 
@@ -181,7 +200,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【中級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "彼らは先生を尊敬している。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-i-6", 
@@ -190,7 +210,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【中級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "彼は古い規則を廃止した。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-i-7", 
@@ -199,7 +220,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【中級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "私はこの騒音を我慢できない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "negative", "phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-i-8", 
@@ -208,7 +230,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【中級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "彼女は自分の仕事に誇りを持っている。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["phrasal_verb", "idiom"] 
     },
     { 
       id: "verbPhrasal-i-9", 
@@ -217,7 +240,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【中級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "彼らはガソリンを使い果たしてしまった。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["perfect_tense", "phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-i-10", 
@@ -226,7 +250,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【中級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "私たちはその問題を解決しなければならない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-i-11", 
@@ -235,7 +260,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【中級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "彼はまもなく姿を現すだろう。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-i-12", 
@@ -244,7 +270,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【中級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "彼は彼女の言葉に注意を払った。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["phrasal_verb", "idiom"] 
     },
     { 
       id: "verbPhrasal-i-13", 
@@ -253,7 +280,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【中級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "あなたはその規則を心に留めておくべきだ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "phrasal_verb", "idiom"] 
     },
     { 
       id: "verbPhrasal-i-14", 
@@ -262,7 +290,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【中級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "彼らはその要求に屈した。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-i-15", 
@@ -271,7 +300,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【中級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "彼女は良いアイデアを思いついた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-a-1", 
@@ -280,7 +310,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【上級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "私たちは失われた時間を埋め合わせなければならない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-a-2", 
@@ -289,7 +320,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【上級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "彼は私たちの期待に応えることができなかった。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "negative", "phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-a-3", 
@@ -298,7 +330,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【上級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "そのマネージャーは自分のチームを見下している。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-a-4", 
@@ -307,7 +340,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【上級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "あなたは自分の貯金に頼るべきだ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-a-5", 
@@ -316,7 +350,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【上級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "彼女はそのスピーチコンテストに参加するつもりだ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-a-6", 
@@ -325,7 +360,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【上級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "その会社は何人かの労働者を解雇するかもしれない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-a-7", 
@@ -334,7 +370,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【上級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "彼はいつも友人のことを良く言う。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["phrasal_verb", "idiom"] 
     },
     { 
       id: "verbPhrasal-a-8", 
@@ -343,7 +380,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【上級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "彼らは自分たちの権力にしがみつくだろう。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-a-9", 
@@ -352,7 +390,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【上級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "そのプロジェクトはついに始まった。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["phrasal_verb", "idiom"] 
     },
     { 
       id: "verbPhrasal-a-10", 
@@ -361,7 +400,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【上級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "私たちは彼の若さを考慮に入れなければならない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "phrasal_verb", "idiom"] 
     },
     { 
       id: "verbPhrasal-a-11", 
@@ -370,7 +410,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【上級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "彼女はそのめったにない機会を利用した。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["phrasal_verb", "idiom"] 
     },
     { 
       id: "verbPhrasal-a-12", 
@@ -379,7 +420,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【上級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "あなたは変化する時代についていかなければならない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-a-13", 
@@ -388,7 +430,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【上級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "政府はその不公平な税金を廃止した。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-a-14", 
@@ -397,7 +440,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【上級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "彼は彼女が言っていることを理解できなかった。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "negative", "phrasal_verb"] 
     },
     { 
       id: "verbPhrasal-a-15", 
@@ -406,7 +450,8 @@ export const verbPhrasalCategory = {
       targetRole: "V (群動詞 / 句動詞)", 
       hint: "【上級】複数語で1つの動詞の働きをする『群動詞（句動詞）』のカタマリをすべてなぞってください。", 
       translation: "あなたはすべての事実を考慮に入れなければならない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "phrasal_verb", "idiom"] 
     }
   ]
 };

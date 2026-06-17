@@ -10,7 +10,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【初級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "その本は彼によって書かれた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle"] 
     },
     { 
       id: "verbPassive-b-2", 
@@ -19,7 +20,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【初級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "英語はカナダで話されている。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle"] 
     },
     { 
       id: "verbPassive-b-3", 
@@ -28,7 +30,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【初級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "その窓はケンによって割られた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle"] 
     },
     { 
       id: "verbPassive-b-4", 
@@ -37,7 +40,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【初級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "この部屋は毎日掃除される。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle"] 
     },
     { 
       id: "verbPassive-b-5", 
@@ -46,7 +50,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【初級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "その歌は彼女によって歌われた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle"] 
     },
     { 
       id: "verbPassive-b-6", 
@@ -55,7 +60,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【初級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "そのケーキは犬に食べられた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle"] 
     },
     { 
       id: "verbPassive-b-7", 
@@ -64,7 +70,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【初級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "夜にはたくさんの星が見られる。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle"] 
     },
     { 
       id: "verbPassive-b-8", 
@@ -73,7 +80,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【初級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "そのドアはトムによって開けられた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle"] 
     },
     { 
       id: "verbPassive-b-9", 
@@ -82,7 +90,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【初級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "この手紙は昨日送られた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle"] 
     },
     { 
       id: "verbPassive-b-10", 
@@ -91,7 +100,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【初級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "その箱は公園で見つけられた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle"] 
     },
     { 
       id: "verbPassive-b-11", 
@@ -100,7 +110,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【初級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "その車は私の父によって洗われた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle"] 
     },
     { 
       id: "verbPassive-b-12", 
@@ -109,7 +120,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【初級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "その写真は彼によって撮られた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle"] 
     },
     { 
       id: "verbPassive-b-13", 
@@ -118,7 +130,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【初級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "彼の名前はみんなに知られている。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle"] 
     },
     { 
       id: "verbPassive-b-14", 
@@ -127,7 +140,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【初級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "その試合は雨によって中止された。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle"] 
     },
     { 
       id: "verbPassive-b-15", 
@@ -136,7 +150,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【初級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "新しい建物がここに建てられた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle"] 
     },
     { 
       id: "verbPassive-i-1", 
@@ -145,7 +160,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【中級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "その問題は彼によって解決された。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle", "perfect_tense"] 
     },
     { 
       id: "verbPassive-i-2", 
@@ -154,7 +170,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【中級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "その会議は明日開かれるだろう。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle", "auxiliary_verb"] 
     },
     { 
       id: "verbPassive-i-3", 
@@ -163,7 +180,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【中級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "この本は簡単に読むことができる。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle", "auxiliary_verb"] 
     },
     { 
       id: "verbPassive-i-4", 
@@ -172,7 +190,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【中級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "その赤ちゃんは彼女に世話をされているところだ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle", "progressive", "present_participle", "phrasal_verb"] 
     },
     { 
       id: "verbPassive-i-5", 
@@ -181,7 +200,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【中級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "私の自転車は駅で盗まれた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle"] 
     },
     { 
       id: "verbPassive-i-6", 
@@ -190,7 +210,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【中級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "その規則は生徒たちによって守られなければならない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle", "auxiliary_verb"] 
     },
     { 
       id: "verbPassive-i-7", 
@@ -199,7 +220,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【中級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "ここでは何年もの間、英語が教えられている。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle", "perfect_tense"] 
     },
     { 
       id: "verbPassive-i-8", 
@@ -208,7 +230,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【中級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "その橋は現在修理されているところだ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle", "progressive", "present_participle"] 
     },
     { 
       id: "verbPassive-i-9", 
@@ -217,7 +240,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【中級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "なくなったカバンは机の下で見つかった。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle"] 
     },
     { 
       id: "verbPassive-i-10", 
@@ -226,7 +250,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【中級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "その噂は多くの人々に信じられている。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle"] 
     },
     { 
       id: "verbPassive-i-11", 
@@ -235,7 +260,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【中級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "私たちはその知らせに驚いた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle"] 
     },
     { 
       id: "verbPassive-i-12", 
@@ -244,7 +270,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【中級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "彼は生徒たちから高く尊敬されている。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle"] 
     },
     { 
       id: "verbPassive-i-13", 
@@ -253,7 +280,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【中級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "去年、たくさんの木が植えられた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle"] 
     },
     { 
       id: "verbPassive-i-14", 
@@ -262,7 +290,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【中級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "その賞は勝者に与えられた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle", "svoo"] 
     },
     { 
       id: "verbPassive-i-15", 
@@ -271,7 +300,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【中級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "彼は部屋に入るのを見られた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle", "perception_verb", "present_participle"] 
     },
     { 
       id: "verbPassive-a-1", 
@@ -280,7 +310,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【上級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "その仕事はまもなく終わる予定だ。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle", "infinitive"] 
     },
     { 
       id: "verbPassive-a-2", 
@@ -289,7 +320,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【上級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "そのコンサートは中止されたのかもしれない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle", "perfect_tense", "auxiliary_verb"] 
     },
     { 
       id: "verbPassive-a-3", 
@@ -298,7 +330,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【上級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "彼は天才だと言われている。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle", "infinitive"] 
     },
     { 
       id: "verbPassive-a-4", 
@@ -307,7 +340,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【上級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "すぐに医者が呼ばれた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle", "phrasal_verb"] 
     },
     { 
       id: "verbPassive-a-5", 
@@ -316,7 +350,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【上級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "彼女は見知らぬ人に話しかけられた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle", "phrasal_verb"] 
     },
     { 
       id: "verbPassive-a-6", 
@@ -325,7 +360,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【上級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "その山は雪で覆われている。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle"] 
     },
     { 
       id: "verbPassive-a-7", 
@@ -334,7 +370,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【上級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "彼は1時間待たされた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle", "causative_verb", "infinitive"] 
     },
     { 
       id: "verbPassive-a-8", 
@@ -343,7 +380,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【上級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "私はにわか雨に降られた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle"] 
     },
     { 
       id: "verbPassive-a-9", 
@@ -352,7 +390,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【上級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "その部屋は彼らによってきれいに保たれていた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle", "perfect_tense", "svoc"] 
     },
     { 
       id: "verbPassive-a-10", 
@@ -361,7 +400,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【上級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "新製品は無事に開発された。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle", "perfect_tense"] 
     },
     { 
       id: "verbPassive-a-11", 
@@ -370,7 +410,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【上級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "彼は会社の社長に選ばれた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle", "svoc"] 
     },
     { 
       id: "verbPassive-a-12", 
@@ -379,7 +420,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【上級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "真実は彼女に伝えられるべきだった。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle", "perfect_tense", "auxiliary_verb", "svoo"] 
     },
     { 
       id: "verbPassive-a-13", 
@@ -388,7 +430,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【上級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "その秘密は決して発見されていない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle", "perfect_tense"] 
     },
     { 
       id: "verbPassive-a-14", 
@@ -397,7 +440,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【上級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "彼らは彼の言葉にすっかり騙された。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle", "phrasal_verb"] 
     },
     { 
       id: "verbPassive-a-15", 
@@ -406,7 +450,8 @@ export const verbPassiveCategory = {
       targetRole: "V (受動態)", 
       hint: "【上級】『〜される』という受動態（受け身）を作っている動詞（V）のカタマリをすべてなぞってください。", 
       translation: "その古代都市は地震によって破壊された。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["passive", "past_participle"] 
     }
   ]
 };

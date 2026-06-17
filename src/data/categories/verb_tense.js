@@ -11,7 +11,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【初級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "私は本を読んでいます。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "progressive", "present_participle"] 
     },
     { 
       id: "verbTense-b-2", 
@@ -20,7 +21,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【初級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "彼女は東京に行くつもりです。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb"] 
     },
     { 
       id: "verbTense-b-3", 
@@ -29,7 +31,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【初級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "彼は仕事を終えました。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "past_participle"] 
     },
     { 
       id: "verbTense-b-4", 
@@ -38,7 +41,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【初級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "私たちはテニスをしています。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "progressive", "present_participle"] 
     },
     { 
       id: "verbTense-b-5", 
@@ -47,7 +51,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【初級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "彼らはここに住んでいます。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "past_participle"] 
     },
     { 
       id: "verbTense-b-6", 
@@ -56,7 +61,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【初級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "私は速く泳ぐことができます。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb"] 
     },
     { 
       id: "verbTense-b-7", 
@@ -65,7 +71,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【初級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "彼女は車を洗っています。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "progressive", "present_participle"] 
     },
     { 
       id: "verbTense-b-8", 
@@ -74,7 +81,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【初級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "彼はテレビを見ていました。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "progressive", "present_participle"] 
     },
     { 
       id: "verbTense-b-9", 
@@ -83,7 +91,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【初級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "あなたは一生懸命勉強しなければなりません。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb"] 
     },
     { 
       id: "verbTense-b-10", 
@@ -92,7 +101,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【初級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "明日は雨が降るでしょう。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb"] 
     },
     { 
       id: "verbTense-b-11", 
@@ -101,7 +111,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【初級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "彼らはその時眠っていました。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "progressive", "present_participle"] 
     },
     { 
       id: "verbTense-b-12", 
@@ -110,7 +121,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【初級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "私は鍵をなくしてしまいました。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "past_participle"] 
     },
     { 
       id: "verbTense-b-13", 
@@ -119,7 +131,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【初級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "彼女は医者に診てもらうべきです。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb"] 
     },
     { 
       id: "verbTense-b-14", 
@@ -128,7 +141,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【初級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "私たちは彼を待っています。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "progressive", "present_participle"] 
     },
     { 
       id: "verbTense-b-15", 
@@ -137,7 +151,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【初級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "彼は部屋を出てしまいました。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "past_participle"] 
     },
     { 
       id: "verbTense-i-1", 
@@ -146,7 +161,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【中級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "私は2時間ずっと英語を勉強しています。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "progressive", "past_participle", "present_participle"] 
     },
     { 
       id: "verbTense-i-2", 
@@ -155,7 +171,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【中級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "その手紙は彼によって書かれました。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "passive", "past_participle"] 
     },
     { 
       id: "verbTense-i-3", 
@@ -164,7 +181,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【中級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "彼女は駅で待っていることでしょう。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "progressive", "present_participle"] 
     },
     { 
       id: "verbTense-i-4", 
@@ -173,7 +191,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【中級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "彼はその電車に乗り遅れたのかもしれません。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "past_participle"] 
     },
     { 
       id: "verbTense-i-5", 
@@ -182,7 +201,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【中級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "雨が降るまで私たちはサッカーをしていました。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "progressive", "past_participle", "present_participle"] 
     },
     { 
       id: "verbTense-i-6", 
@@ -191,7 +211,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【中級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "その建物は現在建設中です。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "progressive", "passive", "present_participle", "past_participle"] 
     },
     { 
       id: "verbTense-i-7", 
@@ -200,7 +221,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【中級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "あなたは私にもっと早く言うべきでした。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "past_participle"] 
     },
     { 
       id: "verbTense-i-8", 
@@ -209,7 +231,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【中級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "彼女はその約束を忘れてしまったに違いありません。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "past_participle"] 
     },
     { 
       id: "verbTense-i-9", 
@@ -218,7 +241,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【中級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "彼らは明日までにはその仕事を終えているでしょう。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "past_participle"] 
     },
     { 
       id: "verbTense-i-10", 
@@ -227,7 +251,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【中級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "私がそんなことを言ったはずがありません。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "negative", "perfect_tense", "past_participle"] 
     },
     { 
       id: "verbTense-i-11", 
@@ -236,7 +261,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【中級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "その問題はついに解決されました。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "passive", "past_participle"] 
     },
     { 
       id: "verbTense-i-12", 
@@ -245,7 +271,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【中級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "彼はその時眠っていたのかもしれません。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "progressive", "past_participle", "present_participle"] 
     },
     { 
       id: "verbTense-i-13", 
@@ -254,7 +281,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【中級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "私はずっとメガネを探しています。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "progressive", "past_participle", "present_participle"] 
     },
     { 
       id: "verbTense-i-14", 
@@ -263,7 +291,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【中級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "そのケーキは兄によって食べられてしまっていた。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "passive", "past_participle"] 
     },
     { 
       id: "verbTense-i-15", 
@@ -272,7 +301,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【中級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "ドアは閉めておかなければなりません。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "passive", "past_participle"] 
     },
     { 
       id: "verbTense-a-1", 
@@ -281,7 +311,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【上級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "そのプロジェクトは来月までには完了しているだろう。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "passive", "past_participle"] 
     },
     { 
       id: "verbTense-a-2", 
@@ -290,7 +321,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【上級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "そのコンサートは嵐のためにキャンセルされたに違いない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "passive", "past_participle"] 
     },
     { 
       id: "verbTense-a-3", 
@@ -299,7 +331,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【上級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "彼女は誰かにつけられていたのかもしれない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "progressive", "passive", "past_participle", "present_participle"] 
     },
     { 
       id: "verbTense-a-4", 
@@ -308,7 +341,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【上級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "あなたが戻る頃には、私はすでに眠っていることでしょう。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "progressive", "past_participle", "present_participle"] 
     },
     { 
       id: "verbTense-a-5", 
@@ -317,7 +351,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【上級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "その秘密は何年もの間、隠されたままになっている。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "passive", "past_participle"] 
     },
     { 
       id: "verbTense-a-6", 
@@ -326,7 +361,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【上級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "その古い橋はもっと早く修理されるべきだった。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "infinitive", "perfect_tense", "passive", "past_participle"] 
     },
     { 
       id: "verbTense-a-7", 
@@ -335,7 +371,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【上級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "彼女は何時間も待っていただろうに。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "progressive", "past_participle", "present_participle"] 
     },
     { 
       id: "verbTense-a-8", 
@@ -344,7 +381,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【上級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "彼は試験に向けてもっと一生懸命勉強しているべきだった。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "progressive", "past_participle", "present_participle"] 
     },
     { 
       id: "verbTense-a-9", 
@@ -353,7 +391,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【上級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "そのお金は泥棒によって盗まれたに違いない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "passive", "past_participle"] 
     },
     { 
       id: "verbTense-a-10", 
@@ -362,7 +401,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【上級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "私たちは大きな間違いを犯していたのかもしれない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "progressive", "past_participle", "present_participle"] 
     },
     { 
       id: "verbTense-a-11", 
@@ -371,7 +411,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【上級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "その仕事はもっと注意深く行われることもできただろうに。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "passive", "past_participle"] 
     },
     { 
       id: "verbTense-a-12", 
@@ -380,7 +421,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【上級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "もし真実を知っていたら、あなたに話していただろう。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "past_participle"] 
     },
     { 
       id: "verbTense-a-13", 
@@ -389,7 +431,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【上級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "来年で彼らは結婚して10年になるだろう。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "passive", "past_participle"] 
     },
     { 
       id: "verbTense-a-14", 
@@ -398,7 +441,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【上級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "彼が一晩中働いていたはずがない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "negative", "perfect_tense", "progressive", "past_participle", "present_participle"] 
     },
     { 
       id: "verbTense-a-15", 
@@ -407,7 +451,8 @@ export const verbTenseCategory = {
       targetRole: "V (助動詞・完了形・進行形のカタマリ)", 
       hint: "【上級】時制や相を作っている、動詞（V）のカタマリのすべてをなぞってください。", 
       translation: "その迷子になった犬は町をさまよっていたに違いない。", 
-      modifiedIndices: [] 
+      modifiedIndices: [],
+      grammarPoints: ["auxiliary_verb", "perfect_tense", "progressive", "past_participle", "present_participle"] 
     }
   ]
 };
