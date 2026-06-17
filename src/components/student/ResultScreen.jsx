@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Crown } from 'lucide-react';
 
@@ -7,10 +7,44 @@ export default function ResultScreen({
   playersData,
   myPeerId,
   score,
+  // 🌟 追加：学習記録に必要なデータを受け取る
+  activeCategory,
+  selectedLevel,
+  correctCount,
+  totalCount,
   onBackToLobby,
   onBackToLevelSelect
 }) {
   const sortedPlayers = Object.values(playersData || {}).sort((a, b) => b.score - a.score);
+  
+  // 🌟 追加：Reactの仕様で2回保存されてしまうのを防ぐためのストッパー
+  const hasLogged = useRef(false);
+
+  // 🌟 追加：画面が表示された瞬間にローカルストレージへ記録を保存する
+  useEffect(() => {
+    // マルチプレイではない ＆ まだ保存していない ＆ カテゴリ情報がある場合のみ保存
+    if (!isMultiplayer && !hasLogged.current && activeCategory) {
+      try {
+        const existingLogs = JSON.parse(localStorage.getItem('tracegram_learning_logs') || '[]');
+        
+        const newLog = {
+          id: Date.now(),
+          date: new Date().toISOString(),
+          categoryTitle: activeCategory.title,
+          categoryId: activeCategory.categoryId,
+          level: selectedLevel,
+          score: score,
+          correctCount: correctCount || 0,
+          totalCount: totalCount || 0
+        };
+
+        localStorage.setItem('tracegram_learning_logs', JSON.stringify([...existingLogs, newLog]));
+        hasLogged.current = true; // 保存完了フラグを立てる
+      } catch (e) {
+        console.error("Failed to save learning log", e);
+      }
+    }
+  }, [isMultiplayer, activeCategory, selectedLevel, score, correctCount, totalCount]);
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-12 z-10 relative overflow-y-auto">

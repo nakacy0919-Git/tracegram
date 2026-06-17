@@ -156,6 +156,13 @@ export default function StudentMode({ categories }) {
         playersData={playersData}
         myPeerId={myPeerId}
         score={score}
+
+　　　　// 🌟 追加：この4行を足して、リザルト画面にデータを送る
+        activeCategory={activeCategory}
+        selectedLevel={selectedLevel}
+        correctCount={correctCount}
+        totalCount={filteredProblems?.length || 0}
+
         onBackToLobby={() => setAppScreen('lobby')}
         onBackToLevelSelect={backToLevelSelect}
       />
