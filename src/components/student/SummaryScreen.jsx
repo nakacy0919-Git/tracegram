@@ -1,11 +1,12 @@
+// src/components/student/SummaryScreen.jsx
 import React, { useState, useRef, useEffect } from 'react';
 import { GripVertical, XCircle } from 'lucide-react';
 import ReadingPane from './ReadingPane';
 import MissionPane from './MissionPane';
-import { useTraceAction } from '../../hooks/useTraceAction';
+// 🌟 ここを新しい専用エンジンに変更
+import { useSummaryTrace } from '../../hooks/useSummaryTrace';
 
 export default function SummaryScreen({ onExit, summaryData }) {
-  // 🌟 UI設定用State
   const [leftWidth, setLeftWidth] = useState(50); 
   const [isDraggingSplit, setIsDraggingSplit] = useState(false);
   const containerRef = useRef(null);
@@ -15,11 +16,8 @@ export default function SummaryScreen({ onExit, summaryData }) {
   const [textSizeClass, setTextSizeClass] = useState('text-xl');
   const [fontClass, setFontClass] = useState('font-sans'); 
   const [readAloudTarget, setReadAloudTarget] = useState('mission'); 
-
-  // 🌟 NEW: ミッション(右画面)用の文字サイズState
   const [missionTextSize, setMissionTextSize] = useState('medium'); 
 
-  // 🌟 進行管理用State
   const [currentPhase, setCurrentPhase] = useState('paragraphs'); 
   const [currentParagraphIdx, setCurrentParagraphIdx] = useState(0);
   const [currentTaskIdx, setCurrentTaskIdx] = useState(0); 
@@ -36,15 +34,15 @@ export default function SummaryScreen({ onExit, summaryData }) {
     currentTask = summaryData.globalTasks[currentTaskIdx];
   }
 
+  // 🌟 ここも新しい専用エンジンに変更
   const {
     selectedIndices, setSelectedIndices,
     traceFeedback, setTraceFeedback,
     isTraceTask,
     handleTracePointerDown, handleTracePointerMove, handleTracePointerUp,
     judgeTrace, handleShowAnswer
-  } = useTraceAction(currentTask, currentPhase);
+  } = useSummaryTrace(currentTask, currentPhase);
 
-  // 目線を維持する自動スクロール処理
   useEffect(() => {
     if (currentPhase === 'paragraphs' && activeParagraphRef.current) {
       setTimeout(() => {
@@ -171,7 +169,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
 
         <div style={{ width: `${100 - leftWidth}%` }} className="h-full">
           <div className="h-full overflow-y-auto bg-slate-100 p-6 md:p-10 shadow-inner flex flex-col">
-            {/* 🌟 missionTextSize を渡す */}
             <MissionPane 
               currentPhase={currentPhase}
               currentTask={currentTask}
