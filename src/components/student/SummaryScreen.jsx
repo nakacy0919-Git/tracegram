@@ -28,6 +28,9 @@ export default function SummaryScreen({ onExit, summaryData }) {
   const [leftWidth, setLeftWidth] = useState(50); 
   const [isDraggingSplit, setIsDraggingSplit] = useState(false);
   const containerRef = useRef(null);
+  
+  // 🌟 NEW: アクティブな段落を自動スクロールで追いかけるためのカメラ(Ref)
+  const activeParagraphRef = useRef(null);
 
   const [isSwapped, setIsSwapped] = useState(false);
   const [textSizeClass, setTextSizeClass] = useState('text-xl');
@@ -55,6 +58,19 @@ export default function SummaryScreen({ onExit, summaryData }) {
   } else if (currentPhase === 'global' && summaryData.globalTasks) {
     currentTask = summaryData.globalTasks[currentTaskIdx];
   }
+
+  // 🌟 NEW: 段落が変わった瞬間に、その段落へ自動でスムーズスクロールする処理
+  useEffect(() => {
+    if (currentPhase === 'paragraphs' && activeParagraphRef.current) {
+      // レンダリング完了後に確実に動作させるため、わずかに遅延させてスクロール
+      setTimeout(() => {
+        activeParagraphRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start', // 画面の上部に合わせる（目線を右側のミッションと揃える）
+        });
+      }, 100);
+    }
+  }, [currentParagraphIdx, currentPhase]);
 
   useEffect(() => {
     setSelectedOption(null);
@@ -234,7 +250,7 @@ export default function SummaryScreen({ onExit, summaryData }) {
     const leadingClass = textSizeClass === 'text-base' ? 'leading-[2.5rem]' : textSizeClass === 'text-xl' ? 'leading-[3.5rem]' : 'leading-[4.2rem]';
 
     return (
-      <div className="h-full overflow-y-auto bg-slate-50 p-4 md:p-8 flex flex-col">
+      <div className="h-full overflow-y-auto bg-slate-50 p-4 md:p-8 flex flex-col scroll-smooth">
         <div className="w-full flex justify-between items-center mb-4 border-b border-slate-200 pb-2 flex-shrink-0">
           <div className="flex items-center gap-2 text-indigo-600">
             <BookOpen size={24} />
@@ -280,7 +296,11 @@ export default function SummaryScreen({ onExit, summaryData }) {
               if (isPast && currentPhase === 'paragraphs') opacityClass += "opacity-50 pointer-events-none"; 
 
               return (
-                <div key={paragraph.p_id} className={opacityClass}>
+                <div 
+                  key={paragraph.p_id} 
+                  ref={isActive ? activeParagraphRef : null} // 🌟 ここにカメラ（Ref）をセット
+                  className={`${opacityClass} scroll-mt-6 md:scroll-mt-10`} // 🌟 上部が見切れないように少しマージンを確保
+                >
                   <div className={`text-xs font-sans tracking-wider uppercase mb-1 flex items-center gap-1.5 ${isActive ? 'text-indigo-600 font-black' : 'text-slate-400 font-bold'}`}>
                     <span>Paragraph {pIdx + 1}</span>
                     <span className="opacity-60">(第{pIdx + 1}段落)</span>
@@ -309,7 +329,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
                           spanClass += "hover:bg-slate-100 text-slate-800 rounded-lg ";
                         }
                       } else {
-                        // 🌟 修正：非アクティブ段落の場合、過去の問題箇所のハイライト（下線や太字）を一切行わずプレーンに表示
                         spanClass += "text-slate-600 font-normal rounded-lg ";
                       }
 
