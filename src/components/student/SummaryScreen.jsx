@@ -16,6 +16,9 @@ export default function SummaryScreen({ onExit, summaryData }) {
   const [fontClass, setFontClass] = useState('font-sans'); 
   const [readAloudTarget, setReadAloudTarget] = useState('mission'); 
 
+  // 🌟 NEW: ミッション(右画面)用の文字サイズState
+  const [missionTextSize, setMissionTextSize] = useState('medium'); 
+
   // 🌟 進行管理用State
   const [currentPhase, setCurrentPhase] = useState('paragraphs'); 
   const [currentParagraphIdx, setCurrentParagraphIdx] = useState(0);
@@ -25,7 +28,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
 
   if (!summaryData) return null;
 
-  // 現在のタスクデータを特定
   const currentParagraph = summaryData.paragraphs[currentParagraphIdx];
   let currentTask = null;
   if (currentPhase === 'paragraphs' && currentParagraph?.tasks) {
@@ -34,7 +36,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
     currentTask = summaryData.globalTasks[currentTaskIdx];
   }
 
-  // 🌟 裏側ロジック（カスタムフック）の呼び出し
   const {
     selectedIndices, setSelectedIndices,
     traceFeedback, setTraceFeedback,
@@ -43,7 +44,7 @@ export default function SummaryScreen({ onExit, summaryData }) {
     judgeTrace, handleShowAnswer
   } = useTraceAction(currentTask, currentPhase);
 
-  // 🌟 目線を維持する自動スクロール処理
+  // 目線を維持する自動スクロール処理
   useEffect(() => {
     if (currentPhase === 'paragraphs' && activeParagraphRef.current) {
       setTimeout(() => {
@@ -55,7 +56,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
     }
   }, [currentParagraphIdx, currentPhase]);
 
-  // タスク切り替え時のリセット
   useEffect(() => {
     setSelectedOption(null);
     setIsAnswerRevealed(false);
@@ -63,7 +63,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
     setTraceFeedback('idle');
   }, [currentParagraphIdx, currentTaskIdx, currentPhase, setSelectedIndices, setTraceFeedback]);
 
-  // --- スプリット画面（左右リサイズ）の処理 ---
   const handleSplitMove = (clientX) => {
     if (!isDraggingSplit || !containerRef.current) return;
     const containerRect = containerRef.current.getBoundingClientRect();
@@ -100,7 +99,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
     };
   }, [isDraggingSplit]);
 
-  // 🌟 タスク進行ロジック
   const handleNextTask = () => {
     if (currentPhase === 'paragraphs') {
       if (currentTaskIdx + 1 < currentParagraph.tasks.length) {
@@ -129,7 +127,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
 
   return (
     <div className={`flex-1 flex flex-col h-full w-full bg-slate-50 relative ${isDraggingSplit ? 'select-none' : ''}`}>
-      {/* 🌟 共通ヘッダー */}
       <div className="flex justify-between items-center px-6 py-3 bg-white border-b border-slate-200 shadow-sm z-20">
         <div className="flex items-center gap-4">
           <button onClick={onExit} className="text-rose-500 hover:scale-110 transition-transform">
@@ -143,10 +140,8 @@ export default function SummaryScreen({ onExit, summaryData }) {
         <div className="text-sm font-bold text-slate-400">要約チャレンジモード</div>
       </div>
 
-      {/* 🌟 左右スプリット全体 */}
       <div ref={containerRef} className={`flex-1 flex w-full h-full overflow-hidden relative ${isSwapped ? 'flex-row-reverse' : 'flex-row'}`}>
         
-        {/* 左側パネル (Reading) */}
         <div style={{ width: `${leftWidth}%` }} className="h-full">
           <ReadingPane 
             summaryData={summaryData}
@@ -168,25 +163,28 @@ export default function SummaryScreen({ onExit, summaryData }) {
           />
         </div>
 
-        {/* 🎚 リサイズバー */}
         <div onMouseDown={() => setIsDraggingSplit(true)} onTouchStart={() => setIsDraggingSplit(true)} className="w-4 flex flex-col items-center justify-center bg-slate-200/50 hover:bg-cyan-200 cursor-col-resize group transition-colors shadow-inner z-10">
           <div className="h-16 w-1.5 bg-slate-400 group-hover:bg-cyan-500 rounded-full flex items-center justify-center transition-colors">
             <GripVertical size={12} className="text-white opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
         </div>
 
-        {/* 右側パネル (Mission) */}
         <div style={{ width: `${100 - leftWidth}%` }} className="h-full">
           <div className="h-full overflow-y-auto bg-slate-100 p-6 md:p-10 shadow-inner flex flex-col">
+            {/* 🌟 missionTextSize を渡す */}
             <MissionPane 
               currentPhase={currentPhase}
               currentTask={currentTask}
+              currentParagraphIdx={currentParagraphIdx}
+              currentTaskIdx={currentTaskIdx}
               summaryData={summaryData}
               traceFeedback={traceFeedback}
               selectedIndices={selectedIndices}
               selectedOption={selectedOption}
               isAnswerRevealed={isAnswerRevealed}
               readAloudTarget={readAloudTarget}
+              missionTextSize={missionTextSize}
+              setMissionTextSize={setMissionTextSize}
               onExit={onExit}
               handleNextTask={handleNextTask}
               handleOptionSelect={handleOptionSelect}
