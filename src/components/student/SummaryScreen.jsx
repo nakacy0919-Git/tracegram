@@ -1,14 +1,35 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GripVertical, XCircle, BookOpen, PenTool, ArrowRight, CheckCircle2, AlertCircle, Trophy } from 'lucide-react';
-import PronunciationMission from './PronunciationMission'; // 🌟 音読用にインポート
+import PronunciationMission from './PronunciationMission'; 
+
+// 🌟 NEW: なぞり時のポロロロッという心地よい効果音
+const playTraceSound = (count, isDeselect = false) => {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'triangle';
+    const baseFreq = isDeselect ? 300 : 440;
+    osc.frequency.setValueAtTime(baseFreq + (count * 30), ctx.currentTime);
+    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.1);
+  } catch (e) {
+    console.warn("Audio play failed", e);
+  }
+};
 
 export default function SummaryScreen({ onExit, summaryData }) {
   const [leftWidth, setLeftWidth] = useState(50); 
-  const [isDragging, setIsDragging] = useState(false);
+  const [isDraggingSplit, setIsDraggingSplit] = useState(false);
   const containerRef = useRef(null);
 
-  // 🌟 全体の進行フェーズ管理: 'paragraphs' -> 'comprehension' -> 'readAloud' -> 'completed'
   const [currentPhase, setCurrentPhase] = useState('paragraphs'); 
   const [currentParagraphIdx, setCurrentParagraphIdx] = useState(0);
   const [currentCompIdx, setCurrentCompIdx] = useState(0);
@@ -17,71 +38,118 @@ export default function SummaryScreen({ onExit, summaryData }) {
   const [selectedOption, setSelectedOption] = useState(null);
   const [isAnswerRevealed, setIsAnswerRevealed] = useState(false);
 
+  // 🌟 NEW: なぞり（トレース）専用の状態管理
   const [selectedIndices, setSelectedIndices] = useState([]);
   const [traceFeedback, setTraceFeedback] = useState('idle'); 
+  const [isTracing, setIsTracing] = useState(false);
+  const [traceMode, setTraceMode] = useState('select');
 
-  // 安全対策（データが渡ってきていない場合）
   if (!summaryData) return null;
 
   const currentParagraph = summaryData.paragraphs[currentParagraphIdx];
 
-  // パラグラフが変わった時の初期化
   useEffect(() => {
     if (currentPhase !== 'paragraphs' || !currentParagraph) return;
     
     if (currentParagraph.traceTask) setTaskStep('trace');
     else if (currentParagraph.fillInTask) setTaskStep('fillIn');
     else if (currentParagraph.paraphraseTask) setTaskStep('paraphrase');
-    else handleNextTask(); // タスクがない段落はスキップ
+    else handleNextTask();
     
     setSelectedOption(null);
     setIsAnswerRevealed(false);
     setSelectedIndices([]);
     setTraceFeedback('idle');
+    setIsTracing(false); // 初期化
   }, [currentParagraphIdx, currentParagraph, currentPhase]);
 
-  // リサイズ処理
-  const handleMove = (clientX) => {
-    if (!isDragging || !containerRef.current) return;
+  // --- スプリット画面のリサイズ処理 ---
+  const handleSplitMove = (clientX) => {
+    if (!isDraggingSplit || !containerRef.current) return;
     const containerRect = containerRef.current.getBoundingClientRect();
     let newLeftWidth = ((clientX - containerRect.left) / containerRect.width) * 100;
     if (newLeftWidth < 20) newLeftWidth = 20;
     if (newLeftWidth > 80) newLeftWidth = 80;
     setLeftWidth(newLeftWidth);
   };
-  const onMouseMove = (e) => handleMove(e.clientX);
-  const onTouchMove = (e) => handleMove(e.touches[0].clientX);
-  const stopDragging = () => setIsDragging(false);
+  const onSplitMouseMove = (e) => handleSplitMove(e.clientX);
+  const onSplitTouchMove = (e) => handleSplitMove(e.touches[0].clientX);
+  const stopSplitDragging = () => setIsDraggingSplit(false);
 
   useEffect(() => {
-    if (isDragging) {
-      window.addEventListener('mousemove', onMouseMove);
-      window.addEventListener('mouseup', stopDragging);
-      window.addEventListener('touchmove', onTouchMove, { passive: false });
-      window.addEventListener('touchend', stopDragging);
+    if (isDraggingSplit) {
+      window.addEventListener('mousemove', onSplitMouseMove);
+      window.addEventListener('mouseup', stopSplitDragging);
+      window.addEventListener('touchmove', onSplitTouchMove, { passive: false });
+      window.addEventListener('touchend', stopSplitDragging);
     } else {
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', stopDragging);
-      window.removeEventListener('touchmove', onTouchMove);
-      window.removeEventListener('touchend', stopDragging);
+      window.removeEventListener('mousemove', onSplitMouseMove);
+      window.removeEventListener('mouseup', stopSplitDragging);
+      window.removeEventListener('touchmove', onSplitTouchMove);
+      window.removeEventListener('touchend', stopSplitDragging);
     }
     return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', stopDragging);
-      window.removeEventListener('touchmove', onTouchMove);
-      window.removeEventListener('touchend', stopDragging);
+      window.removeEventListener('mousemove', onSplitMouseMove);
+      window.removeEventListener('mouseup', stopSplitDragging);
+      window.removeEventListener('touchmove', onSplitTouchMove);
+      window.removeEventListener('touchend', stopSplitDragging);
     };
-  }, [isDragging]);
+  }, [isDraggingSplit]);
 
-  // トレース処理
-  const handleTokenClick = (idx) => {
-    if (currentPhase !== 'paragraphs' || taskStep !== 'trace' || traceFeedback === 'correct') return;
+  // --- 🌟 NEW: 滑らかなトレース（なぞり）処理 ---
+  const updateTraceSelection = (idx, mode) => {
     setSelectedIndices(prev => {
-      if (prev.includes(idx)) return prev.filter(i => i !== idx); 
-      else return [...prev, idx].sort((a, b) => a - b); 
+      if (mode === 'select' && !prev.includes(idx)) {
+        playTraceSound(prev.length);
+        return [...prev, idx].sort((a, b) => a - b);
+      } else if (mode === 'deselect' && prev.includes(idx)) {
+        playTraceSound(0, true);
+        return prev.filter(i => i !== idx);
+      }
+      return prev;
     });
-    setTraceFeedback('idle'); 
   };
+
+  const handleTracePointerDown = (e, idx) => {
+    if (currentPhase !== 'paragraphs' || taskStep !== 'trace' || traceFeedback === 'correct') return;
+    setIsTracing(true);
+    const isCurrentlySelected = selectedIndices.includes(idx);
+    const newTraceMode = isCurrentlySelected ? 'deselect' : 'select';
+    setTraceMode(newTraceMode);
+    updateTraceSelection(idx, newTraceMode);
+    setTraceFeedback('idle');
+  };
+
+  const handleTracePointerMove = (e) => {
+    if (!isTracing || taskStep !== 'trace' || traceFeedback === 'correct') return;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    const element = document.elementFromPoint(clientX, clientY);
+
+    if (element && element.hasAttribute('data-token-idx')) {
+      const idx = parseInt(element.getAttribute('data-token-idx'), 10);
+      updateTraceSelection(idx, traceMode);
+    }
+  };
+
+  const handleTracePointerUp = () => {
+    setIsTracing(false);
+  };
+
+  // 画面外で指を離した時もトレースを終了させる
+  useEffect(() => {
+    if (isTracing) {
+      window.addEventListener('mouseup', handleTracePointerUp);
+      window.addEventListener('touchend', handleTracePointerUp);
+    } else {
+      window.removeEventListener('mouseup', handleTracePointerUp);
+      window.removeEventListener('touchend', handleTracePointerUp);
+    }
+    return () => {
+      window.removeEventListener('mouseup', handleTracePointerUp);
+      window.removeEventListener('touchend', handleTracePointerUp);
+    };
+  }, [isTracing]);
 
   const judgeTrace = () => {
     if (selectedIndices.length === 0) return;
@@ -100,12 +168,12 @@ export default function SummaryScreen({ onExit, summaryData }) {
     }
   };
 
-  // 🌟 タスク進行のスーパーロジック
   const handleNextTask = () => {
     setIsAnswerRevealed(false);
     setSelectedOption(null);
     setSelectedIndices([]);
     setTraceFeedback('idle');
+    setIsTracing(false);
 
     if (currentPhase === 'paragraphs') {
       if (taskStep === 'trace' && currentParagraph.paraphraseTask) {
@@ -115,9 +183,8 @@ export default function SummaryScreen({ onExit, summaryData }) {
       } else if (taskStep === 'paraphrase' && currentParagraph.fillInTask) {
         setTaskStep('fillIn');
       } else if (currentParagraphIdx + 1 < summaryData.paragraphs.length) {
-        setCurrentParagraphIdx(prev => prev + 1); // 次の段落へ
+        setCurrentParagraphIdx(prev => prev + 1); 
       } else {
-        // パラグラフ終了 ➡ 全体問題へ移行
         if (summaryData.comprehensionTasks && summaryData.comprehensionTasks.length > 0) {
           setCurrentPhase('comprehension');
         } else if (summaryData.readAloudTask) {
@@ -128,9 +195,8 @@ export default function SummaryScreen({ onExit, summaryData }) {
       }
     } else if (currentPhase === 'comprehension') {
       if (currentCompIdx + 1 < summaryData.comprehensionTasks.length) {
-        setCurrentCompIdx(prev => prev + 1); // 次の読解問題へ
+        setCurrentCompIdx(prev => prev + 1); 
       } else {
-        // 読解終了 ➡ 音読へ
         if (summaryData.readAloudTask) {
           setCurrentPhase('readAloud');
         } else {
@@ -148,15 +214,20 @@ export default function SummaryScreen({ onExit, summaryData }) {
     setIsAnswerRevealed(true); 
   };
 
-  // 🌟 左画面（長文表示エリア）のレンダリング
   const renderLeftPane = () => {
     return (
-      <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 text-lg leading-[3rem] text-slate-700 font-medium">
+      <div 
+        // 🌟 NEW: トレース中のみ「touch-none」を付与して画面スクロールを止め、なぞりに全集中させる
+        className={`bg-white rounded-2xl p-8 shadow-sm border border-slate-200 text-lg leading-[3rem] text-slate-700 font-medium ${taskStep === 'trace' ? 'touch-none' : ''}`}
+        onPointerMove={handleTracePointerMove}
+        onPointerUp={handleTracePointerUp}
+        onTouchMove={handleTracePointerMove}
+        onTouchEnd={handleTracePointerUp}
+      >
         {currentPhase === 'paragraphs' ? (
-          // パラグラフごとの表示
           currentParagraph.tokens.map((token, idx) => {
             const isSelected = selectedIndices.includes(idx);
-            let spanClass = "inline-block px-1 mx-0.5 rounded transition-all cursor-pointer ";
+            let spanClass = "inline-block px-1 mx-0.5 rounded transition-all cursor-pointer select-none ";
             if (taskStep === 'trace') {
               if (isSelected) {
                 if (traceFeedback === 'wrong') spanClass += "bg-rose-200 text-rose-800";
@@ -171,10 +242,18 @@ export default function SummaryScreen({ onExit, summaryData }) {
                 spanClass += " bg-emerald-50 text-emerald-800 font-bold border-b-2 border-emerald-200";
               }
             }
-            return <span key={idx} onClick={() => handleTokenClick(idx)} className={spanClass}>{token}</span>;
+            return (
+              <span 
+                key={idx} 
+                data-token-idx={idx} // 🌟 NEW: 要素位置からインデックスを取得するための目印
+                onPointerDown={(e) => handleTracePointerDown(e, idx)} 
+                className={spanClass}
+              >
+                {token}
+              </span>
+            );
           })
         ) : (
-          // Comprehension以降は長文全体を表示
           summaryData.paragraphs.map(p => (
             <p key={p.p_id} className="mb-6 indent-4 leading-relaxed">
               {p.tokens.join(' ')}
@@ -185,7 +264,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
     );
   };
 
-  // 🌟 右画面（ミッションエリア）のレンダリング
   const renderRightPane = () => {
     if (currentPhase === 'completed') {
       return (
@@ -231,7 +309,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
       );
     }
 
-    // 読解問題（Comprehension）または 言い換え・穴埋め（Paragraph Task）
     const isComprehension = currentPhase === 'comprehension';
     const taskData = isComprehension 
       ? summaryData.comprehensionTasks[currentCompIdx] 
@@ -246,7 +323,7 @@ export default function SummaryScreen({ onExit, summaryData }) {
           <div className="flex-1 flex flex-col items-center justify-center bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 p-6 text-center">
             <AnimatePresence mode="wait">
               {traceFeedback === 'idle' && (
-                <motion.p key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-slate-400 font-bold">左の長文の単語をタップして、要約に不可欠な部分をなぞってください。</motion.p>
+                <motion.p key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-slate-400 font-bold">左の長文の単語をスワイプしてなぞり、<br/>要約に不可欠な部分を選択してください。</motion.p>
               )}
               {traceFeedback === 'wrong' && (
                 <motion.div key="wrong" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }} className="text-rose-500 font-black flex flex-col items-center gap-2"><XCircle size={32} /><p>不正解。筆者の主張の核となる部分を探しましょう。</p></motion.div>
@@ -273,7 +350,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
       );
     }
 
-    // 選択問題の共通UI
     return (
       <div className="bg-white rounded-3xl p-6 md:p-8 shadow-md border-2 border-teal-100 flex-1 flex flex-col">
         <span className={`inline-block font-black text-sm px-3 py-1 rounded-full mb-4 w-max ${isComprehension ? 'bg-indigo-100 text-indigo-700' : 'bg-teal-100 text-teal-700'}`}>
@@ -315,7 +391,7 @@ export default function SummaryScreen({ onExit, summaryData }) {
   };
 
   return (
-    <div className={`flex-1 flex flex-col h-full w-full bg-slate-50 relative ${isDragging ? 'select-none' : ''}`}>
+    <div className={`flex-1 flex flex-col h-full w-full bg-slate-50 relative ${isDraggingSplit ? 'select-none' : ''}`}>
       <div className="flex justify-between items-center px-6 py-3 bg-white border-b border-slate-200 shadow-sm z-20">
         <div className="flex items-center gap-4">
           <button onClick={onExit} className="text-rose-500 hover:scale-110 transition-transform">
@@ -340,7 +416,7 @@ export default function SummaryScreen({ onExit, summaryData }) {
           </motion.div>
         </div>
 
-        <div onMouseDown={() => setIsDragging(true)} onTouchStart={() => setIsDragging(true)} className="w-4 flex flex-col items-center justify-center bg-slate-200/50 hover:bg-cyan-200 cursor-col-resize group transition-colors shadow-inner z-10">
+        <div onMouseDown={() => setIsDraggingSplit(true)} onTouchStart={() => setIsDraggingSplit(true)} className="w-4 flex flex-col items-center justify-center bg-slate-200/50 hover:bg-cyan-200 cursor-col-resize group transition-colors shadow-inner z-10">
           <div className="h-16 w-1.5 bg-slate-400 group-hover:bg-cyan-500 rounded-full flex items-center justify-center transition-colors">
             <GripVertical size={12} className="text-white opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>

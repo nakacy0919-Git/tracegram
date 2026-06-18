@@ -40,6 +40,7 @@ const getElementColor = (role) => {
 
 export default function GameScreen({
   gameMode,
+  addBonusScore,
   isMultiplayer,
   playersData,
   myPeerId,
@@ -97,6 +98,7 @@ export default function GameScreen({
       if (idx === bugIndex) {
         playSlashSound();
         if (navigator.vibrate) navigator.vibrate(50);
+        if (addBonusScore) addBonusScore(500); 
         
         setSlashingIndex(idx);
         
@@ -210,6 +212,7 @@ export default function GameScreen({
                     return (
                       <motion.span 
                         key={`token-${idx}`} 
+                        data-token-idx={idx} // 🌟 ここが抜けていました！これがないとなぞり判定が動きません。
                         onPointerDown={(e) => handleTokenClick(e, idx)} 
                         exit={isBugWord ? { 
                           scale: [1, 2.5],  
@@ -309,7 +312,6 @@ export default function GameScreen({
                     <p className="text-slate-500 font-bold mt-4 text-sm md:text-base italic">{activeProblem.translation}</p>
                   )}
                 </div>
-                {/* 🌟 NEW: accuracyを受け取ってonNextProblemに渡す */}
                 <PronunciationMission targetSentence={activeProblem.tokens.join(' ')} onComplete={(acc) => onNextProblem(acc)} />
               </div>
             </motion.div>
