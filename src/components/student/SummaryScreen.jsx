@@ -29,7 +29,7 @@ export default function SummaryScreen({ onExit, summaryData }) {
   const [isDraggingSplit, setIsDraggingSplit] = useState(false);
   const containerRef = useRef(null);
   
-  // 🌟 NEW: アクティブな段落を自動スクロールで追いかけるためのカメラ(Ref)
+  // 🌟 段落の自動スクロール用カメラ
   const activeParagraphRef = useRef(null);
 
   const [isSwapped, setIsSwapped] = useState(false);
@@ -59,16 +59,15 @@ export default function SummaryScreen({ onExit, summaryData }) {
     currentTask = summaryData.globalTasks[currentTaskIdx];
   }
 
-  // 🌟 NEW: 段落が変わった瞬間に、その段落へ自動でスムーズスクロールする処理
+  // 🌟 完璧な目線を維持する自動スクロール処理
   useEffect(() => {
     if (currentPhase === 'paragraphs' && activeParagraphRef.current) {
-      // レンダリング完了後に確実に動作させるため、わずかに遅延させてスクロール
       setTimeout(() => {
         activeParagraphRef.current.scrollIntoView({
           behavior: 'smooth',
-          block: 'start', // 画面の上部に合わせる（目線を右側のミッションと揃える）
+          block: 'start', // スクロール領域のトップ（ヘッダーのすぐ下）に揃える
         });
-      }, 100);
+      }, 150); // アニメーションのチラつきを防ぐための微小なディレイ
     }
   }, [currentParagraphIdx, currentPhase]);
 
@@ -88,11 +87,8 @@ export default function SummaryScreen({ onExit, summaryData }) {
     if (rawLeftWidth < 20) rawLeftWidth = 20;
     if (rawLeftWidth > 80) rawLeftWidth = 80;
 
-    if (isSwapped) {
-      setLeftWidth(100 - rawLeftWidth);
-    } else {
-      setLeftWidth(rawLeftWidth);
-    }
+    if (isSwapped) setLeftWidth(100 - rawLeftWidth);
+    else setLeftWidth(rawLeftWidth);
   };
 
   const onSplitMouseMove = (e) => handleSplitMove(e.clientX);
@@ -245,116 +241,86 @@ export default function SummaryScreen({ onExit, summaryData }) {
     setIsAnswerRevealed(true); 
   };
 
-  // 📖 左画面（長文表示エリア）
-  const renderReadingPane = () => {
+  // 📖 左画面スクロールエリア内のテキストコンテンツ
+  const renderReadingContent = () => {
     const leadingClass = textSizeClass === 'text-base' ? 'leading-[2.5rem]' : textSizeClass === 'text-xl' ? 'leading-[3.5rem]' : 'leading-[4.2rem]';
 
     return (
-      <div className="h-full overflow-y-auto bg-slate-50 p-4 md:p-8 flex flex-col scroll-smooth">
-        <div className="w-full flex justify-between items-center mb-4 border-b border-slate-200 pb-2 flex-shrink-0">
-          <div className="flex items-center gap-2 text-indigo-600">
-            <BookOpen size={24} />
-            <h2 className="text-xl font-black">Reading Passage</h2>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <button 
-              onClick={() => setIsSwapped(!isSwapped)}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-200/60 hover:bg-indigo-100 text-slate-500 hover:text-indigo-600 text-xs font-black transition-all"
-              title="左右の画面を入れ替える"
+      <div 
+        className={`bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-200 text-slate-700 font-medium w-full h-fit break-words ${textSizeClass} ${leadingClass} ${fontClass} ${isTraceTask ? 'touch-none' : ''}`}
+        onPointerMove={handleTracePointerMove}
+        onPointerUp={handleTracePointerUp}
+        onTouchMove={handleTracePointerMove}
+        onTouchEnd={handleTracePointerUp}
+      >
+        {summaryData.paragraphs.map((paragraph, pIdx) => {
+          const isActive = currentPhase === 'paragraphs' && pIdx === currentParagraphIdx;
+          const isPast = currentPhase === 'global' || currentPhase === 'completed' || pIdx < currentParagraphIdx;
+          const isFuture = currentPhase === 'paragraphs' && pIdx > currentParagraphIdx;
+
+          let opacityClass = "transition-all duration-300 mb-8 last:mb-0 ";
+          if (isFuture) opacityClass += "opacity-25 pointer-events-none select-none"; 
+          if (isPast && currentPhase === 'paragraphs') opacityClass += "opacity-50 pointer-events-none"; 
+
+          return (
+            <div 
+              key={paragraph.p_id} 
+              ref={isActive ? activeParagraphRef : null} 
+              // 🌟 スクロールした時に、固定ヘッダーからどれくらい離すか（余白）を指定
+              className={`${opacityClass} scroll-mt-6 md:scroll-mt-8`}
             >
-              <ArrowLeftRight size={16} /> 入替
-            </button>
+              <div className={`text-xs font-sans tracking-wider uppercase mb-1 flex items-center gap-1.5 ${isActive ? 'text-indigo-600 font-black' : 'text-slate-400 font-bold'}`}>
+                <span>Paragraph {pIdx + 1}</span>
+                <span className="opacity-60">(第{pIdx + 1}段落)</span>
+                {isActive && <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />}
+              </div>
 
-            <div className="flex bg-slate-200/60 p-1 rounded-xl items-center gap-1 hidden md:flex">
-              <button onClick={() => setFontClass('font-sans')} className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${fontClass === 'font-sans' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>ゴシック</button>
-              <button onClick={() => setFontClass('font-serif')} className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${fontClass === 'font-serif' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>明朝</button>
-            </div>
-            <div className="flex bg-slate-200/60 p-1 rounded-xl items-center gap-1 hidden lg:flex">
-              <button onClick={() => setTextSizeClass('text-base')} className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${textSizeClass === 'text-base' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>小</button>
-              <button onClick={() => setTextSizeClass('text-xl')} className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${textSizeClass === 'text-xl' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>中</button>
-              <button onClick={() => setTextSizeClass('text-2xl')} className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${textSizeClass === 'text-2xl' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>大</button>
-            </div>
-          </div>
-        </div>
-
-        <div className="w-full mt-2 pb-16">
-          <div 
-            className={`bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-200 text-slate-700 font-medium w-full h-fit break-words ${textSizeClass} ${leadingClass} ${fontClass} ${isTraceTask ? 'touch-none' : ''}`}
-            onPointerMove={handleTracePointerMove}
-            onPointerUp={handleTracePointerUp}
-            onTouchMove={handleTracePointerMove}
-            onTouchEnd={handleTracePointerUp}
-          >
-            {summaryData.paragraphs.map((paragraph, pIdx) => {
-              const isActive = currentPhase === 'paragraphs' && pIdx === currentParagraphIdx;
-              const isPast = currentPhase === 'global' || currentPhase === 'completed' || pIdx < currentParagraphIdx;
-              const isFuture = currentPhase === 'paragraphs' && pIdx > currentParagraphIdx;
-
-              let opacityClass = "transition-all duration-300 mb-8 last:mb-0 ";
-              if (isFuture) opacityClass += "opacity-25 pointer-events-none select-none"; 
-              if (isPast && currentPhase === 'paragraphs') opacityClass += "opacity-50 pointer-events-none"; 
-
-              return (
-                <div 
-                  key={paragraph.p_id} 
-                  ref={isActive ? activeParagraphRef : null} // 🌟 ここにカメラ（Ref）をセット
-                  className={`${opacityClass} scroll-mt-6 md:scroll-mt-10`} // 🌟 上部が見切れないように少しマージンを確保
-                >
-                  <div className={`text-xs font-sans tracking-wider uppercase mb-1 flex items-center gap-1.5 ${isActive ? 'text-indigo-600 font-black' : 'text-slate-400 font-bold'}`}>
-                    <span>Paragraph {pIdx + 1}</span>
-                    <span className="opacity-60">(第{pIdx + 1}段落)</span>
-                    {isActive && <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />}
-                  </div>
-
-                  <div className={isActive ? 'bg-indigo-50/20 p-3 rounded-xl border-2 border-indigo-200 shadow-inner' : 'bg-slate-50/50 p-3 rounded-xl border border-slate-100'}>
-                    {paragraph.tokens.map((token, idx) => {
-                      let spanClass = "inline-block px-1.5 py-1 transition-all select-none ";
+              <div className={isActive ? 'bg-indigo-50/20 p-3 rounded-xl border-2 border-indigo-200 shadow-inner' : 'bg-slate-50/50 p-3 rounded-xl border border-slate-100'}>
+                {paragraph.tokens.map((token, idx) => {
+                  let spanClass = "inline-block px-1.5 py-1 transition-all select-none ";
+                  
+                  if (isActive) {
+                    spanClass += "cursor-pointer ";
+                    const isSelected = selectedIndices.includes(idx);
+                    const isPrevSelected = isSelected && selectedIndices.includes(idx - 1);
+                    const isNextSelected = isSelected && selectedIndices.includes(idx + 1);
+                    
+                    if (isSelected) {
+                      if (traceFeedback === 'wrong') spanClass += "bg-rose-200 text-rose-800 ";
+                      else if (traceFeedback === 'partial') spanClass += "bg-amber-200 text-amber-900 ";
+                      else spanClass += "bg-cyan-200 text-cyan-900 shadow-[0_2px_10px_rgba(165,243,252,0.4)] ";
                       
-                      if (isActive) {
-                        spanClass += "cursor-pointer ";
-                        const isSelected = selectedIndices.includes(idx);
-                        const isPrevSelected = isSelected && selectedIndices.includes(idx - 1);
-                        const isNextSelected = isSelected && selectedIndices.includes(idx + 1);
-                        
-                        if (isSelected) {
-                          if (traceFeedback === 'wrong') spanClass += "bg-rose-200 text-rose-800 ";
-                          else if (traceFeedback === 'partial') spanClass += "bg-amber-200 text-amber-900 ";
-                          else spanClass += "bg-cyan-200 text-cyan-900 shadow-[0_2px_10px_rgba(165,243,252,0.4)] ";
-                          
-                          if (!isPrevSelected && !isNextSelected) spanClass += "rounded-lg ";
-                          else if (!isPrevSelected) spanClass += "rounded-l-lg ";
-                          else if (!isNextSelected) spanClass += "rounded-r-lg ";
-                        } else {
-                          spanClass += "hover:bg-slate-100 text-slate-800 rounded-lg ";
-                        }
-                      } else {
-                        spanClass += "text-slate-600 font-normal rounded-lg ";
-                      }
+                      if (!isPrevSelected && !isNextSelected) spanClass += "rounded-lg ";
+                      else if (!isPrevSelected) spanClass += "rounded-l-lg ";
+                      else if (!isNextSelected) spanClass += "rounded-r-lg ";
+                    } else {
+                      spanClass += "hover:bg-slate-100 text-slate-800 rounded-lg ";
+                    }
+                  } else {
+                    spanClass += "text-slate-600 font-normal rounded-lg ";
+                  }
 
-                      return (
-                        <span 
-                          key={idx} 
-                          data-token-idx={idx} 
-                          onPointerDown={(e) => isActive && handleTracePointerDown(e, idx)} 
-                          className={spanClass}
-                        >
-                          {token}
-                        </span>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+                  return (
+                    <span 
+                      key={idx} 
+                      data-token-idx={idx} 
+                      onPointerDown={(e) => isActive && handleTracePointerDown(e, idx)} 
+                      className={spanClass}
+                    >
+                      {token}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
       </div>
     );
   };
 
-  // 📝 右側タスクパネルのレンダリング
-  const renderMissionPane = () => {
+  // 📝 右側スクロールエリア内のタスクコンテンツ
+  const renderMissionContent = () => {
     if (currentPhase === 'completed') {
       return (
         <div className="bg-white rounded-3xl p-10 shadow-md border-2 border-emerald-100 flex flex-col items-center justify-center text-center mt-6">
@@ -528,8 +494,10 @@ export default function SummaryScreen({ onExit, summaryData }) {
   };
 
   return (
-    <div className={`flex-1 flex flex-col h-full w-full bg-slate-50 relative ${isDraggingSplit ? 'select-none' : ''}`}>
-      <div className="flex justify-between items-center px-6 py-3 bg-white border-b border-slate-200 shadow-sm z-20">
+    <div className="flex-1 flex flex-col h-full w-full bg-slate-50 relative overflow-hidden">
+      
+      {/* 🌟 最上部共通ヘッダー（常に固定） */}
+      <div className="flex justify-between items-center px-6 py-3 bg-white border-b border-slate-200 shadow-sm z-30 flex-shrink-0">
         <div className="flex items-center gap-4">
           <button onClick={onExit} className="text-rose-500 hover:scale-110 transition-transform">
             <XCircle size={28} />
@@ -542,30 +510,79 @@ export default function SummaryScreen({ onExit, summaryData }) {
         <div className="text-sm font-bold text-slate-400">要約チャレンジモード</div>
       </div>
 
-      <div ref={containerRef} className={`flex-1 flex w-full h-full overflow-hidden relative ${isSwapped ? 'flex-row-reverse' : 'flex-row'}`}>
+      {/* 🌟 左右スプリット全体 */}
+      <div 
+        ref={containerRef} 
+        className={`flex-1 flex w-full h-full relative ${isSwapped ? 'flex-row-reverse' : 'flex-row'} ${isDraggingSplit ? 'select-none' : ''}`}
+        style={{ height: 'calc(100vh - 60px)' }} // ヘッダー分を引いた高さを厳格に指定
+      >
         
-        <div style={{ width: `${leftWidth}%` }} className="h-full">
-          {renderReadingPane()}
+        {/* 📖 左側パネル (Reading Passage) */}
+        <div style={{ width: `${leftWidth}%` }} className="h-full flex flex-col bg-slate-50 border-r border-slate-200">
+          
+          {/* 左側の固定ヘッダー */}
+          <div className="flex justify-between items-center px-4 md:px-8 py-3 md:py-4 bg-white z-20 shadow-[0_4px_10px_-4px_rgba(0,0,0,0.05)] flex-shrink-0">
+            <div className="flex items-center gap-2 text-indigo-600">
+              <BookOpen size={24} />
+              <h2 className="text-xl font-black">Reading Passage</h2>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => setIsSwapped(!isSwapped)}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-200/60 hover:bg-indigo-100 text-slate-500 hover:text-indigo-600 text-xs font-black transition-all"
+                title="左右の画面を入れ替える"
+              >
+                <ArrowLeftRight size={16} /> 入替
+              </button>
+
+              <div className="flex bg-slate-200/60 p-1 rounded-xl items-center gap-1 hidden md:flex">
+                <button onClick={() => setFontClass('font-sans')} className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${fontClass === 'font-sans' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>ゴシック</button>
+                <button onClick={() => setFontClass('font-serif')} className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${fontClass === 'font-serif' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>明朝</button>
+              </div>
+              <div className="flex bg-slate-200/60 p-1 rounded-xl items-center gap-1 hidden lg:flex">
+                <button onClick={() => setTextSizeClass('text-base')} className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${textSizeClass === 'text-base' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>小</button>
+                <button onClick={() => setTextSizeClass('text-xl')} className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${textSizeClass === 'text-xl' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>中</button>
+                <button onClick={() => setTextSizeClass('text-2xl')} className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${textSizeClass === 'text-2xl' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>大</button>
+              </div>
+            </div>
+          </div>
+
+          {/* 左側のスクロールエリア（ここだけが動く） */}
+          <div className="flex-1 overflow-y-auto px-4 md:px-8 py-6 md:py-8 pb-32">
+            {renderReadingContent()}
+          </div>
         </div>
 
-        <div onMouseDown={() => setIsDraggingSplit(true)} onTouchStart={() => setIsDraggingSplit(true)} className="w-4 flex flex-col items-center justify-center bg-slate-200/50 hover:bg-cyan-200 cursor-col-resize group transition-colors shadow-inner z-10">
+        {/* 🎚 中央のリサイズバー */}
+        <div 
+          onMouseDown={() => setIsDraggingSplit(true)} 
+          onTouchStart={() => setIsDraggingSplit(true)} 
+          className="w-4 flex flex-col items-center justify-center bg-slate-200/30 hover:bg-cyan-200 cursor-col-resize group transition-colors shadow-inner z-30"
+        >
           <div className="h-16 w-1.5 bg-slate-400 group-hover:bg-cyan-500 rounded-full flex items-center justify-center transition-colors">
             <GripVertical size={12} className="text-white opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
         </div>
 
-        <div style={{ width: `${100 - leftWidth}%` }} className="h-full">
-          <div className="h-full overflow-y-auto bg-slate-100 p-6 md:p-10 shadow-inner flex flex-col">
+        {/* 📝 右側パネル (Mission) */}
+        <div style={{ width: `${100 - leftWidth}%` }} className="h-full flex flex-col bg-slate-100 shadow-inner">
+          
+          {/* 右側の固定ヘッダー */}
+          <div className="flex items-center gap-2 px-6 md:px-8 py-3 md:py-4 bg-slate-100 z-20 flex-shrink-0 text-teal-600 shadow-[0_4px_10px_-4px_rgba(0,0,0,0.05)] border-b border-slate-200/60">
+            <PenTool size={24} />
+            <h2 className="text-xl font-black">Mission</h2>
+          </div>
+
+          {/* 右側のスクロールエリア（ここだけが動く） */}
+          <div className="flex-1 overflow-y-auto px-6 md:px-8 py-6 md:py-8 pb-32">
             <AnimatePresence mode="wait">
-              <motion.div key={`${currentPhase}-${currentParagraphIdx}-${currentTaskIdx}`} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="max-w-2xl mx-auto w-full flex flex-col mb-10 h-full">
-                <div className="flex items-center gap-2 mb-6 text-teal-600 flex-shrink-0">
-                  <PenTool size={24} />
-                  <h2 className="text-2xl font-black">Mission</h2>
-                </div>
-                {renderMissionPane()}
+              <motion.div key={`${currentPhase}-${currentParagraphIdx}-${currentTaskIdx}`} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="max-w-2xl mx-auto w-full flex flex-col">
+                {renderMissionContent()}
               </motion.div>
             </AnimatePresence>
           </div>
+
         </div>
         
       </div>
