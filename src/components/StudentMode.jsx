@@ -8,6 +8,7 @@ import LobbyScreen from './student/LobbyScreen';
 import MenuScreen from './student/MenuScreen';
 import ResultScreen from './student/ResultScreen';
 import GameScreen from './student/GameScreen';
+import SummaryScreen from './student/SummaryScreen';
 
 export default function StudentMode({ categories }) {
   const {
@@ -16,7 +17,8 @@ export default function StudentMode({ categories }) {
     selectedLevel, filteredProblems, setGameState,
     selectMainCategory, selectSubCategory, startGame, 
     backToMain, backToSub, backToLevelSelect,
-    handlePointerDown, handlePointerMove, handlePointerUp, submitAnswer, nextProblem
+    handlePointerDown, handlePointerMove, handlePointerUp, submitAnswer, nextProblem,
+    addBonusScore
   } = useTrace(categories);
 
   const {
@@ -30,9 +32,11 @@ export default function StudentMode({ categories }) {
   const [battleSetup, setBattleSetup] = useState(null);
   const [pendingBattle, setPendingBattle] = useState(null);
 
-  // ▼ 追加：オープニング（スプラッシュ）を既に見終わったかを記憶する
   const [hasSeenSplash, setHasSeenSplash] = useState(false);
   const [gameMode, setGameMode] = useState('normal');
+
+  // 🌟 追加：選択された長文データを管理するState
+  const [activeSummary, setActiveSummary] = useState(null);
 
   const processedBattleRef = useRef(null);
 
@@ -96,7 +100,6 @@ export default function StudentMode({ categories }) {
   if (appScreen === 'title') {
     return (
       <TitleScreen 
-        // ▼ 追加：記憶をTitleScreenに渡す
         hasSeenSplash={hasSeenSplash}
         onSplashComplete={() => setHasSeenSplash(true)}
         onSinglePlayer={() => setAppScreen('game')}
@@ -129,12 +132,22 @@ export default function StudentMode({ categories }) {
     );
   }
 
+  // 🌟 追加：要約チャレンジモードの画面切り替え
+  if (appScreen === 'summary') {
+    return (
+      <SummaryScreen 
+        summaryData={activeSummary} // 🌟 選択された長文データを渡す
+        onExit={handleExitToTitle} 
+      />
+    );
+  }
+
   if (gameState === 'main_select' || gameState === 'sub_select' || gameState === 'level_select') {
     return (
       <MenuScreen
-      　// 🌟 ここに追加（2行）
         gameMode={gameMode}
         setGameMode={setGameMode}
+        setActiveSummary={setActiveSummary} // 🌟 MenuScreenにセット関数を渡す
         gameState={gameState}
         availableCategories={availableCategories}
         activeMain={activeMain}
@@ -160,13 +173,10 @@ export default function StudentMode({ categories }) {
         playersData={playersData}
         myPeerId={myPeerId}
         score={score}
-
-　　　　// 🌟 追加：この4行を足して、リザルト画面にデータを送る
         activeCategory={activeCategory}
         selectedLevel={selectedLevel}
         correctCount={correctCount}
         totalCount={filteredProblems?.length || 0}
-
         onBackToLobby={() => setAppScreen('lobby')}
         onBackToLevelSelect={backToLevelSelect}
       />
@@ -175,8 +185,8 @@ export default function StudentMode({ categories }) {
 
   return (
     <GameScreen
-    　// 🌟 ここに追加（1行）
       gameMode={gameMode}
+      addBonusScore={addBonusScore} 
       isMultiplayer={isMultiplayer}
       playersData={playersData}
       myPeerId={myPeerId}

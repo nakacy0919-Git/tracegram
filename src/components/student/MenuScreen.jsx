@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, BookOpen, Layers, BarChart3, AlertTriangle, CheckCircle2, TrendingUp, Award, HelpCircle, Bug, Crosshair } from 'lucide-react';
+// 🌟 追加：Beaker (BETAバッジ用) アイコンをインポート
+import { ArrowLeft, BookOpen, Layers, BarChart3, AlertTriangle, CheckCircle2, TrendingUp, Award, HelpCircle, Bug, Crosshair, FileText, Beaker } from 'lucide-react';
+
+// 🌟 長文データのインポート
+import { summary_b1_01 } from '../../data/summary/summary_b1_01';
+import { summary_b2_01 } from '../../data/summary/summary_b2_01';
 
 const SUB_MAPPING = {
   'BASIC': ['basic_find_verb', 'basic_remove_m', 'basic_5patterns'],
@@ -23,7 +28,8 @@ const GRAMMAR_CATEGORIES = [
 ];
 
 export default function MenuScreen({
-  gameMode, setGameMode, // 🌟 この1行を追加！
+  gameMode, setGameMode, 
+  setActiveSummary, // 🌟 この1行を追加！（選択された長文をセットするため）
   gameState, availableCategories, activeMain, activeCategory, isMultiplayer, isHost,
   setAppScreen, selectMainCategory, selectSubCategory, startGame,
   backToMain, backToSub, handleExitToTitle, setBattleSetup
@@ -32,7 +38,6 @@ export default function MenuScreen({
   const [viewMode, setViewMode] = useState('element'); 
   const [logs, setLogs] = useState([]);
 
-  // 🌟 追加：タブが「内省（弱点分析）」に切り替わった時にlocalStorageから学習ログを読み込む
   useEffect(() => {
     if (viewMode === 'reflection') {
       const savedLogs = localStorage.getItem('tracegram_learning_logs');
@@ -46,7 +51,6 @@ export default function MenuScreen({
     }
   }, [viewMode]);
 
-  // 🌟 追加：学習ログから各カテゴリのデータを集計するロジック
   const analyzeWeaknesses = () => {
     if (logs.length === 0) return { stats: [], weaknesses: [], totalQuestions: 0, totalCorrect: 0 };
 
@@ -69,7 +73,6 @@ export default function MenuScreen({
       accuracy: Math.round((cat.correct / cat.total) * 100)
     }));
 
-    // 正解率が低い順（＝弱点）にソートしてトップ3を抽出
     const weaknesses = [...stats]
       .filter(cat => cat.total > 0)
       .sort((a, b) => a.accuracy - b.accuracy)
@@ -128,6 +131,9 @@ export default function MenuScreen({
       { id: 'MODIFIER', title: '修飾語マスター', desc: '文を長くする飾りを仕分けろ！', bg: "bg-[#8bbff5]", text: "text-[#1d4ed8]" },
     ];
 
+    // 🌟 追加：出題する長文データのリスト
+    const SUMMARY_LIST = [summary_b1_01, summary_b2_01];
+
     return (
       <div className="flex-1 flex flex-col items-center p-6 md:p-12 overflow-y-auto z-10 relative w-full">
         <div className="absolute top-6 left-6 md:top-8 md:left-8 z-20">
@@ -136,7 +142,7 @@ export default function MenuScreen({
         
         <div className="max-w-5xl w-full mt-16 md:mt-10 flex flex-col items-center">
           
-          {/* タブ切り替えエリア：3つ目の「弱点分析」タブを追加 */}
+          {/* タブ切り替えエリア */}
           <div className="flex bg-slate-200/50 p-1.5 rounded-full mb-10 shadow-inner max-w-full overflow-x-auto hide-scrollbar">
             <button 
               onClick={() => setViewMode('element')}
@@ -155,6 +161,13 @@ export default function MenuScreen({
               className={`flex items-center gap-2 px-6 md:px-8 py-3 rounded-full font-black text-sm md:text-lg transition-all whitespace-nowrap ${viewMode === 'reflection' ? 'bg-white text-rose-600 shadow-md' : 'text-slate-500 hover:text-slate-700'}`}
             >
               <BarChart3 size={22} /> 📊 弱点分析レコード
+            </button>
+
+            <button 
+              onClick={() => setViewMode('summary')}
+              className={`flex items-center gap-2 px-6 md:px-8 py-3 rounded-full font-black text-sm md:text-lg transition-all whitespace-nowrap ${viewMode === 'summary' ? 'bg-white text-emerald-600 shadow-md' : 'text-slate-500 hover:text-slate-700'}`}
+            >
+              <FileText size={22} /> 📖 長文・要約トレース
             </button>
           </div>
 
@@ -208,13 +221,11 @@ export default function MenuScreen({
                   ))}
                 </div>
               </motion.div>
-            ) : (
-              /* 📊 🌟 NEW: 内省・弱点分析ダッシュボード画面 🌟 */
+            ) : viewMode === 'reflection' ? (
               <motion.div key="reflection" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="w-full max-w-4xl">
                 <h2 className="text-2xl md:text-3xl font-black text-slate-700 mb-6 text-center drop-shadow-sm">弱点克服のための学習記録・内省レポート</h2>
                 
                 {logs.length === 0 ? (
-                  /* まだ学習ログデータがない場合の画面 */
                   <div className="bg-white rounded-3xl p-10 border-2 border-slate-100 shadow-md text-center flex flex-col items-center justify-center min-h-[300px]">
                     <HelpCircle size={64} className="text-slate-300 mb-4 animate-bounce" />
                     <h3 className="text-xl font-black text-slate-600 mb-2">まだレコードデータがありません</h3>
@@ -223,10 +234,8 @@ export default function MenuScreen({
                     </p>
                   </div>
                 ) : (
-                  /* ログデータがある場合の分析レポート画面 */
                   <div className="flex flex-col gap-6 w-full">
                     
-                    {/* サマリーカード */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="bg-gradient-to-br from-cyan-500 to-blue-600 text-white rounded-2xl p-5 shadow-md flex flex-col justify-between">
                         <span className="font-black text-xs opacity-75 flex items-center gap-1"><Award size={14}/> 総解答トークン数</span>
@@ -245,7 +254,6 @@ export default function MenuScreen({
                       </div>
                     </div>
 
-                    {/* クリティカルな弱点通知ボックス */}
                     {weaknesses.length > 0 && (
                       <div className="bg-rose-50 border-2 border-rose-200 rounded-3xl p-5 shadow-sm">
                         <h3 className="text-rose-700 font-black text-lg flex items-center gap-2 mb-3">
@@ -270,7 +278,6 @@ export default function MenuScreen({
                       </div>
                     )}
 
-                    {/* 分野別の詳細な進捗インジケータ */}
                     <div className="bg-white rounded-3xl p-5 md:p-6 border border-slate-100 shadow-md">
                       <h3 className="text-slate-700 font-black text-lg mb-4">全カテゴリの構造理解度チェック</h3>
                       <div className="flex flex-col gap-4">
@@ -301,7 +308,61 @@ export default function MenuScreen({
                   </div>
                 )}
               </motion.div>
-            )}
+            ) : viewMode === 'summary' ? (
+              /* 🌟 NEW: 要約チャレンジモードのメニュー画面 🌟 */
+              <motion.div key="summary" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="w-full">
+                
+                <div className="flex flex-col items-center justify-center mb-8">
+                  <div className="flex items-center gap-3">
+                    <h2 className="text-2xl md:text-3xl font-black text-slate-700 drop-shadow-sm">長文のコアを掴み、要約力を鍛えよう</h2>
+                    {/* 🌟 開発中バッジ */}
+                    <span className="flex items-center gap-1 bg-amber-100 text-amber-700 font-black text-xs px-3 py-1 rounded-full border border-amber-300 shadow-sm animate-pulse">
+                      <Beaker size={14} /> 開発中 (BETA)
+                    </span>
+                  </div>
+                  <p className="text-slate-500 font-bold mt-2 text-sm">サンプル問題として試験運用中です。予告なく仕様が変更される場合があります。</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  
+                  {/* 🌟 リスト化された長文データの表示 */}
+                  {SUMMARY_LIST.map((summary) => (
+                    <motion.div 
+                      key={summary.id}
+                      whileHover={{ scale: 1.02 }}
+                      className="bg-white p-6 rounded-[24px] shadow-md border-2 border-emerald-100 flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="bg-indigo-500 text-white font-black text-xs px-2 py-1 rounded-md">{summary.level}</span>
+                          <span className="text-emerald-600 font-bold text-sm">{summary.theme}</span>
+                        </div>
+                        <h3 className="text-xl font-black text-slate-800 mb-2">{summary.title}</h3>
+                        <p className="text-slate-500 text-sm font-bold mb-6">
+                          パラグラフごとの論理展開を追いかけ、要約力を高めよう。
+                        </p>
+                      </div>
+                      <button 
+                        onClick={() => {
+                          setActiveSummary(summary); // 🌟 選択した長文のデータをセット
+                          setAppScreen('summary');   // 🌟 画面遷移
+                        }} 
+                        className="mt-2 bg-emerald-500 hover:bg-emerald-400 text-white font-black py-4 rounded-xl shadow-sm transition-colors flex justify-center items-center gap-2"
+                      >
+                        CHALLENGE <FileText size={18} />
+                      </button>
+                    </motion.div>
+                  ))}
+                  
+                  {/* 今後の追加予定枠 */}
+                  <div className="bg-slate-100 p-6 rounded-[24px] border-2 border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 min-h-[200px]">
+                    <p className="font-black">Coming Soon...</p>
+                    <p className="text-sm font-bold">新しい長文を追加予定です</p>
+                  </div>
+
+                </div>
+              </motion.div>
+            ) : null}
           </AnimatePresence>
         </div>
       </div>
@@ -351,9 +412,8 @@ export default function MenuScreen({
                </p>
             )}
           </div>
-　　　　　 <div className="bg-white/80 backdrop-blur-md p-2 rounded-2xl shadow-sm border border-slate-200 mb-10 flex justify-center mx-auto max-w-lg">
+           <div className="bg-white/80 backdrop-blur-md p-2 rounded-2xl shadow-sm border border-slate-200 mb-10 flex justify-center mx-auto max-w-lg">
             <button 
-              // ※注：propsで setGameMode を受け取るように MenuScreen の引数を追加するのをお忘れなく！
               onClick={() => setGameMode('normal')}
               className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-black text-sm md:text-base transition-all ${
                 gameMode === 'normal' ? 'bg-cyan-500 text-white shadow-md' : 'text-slate-500 hover:bg-slate-100'
