@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-// 🌟 必要なアイコン（RefreshCcw, Eye）を追加インポート
-import { GripVertical, XCircle, BookOpen, PenTool, ArrowRight, CheckCircle2, AlertCircle, Trophy, RefreshCcw, Eye } from 'lucide-react';
+import { GripVertical, XCircle, BookOpen, PenTool, ArrowRight, CheckCircle2, AlertCircle, Trophy, RefreshCcw, Eye, ArrowLeftRight } from 'lucide-react';
 import PronunciationMission from './PronunciationMission'; 
 
 const playTraceSound = (count, isDeselect = false) => {
@@ -30,14 +29,14 @@ export default function SummaryScreen({ onExit, summaryData }) {
   const [isDraggingSplit, setIsDraggingSplit] = useState(false);
   const containerRef = useRef(null);
 
-  // 🌟 フォントと文字サイズ調整用のState
+  // 🌟 UI設定用State（全て復活！）
+  const [isSwapped, setIsSwapped] = useState(false);
   const [textSizeClass, setTextSizeClass] = useState('text-xl');
-  const [fontClass, setFontClass] = useState('font-sans'); // 'font-sans' (ゴシック) or 'font-serif' (明朝/Century)
+  const [fontClass, setFontClass] = useState('font-sans'); 
+  const [readAloudTarget, setReadAloudTarget] = useState('mission'); 
 
-  // 🌟 音読範囲選択用のState
-  const [readAloudTarget, setReadAloudTarget] = useState('mission'); // 'mission' | 'all' | 0, 1, 2...
-
-  const [currentPhase, setCurrentPhase] = useState('paragraphs'); 
+  // 🌟 進行管理用State（新データ構造対応版）
+  const [currentPhase, setCurrentPhase] = useState('paragraphs'); // 'paragraphs' -> 'global' -> 'completed'
   const [currentParagraphIdx, setCurrentParagraphIdx] = useState(0);
   const [currentTaskIdx, setCurrentTaskIdx] = useState(0); 
   
@@ -51,6 +50,7 @@ export default function SummaryScreen({ onExit, summaryData }) {
 
   if (!summaryData) return null;
 
+  // 現在のタスクデータを特定
   const currentParagraph = summaryData.paragraphs[currentParagraphIdx];
   let currentTask = null;
   if (currentPhase === 'paragraphs' && currentParagraph?.tasks) {
@@ -59,6 +59,7 @@ export default function SummaryScreen({ onExit, summaryData }) {
     currentTask = summaryData.globalTasks[currentTaskIdx];
   }
 
+  // タスクが切り替わるたびに状態をリセット
   useEffect(() => {
     setSelectedOption(null);
     setIsAnswerRevealed(false);
@@ -67,6 +68,7 @@ export default function SummaryScreen({ onExit, summaryData }) {
     setIsTracing(false);
   }, [currentParagraphIdx, currentTaskIdx, currentPhase]);
 
+  // --- スプリット画面のリサイズ処理 ---
   const handleSplitMove = (clientX) => {
     if (!isDraggingSplit || !containerRef.current) return;
     const containerRect = containerRef.current.getBoundingClientRect();
@@ -99,6 +101,10 @@ export default function SummaryScreen({ onExit, summaryData }) {
     };
   }, [isDraggingSplit]);
 
+  // --- トレース処理 ---
+  const isTraceTask = currentTask && ['trace', 'tap', 'analyze'].includes(currentTask.type);
+  const allowInteraction = currentPhase === 'paragraphs' && isTraceTask && traceFeedback !== 'correct';
+
   const updateTraceSelection = (idx, mode) => {
     setSelectedIndices(prev => {
       if (mode === 'select' && !prev.includes(idx)) {
@@ -112,12 +118,10 @@ export default function SummaryScreen({ onExit, summaryData }) {
     });
   };
 
-  const isTraceTask = currentTask && ['trace', 'tap', 'analyze'].includes(currentTask.type);
-
   const handleTracePointerDown = (e, idx) => {
-    if (currentPhase !== 'paragraphs' || !isTraceTask || traceFeedback === 'correct') return;
+    if (!allowInteraction) return;
     
-    // 🌟 不正解・惜しい判定のあとに画面に触れたら、即座に前の選択をクリアして新しくなぞり始める
+    // 不正解・惜しい判定のあとに画面に触れたら、即座に前の選択をクリアして新しくなぞり始める
     if (traceFeedback === 'wrong' || traceFeedback === 'partial') {
       setTraceFeedback('idle');
       setSelectedIndices([idx]);
@@ -136,7 +140,7 @@ export default function SummaryScreen({ onExit, summaryData }) {
   };
 
   const handleTracePointerMove = (e) => {
-    if (!isTracing || !isTraceTask || traceFeedback === 'correct') return;
+    if (!isTracing || !allowInteraction) return;
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
     const element = document.elementFromPoint(clientX, clientY);
@@ -169,11 +173,10 @@ export default function SummaryScreen({ onExit, summaryData }) {
     let target = [];
     let partial = [];
 
-    if (currentTask.type === 'tap') {
-      target = [currentTask.targetIndex];
-    } else if (currentTask.type === 'analyze') {
-      target = [...(currentTask.targetV || []), ...(currentTask.targetO || [])].sort((a, b) => a - b);
-    } else {
+    // 新データ構造における正解インデックスの抽出
+    if (currentTask.type === 'tap') target = [currentTask.targetIndex];
+    else if (currentTask.type === 'analyze') target = [...(currentTask.targetV || []), ...(currentTask.targetO || [])].sort((a, b) => a - b);
+    else {
       target = currentTask.targetIndices || [];
       partial = currentTask.partialIndices || [];
     }
@@ -185,7 +188,7 @@ export default function SummaryScreen({ onExit, summaryData }) {
     else if (isPartial) setTraceFeedback('partial');
     else {
       setTraceFeedback('wrong');
-      // 🌟 間違えたら800ミリ秒後に自動でサッと消す
+      // 間違えたら800ミリ秒後に自動でサッと消す
       setTimeout(() => {
         setTraceFeedback(prev => prev === 'wrong' ? 'idle' : prev);
         setSelectedIndices([]);
@@ -193,7 +196,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
     }
   };
 
-  // 🌟 わからない場合に解答を表示するロジック
   const handleShowAnswer = () => {
     if (!currentTask) return;
     let target = [];
@@ -202,30 +204,24 @@ export default function SummaryScreen({ onExit, summaryData }) {
     else target = currentTask.targetIndices || [];
 
     setSelectedIndices(target);
-    setTraceFeedback('correct'); // 正解状態にして解説を表示
+    setTraceFeedback('correct'); 
   };
 
   const handleNextTask = () => {
     if (currentPhase === 'paragraphs') {
-      if (currentTaskIdx + 1 < currentParagraph.tasks.length) {
-        setCurrentTaskIdx(prev => prev + 1); 
-      } else if (currentParagraphIdx + 1 < summaryData.paragraphs.length) {
+      if (currentTaskIdx + 1 < currentParagraph.tasks.length) setCurrentTaskIdx(prev => prev + 1); 
+      else if (currentParagraphIdx + 1 < summaryData.paragraphs.length) {
         setCurrentParagraphIdx(prev => prev + 1); 
         setCurrentTaskIdx(0);
       } else {
         if (summaryData.globalTasks && summaryData.globalTasks.length > 0) {
           setCurrentPhase('global');
           setCurrentTaskIdx(0);
-        } else {
-          setCurrentPhase('completed');
-        }
+        } else setCurrentPhase('completed');
       }
     } else if (currentPhase === 'global') {
-      if (currentTaskIdx + 1 < summaryData.globalTasks.length) {
-        setCurrentTaskIdx(prev => prev + 1); 
-      } else {
-        setCurrentPhase('completed');
-      }
+      if (currentTaskIdx + 1 < summaryData.globalTasks.length) setCurrentTaskIdx(prev => prev + 1); 
+      else setCurrentPhase('completed');
     }
   };
 
@@ -235,81 +231,122 @@ export default function SummaryScreen({ onExit, summaryData }) {
     setIsAnswerRevealed(true); 
   };
 
-  const renderLeftPane = () => {
+  // 📖 左画面（長文表示エリア）
+  const renderReadingPane = () => {
     const leadingClass = textSizeClass === 'text-base' ? 'leading-[2.5rem]' : textSizeClass === 'text-xl' ? 'leading-[3.5rem]' : 'leading-[4.2rem]';
 
     return (
-      <div 
-        // 🌟 ここに fontClass を適用して全体のフォントを変更
-        className={`bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-200 text-slate-700 font-medium w-full ${textSizeClass} ${leadingClass} ${fontClass} ${isTraceTask ? 'touch-none' : ''}`}
-        onPointerMove={handleTracePointerMove}
-        onPointerUp={handleTracePointerUp}
-        onTouchMove={handleTracePointerMove}
-        onTouchEnd={handleTracePointerUp}
-      >
-        {summaryData.paragraphs.map((paragraph, pIdx) => {
-          const isActive = currentPhase === 'paragraphs' && pIdx === currentParagraphIdx;
-          const isPast = currentPhase === 'global' || currentPhase === 'completed' || pIdx < currentParagraphIdx;
-          const isFuture = currentPhase === 'paragraphs' && pIdx > currentParagraphIdx;
+      <div className="h-full overflow-y-auto bg-slate-50 p-4 md:p-8 flex flex-col">
+        <div className="w-full flex justify-between items-center mb-4 border-b border-slate-200 pb-2 flex-shrink-0">
+          <div className="flex items-center gap-2 text-indigo-600">
+            <BookOpen size={24} />
+            <h2 className="text-xl font-black">Reading Passage</h2>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            {/* 左右入替ボタン */}
+            <button 
+              onClick={() => setIsSwapped(!isSwapped)}
+              className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-200/60 hover:bg-indigo-100 text-slate-500 hover:text-indigo-600 text-xs font-black transition-all"
+              title="左右の画面を入れ替える"
+            >
+              <ArrowLeftRight size={16} /> 入替
+            </button>
 
-          let opacityClass = "transition-all duration-300 mb-8 last:mb-0 ";
-          if (isFuture) opacityClass += "opacity-25 pointer-events-none select-none"; 
-          if (isPast && currentPhase === 'paragraphs') opacityClass += "opacity-50 pointer-events-none"; 
-
-          return (
-            <div key={paragraph.p_id} className={opacityClass}>
-              <div className={`text-xs font-sans tracking-wider uppercase mb-1 flex items-center gap-1.5 ${isActive ? 'text-indigo-600 font-black' : 'text-slate-400 font-bold'}`}>
-                <span>Paragraph {pIdx + 1}</span>
-                <span className="opacity-60">(第{pIdx + 1}段落)</span>
-                {isActive && <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />}
-              </div>
-
-              <div className={isActive ? 'bg-indigo-50/20 p-2 rounded-xl border border-indigo-100/40 shadow-inner' : ''}>
-                {isActive ? (
-                  paragraph.tokens.map((token, idx) => {
-                    const isSelected = selectedIndices.includes(idx);
-                    let spanClass = "inline-block px-1 mx-0.5 rounded transition-all cursor-pointer select-none ";
-                    
-                    if (isSelected) {
-                      if (traceFeedback === 'wrong') spanClass += "bg-rose-200 text-rose-800";
-                      else if (traceFeedback === 'partial') spanClass += "bg-amber-200 text-amber-900";
-                      else spanClass += "bg-cyan-200 text-cyan-900 shadow-sm";
-                    } else {
-                      spanClass += "hover:bg-slate-100 text-slate-800 font-bold";
-                    }
-                    
-                    return (
-                      <span 
-                        key={idx} 
-                        data-token-idx={idx} 
-                        onPointerDown={(e) => handleTracePointerDown(e, idx)} 
-                        className={spanClass}
-                      >
-                        {token}
-                      </span>
-                    );
-                  })
-                ) : (
-                  <span className="text-slate-600 font-normal">
-                    {paragraph.tokens.map((t, idx) => {
-                      const isTarget = paragraph.traceTask?.targetIndices?.includes(idx);
-                      return (
-                        <span key={idx} className={isTarget ? "border-b border-emerald-300 text-slate-800" : ""}>
-                          {t}{' '}
-                        </span>
-                      );
-                    })}
-                  </span>
-                )}
-              </div>
+            {/* フォント切替 */}
+            <div className="flex bg-slate-200/60 p-1 rounded-xl items-center gap-1 hidden md:flex">
+              <button onClick={() => setFontClass('font-sans')} className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${fontClass === 'font-sans' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>ゴシック</button>
+              <button onClick={() => setFontClass('font-serif')} className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${fontClass === 'font-serif' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>明朝</button>
             </div>
-          );
-        })}
+            {/* 文字サイズ切替 */}
+            <div className="flex bg-slate-200/60 p-1 rounded-xl items-center gap-1 hidden lg:flex">
+              <button onClick={() => setTextSizeClass('text-base')} className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${textSizeClass === 'text-base' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>小</button>
+              <button onClick={() => setTextSizeClass('text-xl')} className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${textSizeClass === 'text-xl' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>中</button>
+              <button onClick={() => setTextSizeClass('text-2xl')} className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${textSizeClass === 'text-2xl' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>大</button>
+            </div>
+          </div>
+        </div>
+
+        <div className="w-full flex-1">
+          <div 
+            className={`bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-200 text-slate-700 font-medium w-full ${textSizeClass} ${leadingClass} ${fontClass} ${isTraceTask ? 'touch-none' : ''}`}
+            onPointerMove={handleTracePointerMove}
+            onPointerUp={handleTracePointerUp}
+            onTouchMove={handleTracePointerMove}
+            onTouchEnd={handleTracePointerUp}
+          >
+            {summaryData.paragraphs.map((paragraph, pIdx) => {
+              const isActive = currentPhase === 'paragraphs' && pIdx === currentParagraphIdx;
+              const isPast = currentPhase === 'global' || currentPhase === 'completed' || pIdx < currentParagraphIdx;
+              const isFuture = currentPhase === 'paragraphs' && pIdx > currentParagraphIdx;
+
+              let opacityClass = "transition-all duration-300 mb-8 last:mb-0 ";
+              if (isFuture) opacityClass += "opacity-25 pointer-events-none select-none"; 
+              if (isPast && currentPhase === 'paragraphs') opacityClass += "opacity-50 pointer-events-none"; 
+
+              return (
+                <div key={paragraph.p_id} className={opacityClass}>
+                  <div className={`text-xs font-sans tracking-wider uppercase mb-1 flex items-center gap-1.5 ${isActive ? 'text-indigo-600 font-black' : 'text-slate-400 font-bold'}`}>
+                    <span>Paragraph {pIdx + 1}</span>
+                    <span className="opacity-60">(第{pIdx + 1}段落)</span>
+                    {isActive && <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />}
+                  </div>
+
+                  <div className={isActive ? 'bg-indigo-50/20 p-3 rounded-xl border border-indigo-100/40 shadow-inner' : ''}>
+                    {isActive ? (
+                      paragraph.tokens.map((token, idx) => {
+                        const isSelected = selectedIndices.includes(idx);
+                        
+                        // 美しい連続ハイライトのロジック復活
+                        const isPrevSelected = isSelected && selectedIndices.includes(idx - 1);
+                        const isNextSelected = isSelected && selectedIndices.includes(idx + 1);
+                        
+                        let spanClass = "inline-block px-1.5 py-1 transition-all cursor-pointer select-none ";
+                        
+                        if (isSelected) {
+                          if (traceFeedback === 'wrong') spanClass += "bg-rose-200 text-rose-800 ";
+                          else if (traceFeedback === 'partial') spanClass += "bg-amber-200 text-amber-900 ";
+                          else spanClass += "bg-cyan-200 text-cyan-900 shadow-[0_2px_10px_rgba(165,243,252,0.4)] ";
+                          
+                          if (!isPrevSelected && !isNextSelected) spanClass += "rounded-lg ";
+                          else if (!isPrevSelected) spanClass += "rounded-l-lg ";
+                          else if (!isNextSelected) spanClass += "rounded-r-lg ";
+                        } else {
+                          spanClass += "hover:bg-slate-100 text-slate-800 rounded-lg ";
+                        }
+                        
+                        return (
+                          <span key={idx} data-token-idx={idx} onPointerDown={(e) => handleTracePointerDown(e, idx)} className={spanClass}>
+                            {token}
+                          </span>
+                        );
+                      })
+                    ) : (
+                      <span className="text-slate-600 font-normal">
+                        {paragraph.tokens.map((t, idx) => {
+                          const isTarget = paragraph.tasks?.some(task => 
+                            task.targetIndices?.includes(idx) || task.targetIndex === idx || task.targetV?.includes(idx) || task.targetO?.includes(idx)
+                          );
+                          return (
+                            <span key={idx} className={isTarget ? "border-b-2 border-emerald-300 text-slate-800 font-bold px-1" : "px-1"}>
+                              {t}
+                            </span>
+                          );
+                        })}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
     );
   };
 
-  const renderRightPane = () => {
+  // 📝 右側タスクパネルのレンダリング
+  const renderMissionPane = () => {
     if (currentPhase === 'completed') {
       return (
         <div className="bg-white rounded-3xl p-10 shadow-md border-2 border-emerald-100 flex-1 flex flex-col items-center justify-center text-center">
@@ -325,14 +362,12 @@ export default function SummaryScreen({ onExit, summaryData }) {
 
     if (!currentTask) return null;
 
-    // 🌟 音読ミッションのレンダリング
     if (currentTask.type === 'voice') {
-      // ユーザーの選択に応じて音読するターゲットテキストを生成
       let readText = currentTask.targetSentence;
       if (readAloudTarget === 'all') {
-        readText = summaryData.paragraphs.map(p => p.rawText).join(' ');
+        readText = summaryData.paragraphs.map(p => p.rawText || p.tokens.join(' ')).join(' ');
       } else if (typeof readAloudTarget === 'number') {
-        readText = summaryData.paragraphs[readAloudTarget].rawText;
+        readText = summaryData.paragraphs[readAloudTarget].rawText || summaryData.paragraphs[readAloudTarget].tokens.join(' ');
       }
 
       return (
@@ -340,11 +375,8 @@ export default function SummaryScreen({ onExit, summaryData }) {
            <span className="inline-block bg-indigo-100 text-indigo-700 font-black text-sm px-3 py-1 rounded-full mb-4 w-max">
             Final Task: Read Aloud
           </span>
-          <h3 className="text-xl font-black text-slate-800 mb-6 leading-relaxed">
-            {currentTask.instruction}
-          </h3>
-
-          {/* 🌟 読みたい段落・範囲の選択プルダウン */}
+          <h3 className="text-xl font-black text-slate-800 mb-6 leading-relaxed">{currentTask.instruction}</h3>
+          
           <div className="mb-4">
             <select 
               value={readAloudTarget}
@@ -352,23 +384,16 @@ export default function SummaryScreen({ onExit, summaryData }) {
                 const val = e.target.value;
                 setReadAloudTarget(val === 'all' || val === 'mission' ? val : parseInt(val, 10));
               }}
-              className="bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-lg px-4 py-2 w-full max-w-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+              className="bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-lg px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-300"
             >
               <option value="mission">指定のハイライト文のみ読む</option>
               <option value="all">長文を全文通しで読む</option>
-              {summaryData.paragraphs.map((p, i) => (
-                <option key={i} value={i}>第{i + 1}段落を読む</option>
-              ))}
+              {summaryData.paragraphs.map((p, i) => <option key={i} value={i}>第{i + 1}段落を読む</option>)}
             </select>
           </div>
 
           <div className="flex-1">
-            {/* keyを変更してコンポーネントを強制再マウントさせ、ターゲット文の変更を即座に反映 */}
-            <PronunciationMission 
-              key={readAloudTarget}
-              targetSentence={readText} 
-              onComplete={handleNextTask} 
-            />
+            <PronunciationMission key={readAloudTarget} targetSentence={readText} onComplete={handleNextTask} />
           </div>
         </div>
       );
@@ -381,7 +406,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
           <span className={`inline-block font-black text-sm px-3 py-1 rounded-full mb-4 w-max ${isGlobal ? 'bg-indigo-100 text-indigo-700' : 'bg-teal-100 text-teal-700'}`}>
             {isGlobal ? 'Comprehension' : 'Multiple Choice'}
           </span>
-          
           <h3 className="text-xl font-black text-slate-800 mb-6 leading-relaxed">{currentTask.instruction}</h3>
           
           <div className="flex flex-col gap-3">
@@ -402,12 +426,12 @@ export default function SummaryScreen({ onExit, summaryData }) {
           </div>
 
           {isAnswerRevealed && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-6 p-4 rounded-xl bg-slate-50 border border-slate-200">
-              <p className="text-slate-600 font-bold text-sm leading-relaxed">
-                <span className="text-indigo-500 font-black mr-2">解説:</span>
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-6 p-5 rounded-2xl bg-slate-50 border border-slate-200">
+              <div className="text-slate-600 font-bold text-sm leading-relaxed text-left w-full">
+                <span className="text-indigo-500 font-black block mb-2 text-base">💡 解説:</span>
                 {currentTask.options[selectedOption].explanation}
-              </p>
-              <button onClick={handleNextTask} className="mt-4 w-full py-3 rounded-lg bg-teal-500 hover:bg-teal-400 text-white font-black transition-all flex justify-center items-center gap-2">
+              </div>
+              <button onClick={handleNextTask} className="mt-5 w-full py-3 rounded-lg bg-teal-500 hover:bg-teal-400 text-white font-black transition-all flex justify-center items-center gap-2">
                 次へ進む <ArrowRight size={18} />
               </button>
             </motion.div>
@@ -416,9 +440,8 @@ export default function SummaryScreen({ onExit, summaryData }) {
       );
     }
 
-    // 🎯 トレース・タップ・アナライズ問題の共通UI
     return (
-      <div className="bg-white rounded-3xl p-8 shadow-md border-2 border-teal-100 flex-1 flex flex-col relative">
+      <div className="bg-white rounded-3xl p-6 md:p-8 shadow-md border-2 border-teal-100 flex-1 flex flex-col relative">
         <span className="inline-block bg-teal-100 text-teal-700 font-black text-sm px-3 py-1 rounded-full mb-4 w-max">
           Task: {currentTask.type.toUpperCase()}
         </span>
@@ -436,10 +459,13 @@ export default function SummaryScreen({ onExit, summaryData }) {
               <motion.div key="partial" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }} className="text-amber-500 font-black flex flex-col items-center gap-2"><AlertCircle size={32} /><p>惜しい！かすっていますが、過不足なく選びましょう。</p></motion.div>
             )}
             {traceFeedback === 'correct' && (
-              <motion.div key="correct" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }} className="text-emerald-500 font-black flex flex-col items-center gap-2">
-                <CheckCircle2 size={40} />
-                <p className="text-xl">PERFECT!</p>
-                <p className="text-sm mt-2 text-slate-600 bg-white p-3 rounded-lg border border-slate-200 shadow-sm">{currentTask.explanation}</p>
+              <motion.div key="correct" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }} className="text-emerald-500 font-black flex flex-col items-center w-full">
+                <CheckCircle2 size={40} className="mb-2" />
+                <p className="text-xl mb-4">PERFECT!</p>
+                <div className="text-sm text-slate-600 bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-left w-full leading-relaxed">
+                  <span className="text-indigo-500 font-black block mb-1">💡 解説:</span>
+                  {currentTask.explanation}
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
@@ -452,15 +478,14 @@ export default function SummaryScreen({ onExit, summaryData }) {
         ) : (
           <div className="flex flex-col gap-4 mt-6">
             <div className="flex gap-2">
-              {/* 🌟 一括クリアボタン */}
               <button 
-                onClick={() => setSelectedIndices([])} 
+                onClick={() => { setSelectedIndices([]); setTraceFeedback('idle'); }} 
                 disabled={selectedIndices.length === 0}
                 className="bg-slate-200 hover:bg-slate-300 text-slate-600 px-6 py-4 rounded-xl font-black transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                title="選択をリセット"
               >
                 <RefreshCcw size={20} />
               </button>
-              
               <button 
                 onClick={judgeTrace} 
                 disabled={selectedIndices.length === 0} 
@@ -470,10 +495,9 @@ export default function SummaryScreen({ onExit, summaryData }) {
               </button>
             </div>
             
-            {/* 🌟 解答を見るボタン */}
             <button 
               onClick={handleShowAnswer}
-              className="text-slate-400 hover:text-slate-600 font-bold text-sm underline flex items-center justify-center gap-1 mx-auto transition-colors"
+              className="text-slate-400 hover:text-slate-600 font-bold text-sm underline flex items-center justify-center gap-1 mx-auto transition-colors mt-2"
             >
               <Eye size={16} /> どうしてもわからないので解答を見る
             </button>
@@ -498,42 +522,9 @@ export default function SummaryScreen({ onExit, summaryData }) {
         <div className="text-sm font-bold text-slate-400">要約チャレンジモード</div>
       </div>
 
-      <div ref={containerRef} className="flex-1 flex w-full h-full overflow-hidden relative">
-        <div style={{ width: `${leftWidth}%` }} className="h-full overflow-y-auto bg-slate-50 p-4 md:p-8 flex flex-col">
-          <div className="w-full flex justify-between items-center mb-4 border-b border-slate-200 pb-2 flex-shrink-0">
-            <div className="flex items-center gap-2 text-indigo-600">
-              <BookOpen size={24} />
-              <h2 className="text-xl font-black">Reading Passage</h2>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              {/* 🌟 フォント切替コントローラー */}
-              <div className="flex bg-slate-200/60 p-1 rounded-xl items-center gap-1">
-                <button 
-                  onClick={() => setFontClass('font-sans')} 
-                  className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${fontClass === 'font-sans' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
-                >
-                  ゴシック
-                </button>
-                <button 
-                  onClick={() => setFontClass('font-serif')} 
-                  className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${fontClass === 'font-serif' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
-                >
-                  明朝(Century)
-                </button>
-              </div>
-
-              {/* 文字サイズ調整コントローラー */}
-              <div className="flex bg-slate-200/60 p-1 rounded-xl items-center gap-1 hidden md:flex">
-                <button onClick={() => setTextSizeClass('text-base')} className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${textSizeClass === 'text-base' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>小</button>
-                <button onClick={() => setTextSizeClass('text-xl')} className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${textSizeClass === 'text-xl' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>中</button>
-                <button onClick={() => setTextSizeClass('text-2xl')} className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${textSizeClass === 'text-2xl' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>大</button>
-              </div>
-            </div>
-          </div>
-          <div className="w-full flex-1">
-            {renderLeftPane()}
-          </div>
+      <div ref={containerRef} className={`flex-1 flex w-full h-full overflow-hidden relative ${isSwapped ? 'flex-row-reverse' : 'flex-row'}`}>
+        <div style={{ width: `${leftWidth}%` }}>
+          {renderReadingPane()}
         </div>
 
         <div onMouseDown={() => setIsDraggingSplit(true)} onTouchStart={() => setIsDraggingSplit(true)} className="w-4 flex flex-col items-center justify-center bg-slate-200/50 hover:bg-cyan-200 cursor-col-resize group transition-colors shadow-inner z-10">
@@ -542,16 +533,18 @@ export default function SummaryScreen({ onExit, summaryData }) {
           </div>
         </div>
 
-        <div style={{ width: `${100 - leftWidth}%` }} className="h-full overflow-y-auto bg-slate-100 p-6 md:p-10 shadow-inner">
-          <AnimatePresence mode="wait">
-            <motion.div key={`${currentPhase}-${currentParagraphIdx}-${currentTaskIdx}`} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="max-w-2xl mx-auto h-full flex flex-col">
-              <div className="flex items-center gap-2 mb-6 text-teal-600">
-                <PenTool size={24} />
-                <h2 className="text-2xl font-black">Mission</h2>
-              </div>
-              {renderRightPane()}
-            </motion.div>
-          </AnimatePresence>
+        <div style={{ width: `${100 - leftWidth}%` }}>
+          <div className="h-full overflow-y-auto bg-slate-100 p-6 md:p-10 shadow-inner flex flex-col">
+            <AnimatePresence mode="wait">
+              <motion.div key={`${currentPhase}-${currentParagraphIdx}-${currentTaskIdx}`} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="max-w-2xl mx-auto w-full h-full flex flex-col">
+                <div className="flex items-center gap-2 mb-6 text-teal-600">
+                  <PenTool size={24} />
+                  <h2 className="text-2xl font-black">Mission</h2>
+                </div>
+                {renderMissionPane()}
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
       </div>
     </div>
