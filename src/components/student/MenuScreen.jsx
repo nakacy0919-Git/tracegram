@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-// 🌟 追加：Beaker (BETAバッジ用) アイコンをインポート
 import { ArrowLeft, BookOpen, Layers, BarChart3, AlertTriangle, CheckCircle2, TrendingUp, Award, HelpCircle, Bug, Crosshair, FileText, Beaker } from 'lucide-react';
 
-// 🌟 長文データのインポート
-import { summary_b1_01 } from '../../data/summary/summary_b1_01';
-import { summary_b2_01 } from '../../data/summary/summary_b2_01';
+// 🌟 長文データのインポート（エラー回避のため .js を明記）
+import { fast_fashion_L1 } from '../../data/summary/fast_fashion/level1_a2.js';
+import { fast_fashion_L2 } from '../../data/summary/fast_fashion/level2_b1.js';
+import { fast_fashion_L3 } from '../../data/summary/fast_fashion/level3_b2.js';
+import { fast_fashion_L4 } from '../../data/summary/fast_fashion/level4_c1.js';
 
 const SUB_MAPPING = {
   'BASIC': ['basic_find_verb', 'basic_remove_m', 'basic_5patterns'],
@@ -29,7 +30,7 @@ const GRAMMAR_CATEGORIES = [
 
 export default function MenuScreen({
   gameMode, setGameMode, 
-  setActiveSummary, // 🌟 この1行を追加！（選択された長文をセットするため）
+  setActiveSummary, 
   gameState, availableCategories, activeMain, activeCategory, isMultiplayer, isHost,
   setAppScreen, selectMainCategory, selectSubCategory, startGame,
   backToMain, backToSub, handleExitToTitle, setBattleSetup
@@ -37,6 +38,9 @@ export default function MenuScreen({
   
   const [viewMode, setViewMode] = useState('element'); 
   const [logs, setLogs] = useState([]);
+  
+  // 🌟 問題数を選択・記憶するためのState
+  const [tempCount, setTempCount] = useState(10);
 
   useEffect(() => {
     if (viewMode === 'reflection') {
@@ -131,8 +135,7 @@ export default function MenuScreen({
       { id: 'MODIFIER', title: '修飾語マスター', desc: '文を長くする飾りを仕分けろ！', bg: "bg-[#8bbff5]", text: "text-[#1d4ed8]" },
     ];
 
-    // 🌟 追加：出題する長文データのリスト
-    const SUMMARY_LIST = [summary_b1_01, summary_b2_01];
+    const SUMMARY_LIST = [fast_fashion_L1, fast_fashion_L2, fast_fashion_L3, fast_fashion_L4];
 
     return (
       <div className="flex-1 flex flex-col items-center p-6 md:p-12 overflow-y-auto z-10 relative w-full">
@@ -142,7 +145,6 @@ export default function MenuScreen({
         
         <div className="max-w-5xl w-full mt-16 md:mt-10 flex flex-col items-center">
           
-          {/* タブ切り替えエリア */}
           <div className="flex bg-slate-200/50 p-1.5 rounded-full mb-10 shadow-inner max-w-full overflow-x-auto hide-scrollbar">
             <button 
               onClick={() => setViewMode('element')}
@@ -162,7 +164,6 @@ export default function MenuScreen({
             >
               <BarChart3 size={22} /> 📊 弱点分析レコード
             </button>
-
             <button 
               onClick={() => setViewMode('summary')}
               className={`flex items-center gap-2 px-6 md:px-8 py-3 rounded-full font-black text-sm md:text-lg transition-all whitespace-nowrap ${viewMode === 'summary' ? 'bg-white text-emerald-600 shadow-md' : 'text-slate-500 hover:text-slate-700'}`}
@@ -235,7 +236,6 @@ export default function MenuScreen({
                   </div>
                 ) : (
                   <div className="flex flex-col gap-6 w-full">
-                    
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="bg-gradient-to-br from-cyan-500 to-blue-600 text-white rounded-2xl p-5 shadow-md flex flex-col justify-between">
                         <span className="font-black text-xs opacity-75 flex items-center gap-1"><Award size={14}/> 総解答トークン数</span>
@@ -309,13 +309,11 @@ export default function MenuScreen({
                 )}
               </motion.div>
             ) : viewMode === 'summary' ? (
-              /* 🌟 NEW: 要約チャレンジモードのメニュー画面 🌟 */
               <motion.div key="summary" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="w-full">
                 
                 <div className="flex flex-col items-center justify-center mb-8">
                   <div className="flex items-center gap-3">
                     <h2 className="text-2xl md:text-3xl font-black text-slate-700 drop-shadow-sm">長文のコアを掴み、要約力を鍛えよう</h2>
-                    {/* 🌟 開発中バッジ */}
                     <span className="flex items-center gap-1 bg-amber-100 text-amber-700 font-black text-xs px-3 py-1 rounded-full border border-amber-300 shadow-sm animate-pulse">
                       <Beaker size={14} /> 開発中 (BETA)
                     </span>
@@ -324,8 +322,6 @@ export default function MenuScreen({
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  
-                  {/* 🌟 リスト化された長文データの表示 */}
                   {SUMMARY_LIST.map((summary) => (
                     <motion.div 
                       key={summary.id}
@@ -344,8 +340,8 @@ export default function MenuScreen({
                       </div>
                       <button 
                         onClick={() => {
-                          setActiveSummary(summary); // 🌟 選択した長文のデータをセット
-                          setAppScreen('summary');   // 🌟 画面遷移
+                          setActiveSummary(summary);
+                          setAppScreen('summary');
                         }} 
                         className="mt-2 bg-emerald-500 hover:bg-emerald-400 text-white font-black py-4 rounded-xl shadow-sm transition-colors flex justify-center items-center gap-2"
                       >
@@ -354,7 +350,6 @@ export default function MenuScreen({
                     </motion.div>
                   ))}
                   
-                  {/* 今後の追加予定枠 */}
                   <div className="bg-slate-100 p-6 rounded-[24px] border-2 border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 min-h-[200px]">
                     <p className="font-black">Coming Soon...</p>
                     <p className="text-sm font-bold">新しい長文を追加予定です</p>
@@ -446,15 +441,33 @@ export default function MenuScreen({
                   </div>
                   
                   {hasProblems ? (
-                    <button onClick={(e) => {
-                        e.stopPropagation();
-                        if (isMultiplayer && isHost) { setBattleSetup({ mainId: activeMain, subCategory: activeCategory, level: lvl.num }); setAppScreen('lobby'); } 
-                        else { startGame(lvl.num); }
-                      }} 
-                      className="bg-white/95 text-slate-800 px-8 py-4 rounded-full font-black text-xl hover:scale-105 active:scale-95 transition-transform shadow-lg border border-slate-100 flex items-center gap-2"
-                    >
-                      {isMultiplayer && isHost ? "👑 待機ルームを開く" : "START 🚀"}
-                    </button>
+                    <div className="flex flex-col sm:flex-row items-center gap-3">
+                      <select 
+                        value={tempCount}
+                        onChange={(e) => setTempCount(parseInt(e.target.value))}
+                        className="bg-white/90 border-2 border-slate-200 rounded-full px-4 py-3 font-black text-slate-600 focus:outline-none focus:border-cyan-400"
+                        onClick={(e) => e.stopPropagation()} 
+                      >
+                        <option value={10}>10問</option>
+                        <option value={20}>20問</option>
+                        <option value={50}>50問</option>
+                      </select>
+
+                      <button onClick={(e) => {
+                          e.stopPropagation();
+                          if (isMultiplayer && isHost) { 
+                            setBattleSetup({ mainId: activeMain, subCategory: activeCategory, level: lvl.num }); 
+                            setAppScreen('lobby'); 
+                          } 
+                          else { 
+                            startGame(lvl.num, tempCount); 
+                          }
+                        }} 
+                        className="bg-white/95 text-slate-800 px-6 py-3 md:px-8 md:py-4 rounded-full font-black text-lg md:text-xl hover:scale-105 active:scale-95 transition-transform shadow-lg border border-slate-100 flex items-center gap-2"
+                      >
+                        {isMultiplayer && isHost ? "👑 待機ルームを開く" : "START 🚀"}
+                      </button>
+                    </div>
                   ) : (
                     <span className="bg-slate-300 text-slate-500 px-6 py-3 rounded-full font-black text-lg">
                       該当問題なし
