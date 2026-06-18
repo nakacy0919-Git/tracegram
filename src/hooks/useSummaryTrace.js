@@ -1,6 +1,6 @@
-// src/hooks/useSummaryTrace.js
 import { useState, useEffect } from 'react';
 
+// 🎵 なぞったときの効果音
 const playTraceSound = (count, isDeselect = false) => {
   try {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -47,6 +47,7 @@ export function useSummaryTrace(currentTask, currentPhase) {
   const handleTracePointerDown = (e, idx) => {
     if (!allowInteraction) return;
     
+    // 不正解のあとに触れたら、即座にリセットして新しくなぞり始める
     if (traceFeedback === 'wrong' || traceFeedback === 'partial') {
       setTraceFeedback('idle');
       setSelectedIndices([idx]);
@@ -78,6 +79,7 @@ export function useSummaryTrace(currentTask, currentPhase) {
 
   const handleTracePointerUp = () => setIsTracing(false);
 
+  // 画面外で指を離した時の処理
   useEffect(() => {
     if (isTracing) {
       window.addEventListener('mouseup', handleTracePointerUp);
@@ -112,6 +114,7 @@ export function useSummaryTrace(currentTask, currentPhase) {
     else if (isPartial) setTraceFeedback('partial');
     else {
       setTraceFeedback('wrong');
+      // 間違えたら800ミリ秒後に自動クリア
       setTimeout(() => {
         setTraceFeedback(prev => prev === 'wrong' ? 'idle' : prev);
         setSelectedIndices([]);
@@ -131,10 +134,15 @@ export function useSummaryTrace(currentTask, currentPhase) {
   };
 
   return {
-    selectedIndices, setSelectedIndices,
-    traceFeedback, setTraceFeedback,
+    selectedIndices,
+    setSelectedIndices,
+    traceFeedback,
+    setTraceFeedback,
     isTraceTask,
-    handleTracePointerDown, handleTracePointerMove, handleTracePointerUp,
-    judgeTrace, handleShowAnswer
+    handleTracePointerDown,
+    handleTracePointerMove,
+    handleTracePointerUp,
+    judgeTrace,
+    handleShowAnswer
   };
 }
