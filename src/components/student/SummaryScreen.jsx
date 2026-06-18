@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GripVertical, XCircle, BookOpen, PenTool, ArrowRight, CheckCircle2, AlertCircle, Trophy, Type } from 'lucide-react';
+// 🌟 必要なアイコン（RefreshCcw, Eye）を追加インポート
+import { GripVertical, XCircle, BookOpen, PenTool, ArrowRight, CheckCircle2, AlertCircle, Trophy, RefreshCcw, Eye } from 'lucide-react';
 import PronunciationMission from './PronunciationMission'; 
 
 const playTraceSound = (count, isDeselect = false) => {
@@ -29,8 +30,12 @@ export default function SummaryScreen({ onExit, summaryData }) {
   const [isDraggingSplit, setIsDraggingSplit] = useState(false);
   const containerRef = useRef(null);
 
-  // 🌟 文字サイズ調整用のState ('text-base' | 'text-xl' | 'text-2xl')
+  // 🌟 フォントと文字サイズ調整用のState
   const [textSizeClass, setTextSizeClass] = useState('text-xl');
+  const [fontClass, setFontClass] = useState('font-sans'); // 'font-sans' (ゴシック) or 'font-serif' (明朝/Century)
+
+  // 🌟 音読範囲選択用のState
+  const [readAloudTarget, setReadAloudTarget] = useState('mission'); // 'mission' | 'all' | 0, 1, 2...
 
   const [currentPhase, setCurrentPhase] = useState('paragraphs'); 
   const [currentParagraphIdx, setCurrentParagraphIdx] = useState(0);
@@ -62,7 +67,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
     setIsTracing(false);
   }, [currentParagraphIdx, currentTaskIdx, currentPhase]);
 
-  // リサイズ処理
   const handleSplitMove = (clientX) => {
     if (!isDraggingSplit || !containerRef.current) return;
     const containerRect = containerRef.current.getBoundingClientRect();
@@ -95,7 +99,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
     };
   }, [isDraggingSplit]);
 
-  // トレース処理
   const updateTraceSelection = (idx, mode) => {
     setSelectedIndices(prev => {
       if (mode === 'select' && !prev.includes(idx)) {
@@ -110,10 +113,20 @@ export default function SummaryScreen({ onExit, summaryData }) {
   };
 
   const isTraceTask = currentTask && ['trace', 'tap', 'analyze'].includes(currentTask.type);
-  const allowInteraction = currentPhase === 'paragraphs' && isTraceTask && traceFeedback !== 'correct';
 
   const handleTracePointerDown = (e, idx) => {
-    if (!allowInteraction) return;
+    if (currentPhase !== 'paragraphs' || !isTraceTask || traceFeedback === 'correct') return;
+    
+    // 🌟 不正解・惜しい判定のあとに画面に触れたら、即座に前の選択をクリアして新しくなぞり始める
+    if (traceFeedback === 'wrong' || traceFeedback === 'partial') {
+      setTraceFeedback('idle');
+      setSelectedIndices([idx]);
+      setTraceMode('select');
+      playTraceSound(1);
+      setIsTracing(true);
+      return;
+    }
+
     setIsTracing(true);
     const isCurrentlySelected = selectedIndices.includes(idx);
     const newTraceMode = isCurrentlySelected ? 'deselect' : 'select';
@@ -123,7 +136,7 @@ export default function SummaryScreen({ onExit, summaryData }) {
   };
 
   const handleTracePointerMove = (e) => {
-    if (!isTracing || !allowInteraction) return;
+    if (!isTracing || !isTraceTask || traceFeedback === 'correct') return;
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
     const element = document.elementFromPoint(clientX, clientY);
@@ -172,8 +185,24 @@ export default function SummaryScreen({ onExit, summaryData }) {
     else if (isPartial) setTraceFeedback('partial');
     else {
       setTraceFeedback('wrong');
-      setTimeout(() => setSelectedIndices([]), 1500);
+      // 🌟 間違えたら800ミリ秒後に自動でサッと消す
+      setTimeout(() => {
+        setTraceFeedback(prev => prev === 'wrong' ? 'idle' : prev);
+        setSelectedIndices([]);
+      }, 800);
     }
+  };
+
+  // 🌟 わからない場合に解答を表示するロジック
+  const handleShowAnswer = () => {
+    if (!currentTask) return;
+    let target = [];
+    if (currentTask.type === 'tap') target = [currentTask.targetIndex];
+    else if (currentTask.type === 'analyze') target = [...(currentTask.targetV || []), ...(currentTask.targetO || [])].sort((a, b) => a - b);
+    else target = currentTask.targetIndices || [];
+
+    setSelectedIndices(target);
+    setTraceFeedback('correct'); // 正解状態にして解説を表示
   };
 
   const handleNextTask = () => {
@@ -206,14 +235,13 @@ export default function SummaryScreen({ onExit, summaryData }) {
     setIsAnswerRevealed(true); 
   };
 
-  // 🌟 修正：左画面（長文表示エリア）のレンダリング
   const renderLeftPane = () => {
-    // さまざまな文字サイズクラスに対応する行間を動的に設定
     const leadingClass = textSizeClass === 'text-base' ? 'leading-[2.5rem]' : textSizeClass === 'text-xl' ? 'leading-[3.5rem]' : 'leading-[4.2rem]';
 
     return (
       <div 
-        className={`bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-200 text-slate-700 font-medium w-full ${textSizeClass} ${leadingClass} ${isTraceTask ? 'touch-none' : ''}`}
+        // 🌟 ここに fontClass を適用して全体のフォントを変更
+        className={`bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-200 text-slate-700 font-medium w-full ${textSizeClass} ${leadingClass} ${fontClass} ${isTraceTask ? 'touch-none' : ''}`}
         onPointerMove={handleTracePointerMove}
         onPointerUp={handleTracePointerUp}
         onTouchMove={handleTracePointerMove}
@@ -224,24 +252,20 @@ export default function SummaryScreen({ onExit, summaryData }) {
           const isPast = currentPhase === 'global' || currentPhase === 'completed' || pIdx < currentParagraphIdx;
           const isFuture = currentPhase === 'paragraphs' && pIdx > currentParagraphIdx;
 
-          // 🌟 段落ごとの状態に応じたスタイル付け
           let opacityClass = "transition-all duration-300 mb-8 last:mb-0 ";
-          if (isFuture) opacityClass += "opacity-25 pointer-events-none select-none"; // 未来の段落はうっすら
-          if (isPast && currentPhase === 'paragraphs') opacityClass += "opacity-50 pointer-events-none"; // 終わった段落も少し薄く
+          if (isFuture) opacityClass += "opacity-25 pointer-events-none select-none"; 
+          if (isPast && currentPhase === 'paragraphs') opacityClass += "opacity-50 pointer-events-none"; 
 
           return (
             <div key={paragraph.p_id} className={opacityClass}>
-              {/* 🌟 段落カウンターの表示 */}
-              <div className={`text-xs font-black tracking-wider uppercase mb-1 flex items-center gap-1.5 ${isActive ? 'text-indigo-600' : 'text-slate-400'}`}>
+              <div className={`text-xs font-sans tracking-wider uppercase mb-1 flex items-center gap-1.5 ${isActive ? 'text-indigo-600 font-black' : 'text-slate-400 font-bold'}`}>
                 <span>Paragraph {pIdx + 1}</span>
-                <span className="opacity-60 font-bold">(第{pIdx + 1}段落)</span>
+                <span className="opacity-60">(第{pIdx + 1}段落)</span>
                 {isActive && <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />}
               </div>
 
-              {/* テキストコンテンツ */}
               <div className={isActive ? 'bg-indigo-50/20 p-2 rounded-xl border border-indigo-100/40 shadow-inner' : ''}>
                 {isActive ? (
-                  // アクティブな段落はインタラクティブに操作可能
                   paragraph.tokens.map((token, idx) => {
                     const isSelected = selectedIndices.includes(idx);
                     let spanClass = "inline-block px-1 mx-0.5 rounded transition-all cursor-pointer select-none ";
@@ -266,10 +290,8 @@ export default function SummaryScreen({ onExit, summaryData }) {
                     );
                   })
                 ) : (
-                  // それ以外の段落はプレーンテキストとして流す
                   <span className="text-slate-600 font-normal">
                     {paragraph.tokens.map((t, idx) => {
-                      // 終わった段落の正解トレース箇所に薄い下線を入れておく
                       const isTarget = paragraph.traceTask?.targetIndices?.includes(idx);
                       return (
                         <span key={idx} className={isTarget ? "border-b border-emerald-300 text-slate-800" : ""}>
@@ -303,7 +325,16 @@ export default function SummaryScreen({ onExit, summaryData }) {
 
     if (!currentTask) return null;
 
+    // 🌟 音読ミッションのレンダリング
     if (currentTask.type === 'voice') {
+      // ユーザーの選択に応じて音読するターゲットテキストを生成
+      let readText = currentTask.targetSentence;
+      if (readAloudTarget === 'all') {
+        readText = summaryData.paragraphs.map(p => p.rawText).join(' ');
+      } else if (typeof readAloudTarget === 'number') {
+        readText = summaryData.paragraphs[readAloudTarget].rawText;
+      }
+
       return (
         <div className="bg-white rounded-3xl p-8 shadow-md border-2 border-teal-100 flex-1 flex flex-col">
            <span className="inline-block bg-indigo-100 text-indigo-700 font-black text-sm px-3 py-1 rounded-full mb-4 w-max">
@@ -312,9 +343,30 @@ export default function SummaryScreen({ onExit, summaryData }) {
           <h3 className="text-xl font-black text-slate-800 mb-6 leading-relaxed">
             {currentTask.instruction}
           </h3>
+
+          {/* 🌟 読みたい段落・範囲の選択プルダウン */}
+          <div className="mb-4">
+            <select 
+              value={readAloudTarget}
+              onChange={(e) => {
+                const val = e.target.value;
+                setReadAloudTarget(val === 'all' || val === 'mission' ? val : parseInt(val, 10));
+              }}
+              className="bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-lg px-4 py-2 w-full max-w-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            >
+              <option value="mission">指定のハイライト文のみ読む</option>
+              <option value="all">長文を全文通しで読む</option>
+              {summaryData.paragraphs.map((p, i) => (
+                <option key={i} value={i}>第{i + 1}段落を読む</option>
+              ))}
+            </select>
+          </div>
+
           <div className="flex-1">
+            {/* keyを変更してコンポーネントを強制再マウントさせ、ターゲット文の変更を即座に反映 */}
             <PronunciationMission 
-              targetSentence={currentTask.targetSentence} 
+              key={readAloudTarget}
+              targetSentence={readText} 
               onComplete={handleNextTask} 
             />
           </div>
@@ -364,8 +416,9 @@ export default function SummaryScreen({ onExit, summaryData }) {
       );
     }
 
+    // 🎯 トレース・タップ・アナライズ問題の共通UI
     return (
-      <div className="bg-white rounded-3xl p-8 shadow-md border-2 border-teal-100 flex-1 flex flex-col">
+      <div className="bg-white rounded-3xl p-8 shadow-md border-2 border-teal-100 flex-1 flex flex-col relative">
         <span className="inline-block bg-teal-100 text-teal-700 font-black text-sm px-3 py-1 rounded-full mb-4 w-max">
           Task: {currentTask.type.toUpperCase()}
         </span>
@@ -397,9 +450,34 @@ export default function SummaryScreen({ onExit, summaryData }) {
             次のタスクへ <ArrowRight size={20} />
           </button>
         ) : (
-          <button onClick={judgeTrace} disabled={selectedIndices.length === 0} className={`mt-6 w-full py-4 rounded-xl font-black text-lg transition-all shadow-md flex justify-center items-center gap-2 ${selectedIndices.length === 0 ? 'bg-slate-200 text-slate-400 cursor-not-allowed' : 'bg-cyan-500 hover:bg-cyan-400 text-white'}`}>
-            判定する！
-          </button>
+          <div className="flex flex-col gap-4 mt-6">
+            <div className="flex gap-2">
+              {/* 🌟 一括クリアボタン */}
+              <button 
+                onClick={() => setSelectedIndices([])} 
+                disabled={selectedIndices.length === 0}
+                className="bg-slate-200 hover:bg-slate-300 text-slate-600 px-6 py-4 rounded-xl font-black transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <RefreshCcw size={20} />
+              </button>
+              
+              <button 
+                onClick={judgeTrace} 
+                disabled={selectedIndices.length === 0} 
+                className={`flex-1 py-4 rounded-xl font-black text-lg transition-all shadow-md flex justify-center items-center gap-2 ${selectedIndices.length === 0 ? 'bg-slate-200 text-slate-400 cursor-not-allowed' : 'bg-cyan-500 hover:bg-cyan-400 text-white'}`}
+              >
+                判定する！
+              </button>
+            </div>
+            
+            {/* 🌟 解答を見るボタン */}
+            <button 
+              onClick={handleShowAnswer}
+              className="text-slate-400 hover:text-slate-600 font-bold text-sm underline flex items-center justify-center gap-1 mx-auto transition-colors"
+            >
+              <Eye size={16} /> どうしてもわからないので解答を見る
+            </button>
+          </div>
         )}
       </div>
     );
@@ -421,7 +499,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
       </div>
 
       <div ref={containerRef} className="flex-1 flex w-full h-full overflow-hidden relative">
-        {/* 📖 左ペイン：長文表示エリア（幅いっぱい対応） */}
         <div style={{ width: `${leftWidth}%` }} className="h-full overflow-y-auto bg-slate-50 p-4 md:p-8 flex flex-col">
           <div className="w-full flex justify-between items-center mb-4 border-b border-slate-200 pb-2 flex-shrink-0">
             <div className="flex items-center gap-2 text-indigo-600">
@@ -429,26 +506,29 @@ export default function SummaryScreen({ onExit, summaryData }) {
               <h2 className="text-xl font-black">Reading Passage</h2>
             </div>
             
-            {/* 🌟 文字サイズ調整コントローラー */}
-            <div className="flex bg-slate-200/60 p-1 rounded-xl items-center gap-1">
-              <button 
-                onClick={() => setTextSizeClass('text-base')} 
-                className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${textSizeClass === 'text-base' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
-              >
-                小
-              </button>
-              <button 
-                onClick={() => setTextSizeClass('text-xl')} 
-                className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${textSizeClass === 'text-xl' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
-              >
-                中
-              </button>
-              <button 
-                onClick={() => setTextSizeClass('text-2xl')} 
-                className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${textSizeClass === 'text-2xl' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
-              >
-                大
-              </button>
+            <div className="flex items-center gap-4">
+              {/* 🌟 フォント切替コントローラー */}
+              <div className="flex bg-slate-200/60 p-1 rounded-xl items-center gap-1">
+                <button 
+                  onClick={() => setFontClass('font-sans')} 
+                  className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${fontClass === 'font-sans' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+                >
+                  ゴシック
+                </button>
+                <button 
+                  onClick={() => setFontClass('font-serif')} 
+                  className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${fontClass === 'font-serif' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+                >
+                  明朝(Century)
+                </button>
+              </div>
+
+              {/* 文字サイズ調整コントローラー */}
+              <div className="flex bg-slate-200/60 p-1 rounded-xl items-center gap-1 hidden md:flex">
+                <button onClick={() => setTextSizeClass('text-base')} className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${textSizeClass === 'text-base' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>小</button>
+                <button onClick={() => setTextSizeClass('text-xl')} className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${textSizeClass === 'text-xl' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>中</button>
+                <button onClick={() => setTextSizeClass('text-2xl')} className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${textSizeClass === 'text-2xl' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>大</button>
+              </div>
             </div>
           </div>
           <div className="w-full flex-1">
