@@ -14,7 +14,8 @@ export default function RootLayout({ children }) {
   return (
     // サイトの言語を日本語(ja)に設定
     <html lang="ja">
-      <body>{children}</body>
+      {/* 🌟 ここに suppressHydrationWarning を追加して、拡張機能の干渉エラーを無視させます */}
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }

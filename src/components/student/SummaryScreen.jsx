@@ -29,14 +29,12 @@ export default function SummaryScreen({ onExit, summaryData }) {
   const [isDraggingSplit, setIsDraggingSplit] = useState(false);
   const containerRef = useRef(null);
 
-  // 🌟 UI設定用State（全て復活！）
   const [isSwapped, setIsSwapped] = useState(false);
   const [textSizeClass, setTextSizeClass] = useState('text-xl');
   const [fontClass, setFontClass] = useState('font-sans'); 
   const [readAloudTarget, setReadAloudTarget] = useState('mission'); 
 
-  // 🌟 進行管理用State（新データ構造対応版）
-  const [currentPhase, setCurrentPhase] = useState('paragraphs'); // 'paragraphs' -> 'global' -> 'completed'
+  const [currentPhase, setCurrentPhase] = useState('paragraphs'); 
   const [currentParagraphIdx, setCurrentParagraphIdx] = useState(0);
   const [currentTaskIdx, setCurrentTaskIdx] = useState(0); 
   
@@ -50,7 +48,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
 
   if (!summaryData) return null;
 
-  // 現在のタスクデータを特定
   const currentParagraph = summaryData.paragraphs[currentParagraphIdx];
   let currentTask = null;
   if (currentPhase === 'paragraphs' && currentParagraph?.tasks) {
@@ -59,7 +56,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
     currentTask = summaryData.globalTasks[currentTaskIdx];
   }
 
-  // タスクが切り替わるたびに状態をリセット
   useEffect(() => {
     setSelectedOption(null);
     setIsAnswerRevealed(false);
@@ -68,15 +64,21 @@ export default function SummaryScreen({ onExit, summaryData }) {
     setIsTracing(false);
   }, [currentParagraphIdx, currentTaskIdx, currentPhase]);
 
-  // --- スプリット画面のリサイズ処理 ---
   const handleSplitMove = (clientX) => {
     if (!isDraggingSplit || !containerRef.current) return;
     const containerRect = containerRef.current.getBoundingClientRect();
-    let newLeftWidth = ((clientX - containerRect.left) / containerRect.width) * 100;
-    if (newLeftWidth < 20) newLeftWidth = 20;
-    if (newLeftWidth > 80) newLeftWidth = 80;
-    setLeftWidth(newLeftWidth);
+    let rawLeftWidth = ((clientX - containerRect.left) / containerRect.width) * 100;
+    
+    if (rawLeftWidth < 20) rawLeftWidth = 20;
+    if (rawLeftWidth > 80) rawLeftWidth = 80;
+
+    if (isSwapped) {
+      setLeftWidth(100 - rawLeftWidth);
+    } else {
+      setLeftWidth(rawLeftWidth);
+    }
   };
+
   const onSplitMouseMove = (e) => handleSplitMove(e.clientX);
   const onSplitTouchMove = (e) => handleSplitMove(e.touches[0].clientX);
   const stopSplitDragging = () => setIsDraggingSplit(false);
@@ -101,10 +103,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
     };
   }, [isDraggingSplit]);
 
-  // --- トレース処理 ---
-  const isTraceTask = currentTask && ['trace', 'tap', 'analyze'].includes(currentTask.type);
-  const allowInteraction = currentPhase === 'paragraphs' && isTraceTask && traceFeedback !== 'correct';
-
   const updateTraceSelection = (idx, mode) => {
     setSelectedIndices(prev => {
       if (mode === 'select' && !prev.includes(idx)) {
@@ -118,10 +116,12 @@ export default function SummaryScreen({ onExit, summaryData }) {
     });
   };
 
+  const isTraceTask = currentTask && ['trace', 'tap', 'analyze'].includes(currentTask.type);
+  const allowInteraction = currentPhase === 'paragraphs' && isTraceTask && traceFeedback !== 'correct';
+
   const handleTracePointerDown = (e, idx) => {
     if (!allowInteraction) return;
     
-    // 不正解・惜しい判定のあとに画面に触れたら、即座に前の選択をクリアして新しくなぞり始める
     if (traceFeedback === 'wrong' || traceFeedback === 'partial') {
       setTraceFeedback('idle');
       setSelectedIndices([idx]);
@@ -173,7 +173,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
     let target = [];
     let partial = [];
 
-    // 新データ構造における正解インデックスの抽出
     if (currentTask.type === 'tap') target = [currentTask.targetIndex];
     else if (currentTask.type === 'analyze') target = [...(currentTask.targetV || []), ...(currentTask.targetO || [])].sort((a, b) => a - b);
     else {
@@ -188,7 +187,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
     else if (isPartial) setTraceFeedback('partial');
     else {
       setTraceFeedback('wrong');
-      // 間違えたら800ミリ秒後に自動でサッと消す
       setTimeout(() => {
         setTraceFeedback(prev => prev === 'wrong' ? 'idle' : prev);
         setSelectedIndices([]);
@@ -244,7 +242,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
           </div>
           
           <div className="flex items-center gap-2">
-            {/* 左右入替ボタン */}
             <button 
               onClick={() => setIsSwapped(!isSwapped)}
               className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-200/60 hover:bg-indigo-100 text-slate-500 hover:text-indigo-600 text-xs font-black transition-all"
@@ -253,12 +250,10 @@ export default function SummaryScreen({ onExit, summaryData }) {
               <ArrowLeftRight size={16} /> 入替
             </button>
 
-            {/* フォント切替 */}
             <div className="flex bg-slate-200/60 p-1 rounded-xl items-center gap-1 hidden md:flex">
               <button onClick={() => setFontClass('font-sans')} className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${fontClass === 'font-sans' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>ゴシック</button>
               <button onClick={() => setFontClass('font-serif')} className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${fontClass === 'font-serif' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>明朝</button>
             </div>
-            {/* 文字サイズ切替 */}
             <div className="flex bg-slate-200/60 p-1 rounded-xl items-center gap-1 hidden lg:flex">
               <button onClick={() => setTextSizeClass('text-base')} className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${textSizeClass === 'text-base' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>小</button>
               <button onClick={() => setTextSizeClass('text-xl')} className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${textSizeClass === 'text-xl' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>中</button>
@@ -267,9 +262,9 @@ export default function SummaryScreen({ onExit, summaryData }) {
           </div>
         </div>
 
-        <div className="w-full flex-1">
+        <div className="w-full mt-2 pb-16">
           <div 
-            className={`bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-200 text-slate-700 font-medium w-full ${textSizeClass} ${leadingClass} ${fontClass} ${isTraceTask ? 'touch-none' : ''}`}
+            className={`bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-200 text-slate-700 font-medium w-full h-fit break-words ${textSizeClass} ${leadingClass} ${fontClass} ${isTraceTask ? 'touch-none' : ''}`}
             onPointerMove={handleTracePointerMove}
             onPointerUp={handleTracePointerUp}
             onTouchMove={handleTracePointerMove}
@@ -292,16 +287,15 @@ export default function SummaryScreen({ onExit, summaryData }) {
                     {isActive && <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />}
                   </div>
 
-                  <div className={isActive ? 'bg-indigo-50/20 p-3 rounded-xl border border-indigo-100/40 shadow-inner' : ''}>
-                    {isActive ? (
-                      paragraph.tokens.map((token, idx) => {
+                  <div className={isActive ? 'bg-indigo-50/20 p-3 rounded-xl border-2 border-indigo-200 shadow-inner' : 'bg-slate-50/50 p-3 rounded-xl border border-slate-100'}>
+                    {paragraph.tokens.map((token, idx) => {
+                      let spanClass = "inline-block px-1.5 py-1 transition-all select-none ";
+                      
+                      if (isActive) {
+                        spanClass += "cursor-pointer ";
                         const isSelected = selectedIndices.includes(idx);
-                        
-                        // 美しい連続ハイライトのロジック復活
                         const isPrevSelected = isSelected && selectedIndices.includes(idx - 1);
                         const isNextSelected = isSelected && selectedIndices.includes(idx + 1);
-                        
-                        let spanClass = "inline-block px-1.5 py-1 transition-all cursor-pointer select-none ";
                         
                         if (isSelected) {
                           if (traceFeedback === 'wrong') spanClass += "bg-rose-200 text-rose-800 ";
@@ -314,27 +308,22 @@ export default function SummaryScreen({ onExit, summaryData }) {
                         } else {
                           spanClass += "hover:bg-slate-100 text-slate-800 rounded-lg ";
                         }
-                        
-                        return (
-                          <span key={idx} data-token-idx={idx} onPointerDown={(e) => handleTracePointerDown(e, idx)} className={spanClass}>
-                            {token}
-                          </span>
-                        );
-                      })
-                    ) : (
-                      <span className="text-slate-600 font-normal">
-                        {paragraph.tokens.map((t, idx) => {
-                          const isTarget = paragraph.tasks?.some(task => 
-                            task.targetIndices?.includes(idx) || task.targetIndex === idx || task.targetV?.includes(idx) || task.targetO?.includes(idx)
-                          );
-                          return (
-                            <span key={idx} className={isTarget ? "border-b-2 border-emerald-300 text-slate-800 font-bold px-1" : "px-1"}>
-                              {t}
-                            </span>
-                          );
-                        })}
-                      </span>
-                    )}
+                      } else {
+                        // 🌟 修正：非アクティブ段落の場合、過去の問題箇所のハイライト（下線や太字）を一切行わずプレーンに表示
+                        spanClass += "text-slate-600 font-normal rounded-lg ";
+                      }
+
+                      return (
+                        <span 
+                          key={idx} 
+                          data-token-idx={idx} 
+                          onPointerDown={(e) => isActive && handleTracePointerDown(e, idx)} 
+                          className={spanClass}
+                        >
+                          {token}
+                        </span>
+                      );
+                    })}
                   </div>
                 </div>
               );
@@ -349,7 +338,7 @@ export default function SummaryScreen({ onExit, summaryData }) {
   const renderMissionPane = () => {
     if (currentPhase === 'completed') {
       return (
-        <div className="bg-white rounded-3xl p-10 shadow-md border-2 border-emerald-100 flex-1 flex flex-col items-center justify-center text-center">
+        <div className="bg-white rounded-3xl p-10 shadow-md border-2 border-emerald-100 flex flex-col items-center justify-center text-center mt-6">
           <Trophy size={64} className="text-yellow-400 mb-6 drop-shadow-md" />
           <h2 className="text-3xl font-black text-slate-800 mb-4">CHALLENGE CLEARED!</h2>
           <p className="text-slate-500 font-bold mb-8">長文の論理展開を完璧に捉え切りました。</p>
@@ -371,11 +360,11 @@ export default function SummaryScreen({ onExit, summaryData }) {
       }
 
       return (
-        <div className="bg-white rounded-3xl p-8 shadow-md border-2 border-teal-100 flex-1 flex flex-col">
+        <div className="bg-white rounded-3xl p-8 shadow-md border-2 border-teal-100 flex flex-col">
            <span className="inline-block bg-indigo-100 text-indigo-700 font-black text-sm px-3 py-1 rounded-full mb-4 w-max">
             Final Task: Read Aloud
           </span>
-          <h3 className="text-xl font-black text-slate-800 mb-6 leading-relaxed">{currentTask.instruction}</h3>
+          <h3 className="text-xl font-black text-slate-800 mb-6 leading-relaxed text-left">{currentTask.instruction}</h3>
           
           <div className="mb-4">
             <select 
@@ -391,10 +380,15 @@ export default function SummaryScreen({ onExit, summaryData }) {
               {summaryData.paragraphs.map((p, i) => <option key={i} value={i}>第{i + 1}段落を読む</option>)}
             </select>
           </div>
-
-          <div className="flex-1">
+          <div>
             <PronunciationMission key={readAloudTarget} targetSentence={readText} onComplete={handleNextTask} />
           </div>
+          <button 
+            onClick={handleNextTask} 
+            className="mt-6 text-slate-400 hover:text-slate-500 font-bold text-sm underline flex items-center justify-center gap-1 mx-auto transition-colors"
+          >
+            このタスクをスキップして次へ
+          </button>
         </div>
       );
     }
@@ -402,11 +396,11 @@ export default function SummaryScreen({ onExit, summaryData }) {
     if (currentTask.type === 'select') {
       const isGlobal = currentPhase === 'global';
       return (
-        <div className="bg-white rounded-3xl p-6 md:p-8 shadow-md border-2 border-teal-100 flex-1 flex flex-col">
+        <div className="bg-white rounded-3xl p-6 md:p-8 shadow-md border-2 border-teal-100 flex flex-col">
           <span className={`inline-block font-black text-sm px-3 py-1 rounded-full mb-4 w-max ${isGlobal ? 'bg-indigo-100 text-indigo-700' : 'bg-teal-100 text-teal-700'}`}>
             {isGlobal ? 'Comprehension' : 'Multiple Choice'}
           </span>
-          <h3 className="text-xl font-black text-slate-800 mb-6 leading-relaxed">{currentTask.instruction}</h3>
+          <h3 className="text-xl font-black text-slate-800 mb-6 leading-relaxed text-left">{currentTask.instruction}</h3>
           
           <div className="flex flex-col gap-3">
             {currentTask.options.map((option, idx) => {
@@ -441,27 +435,34 @@ export default function SummaryScreen({ onExit, summaryData }) {
     }
 
     return (
-      <div className="bg-white rounded-3xl p-6 md:p-8 shadow-md border-2 border-teal-100 flex-1 flex flex-col relative">
+      <div className="bg-white rounded-3xl p-6 md:p-8 shadow-md border-2 border-teal-100 flex flex-col relative min-h-[400px]">
         <span className="inline-block bg-teal-100 text-teal-700 font-black text-sm px-3 py-1 rounded-full mb-4 w-max">
           Task: {currentTask.type.toUpperCase()}
         </span>
-        <h3 className="text-xl font-black text-slate-800 mb-6 leading-relaxed">{currentTask.instruction}</h3>
+        <h3 className="text-xl font-black text-slate-800 mb-6 leading-relaxed text-left">{currentTask.instruction}</h3>
         
-        <div className="flex-1 flex flex-col items-center justify-center bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 p-6 text-center">
+        <div className="w-full flex flex-col items-start justify-center bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 p-5 text-left mb-6 min-h-[120px]">
           <AnimatePresence mode="wait">
             {traceFeedback === 'idle' && (
-              <motion.p key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-slate-400 font-bold">左の長文で正解だと思う部分をなぞるかタップしてください。</motion.p>
+              <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <p className="text-slate-500 font-bold">左の長文で正解だと思う部分をなぞるかタップしてください。</p>
+              </motion.div>
             )}
             {traceFeedback === 'wrong' && (
-              <motion.div key="wrong" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }} className="text-rose-500 font-black flex flex-col items-center gap-2"><XCircle size={32} /><p>不正解。もう一度よく探してみましょう。</p></motion.div>
+              <motion.div key="wrong" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }} className="text-rose-500 font-black flex items-center gap-3">
+                <XCircle size={28} />
+                <p>不正解。もう一度よく探してみましょう。</p>
+              </motion.div>
             )}
             {traceFeedback === 'partial' && (
-              <motion.div key="partial" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }} className="text-amber-500 font-black flex flex-col items-center gap-2"><AlertCircle size={32} /><p>惜しい！かすっていますが、過不足なく選びましょう。</p></motion.div>
+              <motion.div key="partial" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }} className="text-amber-500 font-black flex items-center gap-3">
+                <AlertCircle size={28} />
+                <p>惜しい！かすっていますが、過不足なく選びましょう。</p>
+              </motion.div>
             )}
             {traceFeedback === 'correct' && (
-              <motion.div key="correct" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }} className="text-emerald-500 font-black flex flex-col items-center w-full">
-                <CheckCircle2 size={40} className="mb-2" />
-                <p className="text-xl mb-4">PERFECT!</p>
+              <motion.div key="correct" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }} className="text-emerald-500 font-black flex flex-col items-start w-full">
+                <div className="flex items-center gap-2 mb-3"><CheckCircle2 size={32} /><p className="text-xl">PERFECT!</p></div>
                 <div className="text-sm text-slate-600 bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-left w-full leading-relaxed">
                   <span className="text-indigo-500 font-black block mb-1">💡 解説:</span>
                   {currentTask.explanation}
@@ -472,11 +473,11 @@ export default function SummaryScreen({ onExit, summaryData }) {
         </div>
 
         {traceFeedback === 'correct' ? (
-          <button onClick={handleNextTask} className="mt-6 w-full py-4 rounded-xl bg-teal-500 hover:bg-teal-400 text-white font-black text-lg transition-all shadow-md flex justify-center items-center gap-2 animate-bounce">
+          <button onClick={handleNextTask} className="w-full py-4 rounded-xl bg-teal-500 hover:bg-teal-400 text-white font-black text-lg transition-all shadow-md flex justify-center items-center gap-2 animate-bounce mt-auto">
             次のタスクへ <ArrowRight size={20} />
           </button>
         ) : (
-          <div className="flex flex-col gap-4 mt-6">
+          <div className="flex flex-col gap-4 mt-auto">
             <div className="flex gap-2">
               <button 
                 onClick={() => { setSelectedIndices([]); setTraceFeedback('idle'); }} 
@@ -497,7 +498,7 @@ export default function SummaryScreen({ onExit, summaryData }) {
             
             <button 
               onClick={handleShowAnswer}
-              className="text-slate-400 hover:text-slate-600 font-bold text-sm underline flex items-center justify-center gap-1 mx-auto transition-colors mt-2"
+              className="text-slate-400 hover:text-slate-600 font-bold text-sm underline flex items-center justify-center gap-1 mx-auto transition-colors mt-1"
             >
               <Eye size={16} /> どうしてもわからないので解答を見る
             </button>
@@ -523,7 +524,8 @@ export default function SummaryScreen({ onExit, summaryData }) {
       </div>
 
       <div ref={containerRef} className={`flex-1 flex w-full h-full overflow-hidden relative ${isSwapped ? 'flex-row-reverse' : 'flex-row'}`}>
-        <div style={{ width: `${leftWidth}%` }}>
+        
+        <div style={{ width: `${leftWidth}%` }} className="h-full">
           {renderReadingPane()}
         </div>
 
@@ -533,11 +535,11 @@ export default function SummaryScreen({ onExit, summaryData }) {
           </div>
         </div>
 
-        <div style={{ width: `${100 - leftWidth}%` }}>
+        <div style={{ width: `${100 - leftWidth}%` }} className="h-full">
           <div className="h-full overflow-y-auto bg-slate-100 p-6 md:p-10 shadow-inner flex flex-col">
             <AnimatePresence mode="wait">
-              <motion.div key={`${currentPhase}-${currentParagraphIdx}-${currentTaskIdx}`} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="max-w-2xl mx-auto w-full h-full flex flex-col">
-                <div className="flex items-center gap-2 mb-6 text-teal-600">
+              <motion.div key={`${currentPhase}-${currentParagraphIdx}-${currentTaskIdx}`} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="max-w-2xl mx-auto w-full flex flex-col mb-10 h-full">
+                <div className="flex items-center gap-2 mb-6 text-teal-600 flex-shrink-0">
                   <PenTool size={24} />
                   <h2 className="text-2xl font-black">Mission</h2>
                 </div>
@@ -546,6 +548,7 @@ export default function SummaryScreen({ onExit, summaryData }) {
             </AnimatePresence>
           </div>
         </div>
+        
       </div>
     </div>
   );
