@@ -4,6 +4,8 @@ import { BookOpen, ArrowLeftRight } from 'lucide-react';
 export default function ReadingPane({
   summaryData,
   currentPhase,
+  currentTask, // 🌟 受け取り
+  readAloudTarget, // 🌟 受け取り
   currentParagraphIdx,
   selectedIndices,
   traceFeedback,
@@ -20,6 +22,29 @@ export default function ReadingPane({
 }) {
   const scrollContainerRef = useRef(null);
   const paragraphRefs = useRef([]); 
+
+  const isVoiceMode = currentPhase === 'global' && currentTask?.type === 'voice';
+
+  // 🌟 左の本文をスクロールした時、右の音読パネルも全く同じ割合で追従させる！
+  const handleScrollSync = (e) => {
+    if (isVoiceMode) {
+      if (window._isSyncingLeft) {
+        window._isSyncingLeft = false;
+        return;
+      }
+      const rightPane = document.getElementById('right-scroll-pane');
+      if (rightPane) {
+        const leftPane = e.currentTarget;
+        const leftScrollable = leftPane.scrollHeight - leftPane.clientHeight;
+        const rightScrollable = rightPane.scrollHeight - rightPane.clientHeight;
+        if (leftScrollable > 0 && rightScrollable > 0) {
+          const ratio = leftPane.scrollTop / leftScrollable;
+          window._isSyncingRight = true;
+          rightPane.scrollTop = ratio * rightScrollable;
+        }
+      }
+    }
+  };
 
   useEffect(() => {
     if (currentPhase === 'paragraphs') {
@@ -69,8 +94,10 @@ export default function ReadingPane({
 
       {/* 📖 本文スクロールエリア */}
       <div 
+        id="left-scroll-pane" // 🌟 スクロール同期用のID
         ref={scrollContainerRef}
         className="flex-1 overflow-y-auto p-4 md:p-8 pb-32 relative" 
+        onScroll={handleScrollSync} // 🌟 右パネルを自動追従させる
         onPointerMove={handleTracePointerMove}
         onPointerUp={handleTracePointerUp}
         onTouchMove={handleTracePointerMove}
@@ -84,50 +111,52 @@ export default function ReadingPane({
             }
 
             const isActive = currentPhase === 'paragraphs' && currentParagraphIdx === idx;
+            const isGlobal = currentPhase === 'global';
+            const isVoiceTarget = isVoiceMode && (readAloudTarget === 'all' || readAloudTarget === idx);
+
+            // 🌟 「白の透明フィルターがかかって読みにくい」問題を完全解消！
+            let containerClass = 'bg-slate-50/50 border border-slate-200 opacity-40';
+            if (isActive) {
+              containerClass = 'bg-white border-2 border-indigo-300 shadow-lg scale-[1.02] z-10';
+            } else if (isGlobal) {
+              if (isVoiceTarget) {
+                containerClass = 'bg-white border-2 border-teal-400 shadow-lg scale-[1.01] z-10 opacity-100'; // 音読ターゲットはくっきり
+              } else {
+                containerClass = 'bg-white border border-slate-200 opacity-100'; // 全体問題時も白モヤを消して読みやすく
+              }
+            }
             
             return (
               <div 
                 key={p.p_id || idx} 
                 ref={(el) => (paragraphRefs.current[idx] = el)} 
-                className={`relative p-6 rounded-2xl transition-all duration-500 ${
-                  isActive 
-                    ? 'bg-white border-2 border-indigo-300 shadow-lg scale-[1.02] z-10' 
-                    : 'bg-slate-50/50 border border-slate-200 opacity-40'
-                }`}
+                className={`relative p-6 rounded-2xl transition-all duration-500 ${containerClass}`}
               >
                 <div className={`text-xs font-black mb-4 flex items-center gap-2 ${isActive ? 'text-indigo-500' : 'text-slate-400'}`}>
                   PARAGRAPH {idx + 1} (第{idx + 1}段落) {isActive && <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />}
                 </div>
                 
-                <div className={`leading-[2.5em] tracking-wide ${fontClass} ${textSizeClass} ${isActive ? 'text-slate-800' : 'text-slate-500'}`}>
+                <div className={`leading-[2.5em] tracking-wide ${fontClass} ${textSizeClass}`}>
                   {p.tokens.map((token, tIdx) => {
-                    // 🌟 なぞり状態と前後の単語の繋がりをチェック
                     const isSelected = isActive && selectedIndices.includes(tIdx);
                     const isPrevSelected = isActive && selectedIndices.includes(tIdx - 1);
                     const isNextSelected = isActive && selectedIndices.includes(tIdx + 1);
 
                     let tokenBg = "bg-transparent";
-                    let tokenText = isActive ? "text-slate-700 font-bold" : "text-slate-500 font-medium";
+                    // 🌟 モヤを消すため、文字色もはっきりとした色に変更
+                    let tokenText = (isActive || isGlobal) ? "text-slate-800 font-bold" : "text-slate-500 font-medium";
                     let shapeClass = "rounded-lg"; 
 
-                    // 🌟 選ばれた単語の色と形のロジック
                     if (isSelected) {
-                      // 1. 本物の蛍光ペンのような鮮やかな色合い
                       if (traceFeedback === 'wrong') { tokenBg = 'bg-rose-300'; tokenText = 'text-rose-950 font-bold shadow-sm'; }
                       else if (traceFeedback === 'partial') { tokenBg = 'bg-amber-300'; tokenText = 'text-amber-950 font-bold shadow-sm'; }
                       else if (traceFeedback === 'correct') { tokenBg = 'bg-emerald-300'; tokenText = 'text-emerald-950 font-bold shadow-sm'; }
                       else { tokenBg = 'bg-cyan-300'; tokenText = 'text-cyan-950 font-bold shadow-sm'; }
 
-                      // 2. 自動結合ロジック：前後の単語が選ばれていたら角の丸みを消して合体させる
-                      if (isPrevSelected && isNextSelected) {
-                        shapeClass = "rounded-none";
-                      } else if (isPrevSelected && !isNextSelected) {
-                        shapeClass = "rounded-r-lg rounded-l-none";
-                      } else if (!isPrevSelected && isNextSelected) {
-                        shapeClass = "rounded-l-lg rounded-r-none";
-                      } else {
-                        shapeClass = "rounded-lg"; // 1語だけ選ばれた場合
-                      }
+                      if (isPrevSelected && isNextSelected) shapeClass = "rounded-none";
+                      else if (isPrevSelected && !isNextSelected) shapeClass = "rounded-r-lg rounded-l-none";
+                      else if (!isPrevSelected && isNextSelected) shapeClass = "rounded-l-lg rounded-r-none";
+                      else shapeClass = "rounded-lg"; 
                     } else if (isActive && isTraceTask) {
                       tokenBg = "hover:bg-slate-200/50";
                     }
@@ -137,7 +166,6 @@ export default function ReadingPane({
                         key={tIdx}
                         data-token-idx={tIdx}
                         onPointerDown={(e) => { if (isActive && isTraceTask) handleTracePointerDown(e, tIdx); }}
-                        // 🌟 px-1とmx-0によって「文字幅を全く変えずに背景色だけを繋げる」魔法のCSS
                         className={`inline-block px-1 py-1 mx-0 select-none transition-colors duration-150 ${isActive && isTraceTask ? 'cursor-pointer' : ''} ${shapeClass} ${tokenBg} ${tokenText}`}
                       >
                         {token}

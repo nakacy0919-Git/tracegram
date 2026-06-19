@@ -38,7 +38,7 @@ export default function MissionPane({
   };
 
   const modeMeta = {
-    comprehension: { title: '読解設問ミッション', icon: <BookOpen size={22} />, color: 'text-emerald-600', desc: '入試や検定試験に近い形式で、文脈を正確に読み解く力を鍛えます。' },
+    comprehension: { title: '読解設問ミッション', icon: <BookOpen size={22} />, color: 'text-emerald-600', desc: '入試や検定試験に近い形式で、文脈を正確に見抜く力を測ります。' },
     structure: { title: '構文・解剖ミッション', icon: <Compass size={22} />, color: 'text-cyan-600', desc: '英文の骨組み（SVOCや修飾関係）を指先でなぞり、英語脳の回路を作ります。' },
     summary: { title: '情報抽出・要約ミッション', icon: <FileText size={22} />, color: 'text-indigo-600', desc: '各パラグラフの核心となるキーフレーズを繋ぎ合わせ、論理構造を要約します。' },
     vocabulary: { title: '語彙・熟語ハント', icon: <Type size={22} />, color: 'text-purple-600', desc: '文脈の中から重要語彙や熟語を見つけ出し、ニュアンスまで完全にマスターします。' }
@@ -94,16 +94,38 @@ export default function MissionPane({
       return (
         <div className="bg-white rounded-3xl p-6 md:p-8 shadow-md border-2 border-teal-100 flex flex-col h-full">
           <span className="inline-block bg-indigo-100 text-indigo-700 font-black text-xs px-3 py-1 rounded-full mb-4 w-max flex-shrink-0">Final Task: Read Aloud</span>
-          {/* 🌟 break-keep を削除して自然に改行されるように修正 */}
           <h3 className={`${tSize.instruction} font-black text-slate-800 mb-6 leading-relaxed text-left`}>{instructionText}</h3>
           <div className="mb-4 flex-shrink-0">
-            <select value={readAloudTarget} onChange={(e) => { const val = e.target.value; setReadAloudTarget(val === 'all' || val === 'mission' ? val : parseInt(val, 10)); }} className="bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-lg px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-300 text-sm">
-              <option value="mission">指定のハイライト文のみ読む</option>
+            <select value={readAloudTarget} onChange={(e) => { const val = e.target.value; setReadAloudTarget(val === 'all' ? val : parseInt(val, 10)); }} className="bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-lg px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-300 text-sm">
+              {/* 🌟 修正：「ハイライト文のみ読む」を削除し、全文通しがデフォルトに */}
               <option value="all">長文を全文通しで読む</option>
               {summaryData.paragraphs.map((p, i) => <option key={i} value={i}>第{i + 1}段落を読む</option>)}
             </select>
           </div>
-          <div className="overflow-y-auto flex-1 min-h-0"><PronunciationMission key={readAloudTarget} targetSentence={readText} onComplete={handleNextTask} /></div>
+          {/* 🌟 ここが同期スクロールの受け皿になります */}
+          <div 
+            id="right-scroll-pane"
+            className="overflow-y-auto flex-1 min-h-0 relative"
+            onScroll={(e) => {
+              if (window._isSyncingRight) {
+                window._isSyncingRight = false;
+                return;
+              }
+              const leftPane = document.getElementById('left-scroll-pane');
+              if (leftPane) {
+                const rightPane = e.currentTarget;
+                const leftScrollable = leftPane.scrollHeight - leftPane.clientHeight;
+                const rightScrollable = rightPane.scrollHeight - rightPane.clientHeight;
+                if (leftScrollable > 0 && rightScrollable > 0) {
+                  const ratio = rightPane.scrollTop / rightScrollable;
+                  window._isSyncingLeft = true;
+                  leftPane.scrollTop = ratio * leftScrollable;
+                }
+              }
+            }}
+          >
+            <PronunciationMission key={readAloudTarget} targetSentence={readText} onComplete={handleNextTask} />
+          </div>
           <button onClick={handleNextTask} className="mt-4 text-slate-400 hover:text-slate-500 font-bold text-xs underline flex items-center justify-center gap-1 mx-auto flex-shrink-0">このタスクをスキップして次へ</button>
         </div>
       );
@@ -121,10 +143,7 @@ export default function MissionPane({
           <span className={`inline-block font-black text-xs px-3 py-1 rounded-full mb-4 w-max flex-shrink-0 ${isGlobal ? 'bg-indigo-100 text-indigo-700' : 'bg-teal-100 text-teal-700'}`}>
             {isGlobal ? 'Comprehension' : 'Multiple Choice'}
           </span>
-          
-          {/* 🌟 break-keep を削除して自然に改行されるように修正 */}
           <h3 className={`${tSize.instruction} font-black text-slate-800 mb-6 leading-relaxed text-left`}>{instructionText}</h3>
-          
           <div className="flex flex-col gap-3 overflow-y-auto flex-1 mb-4 pr-1 min-h-0 pb-2">
             {currentTask.options.map((option, idx) => {
               const isSelected = selectedOption === idx;
@@ -139,7 +158,6 @@ export default function MissionPane({
                   key={idx} 
                   onClick={() => handleOptionSelect(idx)} 
                   disabled={isAnswerRevealed} 
-                  // 🌟 選択肢の文章も自然に改行されるように break-keep を削除
                   className={`text-left rounded-xl border-2 font-bold transition-all flex-shrink-0 leading-snug ${tSize.option} ${btnClass}`}
                 >
                   {option.text}
@@ -175,11 +193,9 @@ export default function MissionPane({
         <span className="inline-block bg-teal-100 text-teal-700 font-black text-xs px-3 py-1 rounded-full mb-4 w-max flex-shrink-0">
           Task: {currentTask.type.toUpperCase()}
         </span>
-        {/* 🌟 break-keep を削除して自然に改行されるように修正 */}
         <h3 className={`${tSize.instruction} font-black text-slate-800 mb-6 leading-relaxed text-left`}>
           {instructionText}
         </h3>
-        
         <div className="flex flex-col gap-4 mt-auto flex-shrink-0">
           <div className="flex gap-2 w-full">
             <button 

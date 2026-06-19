@@ -13,9 +13,9 @@ export default function SummaryScreen({ onExit, summaryData }) {
   const [isSwapped, setIsSwapped] = useState(false);
   const [textSizeClass, setTextSizeClass] = useState('text-xl');
   const [fontClass, setFontClass] = useState('font-sans'); 
-  const [readAloudTarget, setReadAloudTarget] = useState('mission'); 
   
-  // 🌟 デフォルトを 'small'（小サイズ）に修正
+  // 🌟 初期値を 'all'（全文通しで読む）に変更
+  const [readAloudTarget, setReadAloudTarget] = useState('all'); 
   const [missionTextSize, setMissionTextSize] = useState('small'); 
 
   const [currentMode, setCurrentMode] = useState(null); 
@@ -289,6 +289,8 @@ export default function SummaryScreen({ onExit, summaryData }) {
           <ReadingPane 
             summaryData={summaryData}
             currentPhase={currentPhase}
+            currentTask={currentTask} // 🌟 追加：現在なんのタスクをしているか渡す
+            readAloudTarget={readAloudTarget} // 🌟 追加：音読ターゲットを渡す
             currentParagraphIdx={currentParagraphIdx}
             selectedIndices={selectedIndices}
             traceFeedback={traceFeedback}
