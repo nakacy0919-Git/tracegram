@@ -35,8 +35,14 @@ export default function StudentMode({ categories }) {
   const [hasSeenSplash, setHasSeenSplash] = useState(false);
   const [gameMode, setGameMode] = useState('normal');
 
-  // 🌟 追加：選択された長文データを管理するState
+  // 🌟 長文データを管理するState
   const [activeSummary, setActiveSummary] = useState(null);
+
+  // 🌟 【超重要】メニュー画面の状態をホイスティング（画面を切り替えても記憶しておくため）
+  const [menuViewMode, setMenuViewMode] = useState('element'); 
+  const [summaryStep, setSummaryStep] = useState('genres');
+  const [selectedGenreId, setSelectedGenreId] = useState(null);
+  const [selectedArticle, setSelectedArticle] = useState(null);
 
   const processedBattleRef = useRef(null);
 
@@ -102,8 +108,8 @@ export default function StudentMode({ categories }) {
       <TitleScreen 
         hasSeenSplash={hasSeenSplash}
         onSplashComplete={() => setHasSeenSplash(true)}
-        onSinglePlayer={() => setAppScreen('game')}
-        onCreateRoom={() => { createRoom(); setAppScreen('game'); }}
+        onSinglePlayer={() => setAppScreen('main')} // 'game'から'main'に変更して確実にMenuScreenへ
+        onCreateRoom={() => { createRoom(); setAppScreen('main'); }}
         joinPin={joinPin}
         setJoinPin={setJoinPin}
         onJoinRoom={(pin) => { joinRoom(pin); setAppScreen('lobby'); }}
@@ -132,22 +138,24 @@ export default function StudentMode({ categories }) {
     );
   }
 
-  // 🌟 追加：要約チャレンジモードの画面切り替え
+  // 🌟 長文・要約トレース画面
   if (appScreen === 'summary') {
     return (
       <SummaryScreen 
-        summaryData={activeSummary} // 🌟 選択された長文データを渡す
-        onExit={handleExitToTitle} 
+        summaryData={activeSummary} 
+        // 🌟 戻るボタンを押した時、タイトルではなく「メニュー画面（一つ前の状態）」へ戻す
+        onExit={() => setAppScreen('main')} 
       />
     );
   }
 
+  // メニュー画面
   if (gameState === 'main_select' || gameState === 'sub_select' || gameState === 'level_select') {
     return (
       <MenuScreen
         gameMode={gameMode}
         setGameMode={setGameMode}
-        setActiveSummary={setActiveSummary} // 🌟 MenuScreenにセット関数を渡す
+        setActiveSummary={setActiveSummary} 
         gameState={gameState}
         availableCategories={availableCategories}
         activeMain={activeMain}
@@ -162,6 +170,15 @@ export default function StudentMode({ categories }) {
         backToSub={backToSub}
         handleExitToTitle={handleExitToTitle}
         setBattleSetup={setBattleSetup}
+        // 🌟 状態を子コンポーネントに渡す
+        menuViewMode={menuViewMode}
+        setMenuViewMode={setMenuViewMode}
+        summaryStep={summaryStep}
+        setSummaryStep={setSummaryStep}
+        selectedGenreId={selectedGenreId}
+        setSelectedGenreId={setSelectedGenreId}
+        selectedArticle={selectedArticle}
+        setSelectedArticle={setSelectedArticle}
       />
     );
   }
