@@ -27,9 +27,8 @@ export default function MissionPane({
   setReadAloudTarget
 }) {
   
-  const [lang, setLang] = useState('ja'); // 'ja' または 'en'
+  const [lang, setLang] = useState('ja'); 
 
-  // 🌟 画面幅が狭まっても文字とパディングが美しさを保つように微調整
   const tSize = {
     instruction: missionTextSize === 'small' ? 'text-base md:text-lg' : missionTextSize === 'large' ? 'text-xl md:text-2xl' : 'text-lg md:text-xl',
     option: missionTextSize === 'small' ? 'text-xs md:text-sm p-3' : missionTextSize === 'large' ? 'text-base md:text-lg p-5' : 'text-sm md:text-base p-4',
@@ -95,7 +94,8 @@ export default function MissionPane({
       return (
         <div className="bg-white rounded-3xl p-6 md:p-8 shadow-md border-2 border-teal-100 flex flex-col h-full">
           <span className="inline-block bg-indigo-100 text-indigo-700 font-black text-xs px-3 py-1 rounded-full mb-4 w-max flex-shrink-0">Final Task: Read Aloud</span>
-          <h3 className={`${tSize.instruction} font-black text-slate-800 mb-6 leading-relaxed text-left break-keep`}>{instructionText}</h3>
+          {/* 🌟 break-keep を削除して自然に改行されるように修正 */}
+          <h3 className={`${tSize.instruction} font-black text-slate-800 mb-6 leading-relaxed text-left`}>{instructionText}</h3>
           <div className="mb-4 flex-shrink-0">
             <select value={readAloudTarget} onChange={(e) => { const val = e.target.value; setReadAloudTarget(val === 'all' || val === 'mission' ? val : parseInt(val, 10)); }} className="bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-lg px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-300 text-sm">
               <option value="mission">指定のハイライト文のみ読む</option>
@@ -122,10 +122,9 @@ export default function MissionPane({
             {isGlobal ? 'Comprehension' : 'Multiple Choice'}
           </span>
           
-          {/* 🌟 不自然な単語途中改行を防ぐ break-keep */}
-          <h3 className={`${tSize.instruction} font-black text-slate-800 mb-6 leading-relaxed text-left break-keep`}>{instructionText}</h3>
+          {/* 🌟 break-keep を削除して自然に改行されるように修正 */}
+          <h3 className={`${tSize.instruction} font-black text-slate-800 mb-6 leading-relaxed text-left`}>{instructionText}</h3>
           
-          {/* 🌟 選択肢が潰れないようにスクロール可能領域にしつつ、文字が絶対に2行にならないよう確保 */}
           <div className="flex flex-col gap-3 overflow-y-auto flex-1 mb-4 pr-1 min-h-0 pb-2">
             {currentTask.options.map((option, idx) => {
               const isSelected = selectedOption === idx;
@@ -140,7 +139,8 @@ export default function MissionPane({
                   key={idx} 
                   onClick={() => handleOptionSelect(idx)} 
                   disabled={isAnswerRevealed} 
-                  className={`text-left rounded-xl border-2 font-bold transition-all flex-shrink-0 leading-snug break-keep ${tSize.option} ${btnClass}`}
+                  // 🌟 選択肢の文章も自然に改行されるように break-keep を削除
+                  className={`text-left rounded-xl border-2 font-bold transition-all flex-shrink-0 leading-snug ${tSize.option} ${btnClass}`}
                 >
                   {option.text}
                 </button>
@@ -148,7 +148,6 @@ export default function MissionPane({
             })}
           </div>
 
-          {/* 🌟 選択問題の解説ポップアップ（幅が狭まってもボタンが変形しない構造） */}
           <AnimatePresence>
             {isAnswerRevealed && (
               <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} className="absolute bottom-0 left-0 right-0 p-5 bg-white/98 backdrop-blur-md border-t-2 border-slate-100 shadow-[0_-10px_30px_rgba(0,0,0,0.08)] z-20 rounded-b-3xl flex flex-col max-h-[60%] flex-shrink-0">
@@ -176,14 +175,13 @@ export default function MissionPane({
         <span className="inline-block bg-teal-100 text-teal-700 font-black text-xs px-3 py-1 rounded-full mb-4 w-max flex-shrink-0">
           Task: {currentTask.type.toUpperCase()}
         </span>
-        <h3 className={`${tSize.instruction} font-black text-slate-800 mb-6 leading-relaxed text-left break-keep`}>
+        {/* 🌟 break-keep を削除して自然に改行されるように修正 */}
+        <h3 className={`${tSize.instruction} font-black text-slate-800 mb-6 leading-relaxed text-left`}>
           {instructionText}
         </h3>
         
-        {/* 下部固定のアクションボタンエリア */}
         <div className="flex flex-col gap-4 mt-auto flex-shrink-0">
           <div className="flex gap-2 w-full">
-            {/* 🌟 リセットボタンが絶対に楕円形に潰れないように flex-shrink-0 を指定 */}
             <button 
               onClick={() => { setSelectedIndices([]); setTraceFeedback('idle'); }} 
               disabled={selectedIndices.length === 0} 
@@ -192,7 +190,6 @@ export default function MissionPane({
             >
               <RefreshCcw size={18} />
             </button>
-            {/* 🌟 判定するボタンが絶対に2行に変形しないように whitespace-nowrap を指定 */}
             <button 
               onClick={judgeTrace} 
               disabled={selectedIndices.length === 0} 
@@ -206,7 +203,6 @@ export default function MissionPane({
           </button>
         </div>
 
-        {/* 🌟 判定後の解説ポップアップ（幅リサイズに100%追従して型崩れしない構造） */}
         <AnimatePresence>
           {traceFeedback !== 'idle' && (
             <motion.div 
@@ -255,19 +251,16 @@ export default function MissionPane({
 
   return (
     <div className="max-w-2xl mx-auto w-full flex flex-col h-full relative min-h-0">
-      {/* 固定ヘッダー（JA/EN、文字サイズトグル） */}
       <div className="flex justify-between items-center mb-5 flex-shrink-0 gap-2">
         <div className={`flex items-center gap-1.5 ${modeMeta[currentMode].color} min-w-0`}>
           <div className="flex-shrink-0">{modeMeta[currentMode].icon}</div>
           <h2 className="text-lg md:text-xl font-black truncate">{modeMeta[currentMode].title}</h2>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
-          {/* 言語切り替えトグル */}
           <div className="flex bg-slate-200/60 p-0.5 rounded-xl items-center gap-0.5">
             <button onClick={() => setLang('ja')} className={`flex items-center justify-center w-8 py-1 rounded-lg text-[11px] font-black transition-all ${lang === 'ja' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>JA</button>
             <button onClick={() => setLang('en')} className={`flex items-center justify-center w-8 py-1 rounded-lg text-[11px] font-black transition-all ${lang === 'en' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>EN</button>
           </div>
-          {/* サイズ切り替え */}
           <div className="flex bg-slate-200/60 p-0.5 rounded-xl items-center gap-0.5">
             <button onClick={() => setMissionTextSize('small')} className={`w-6 py-1 rounded-lg text-[11px] font-black transition-all ${missionTextSize === 'small' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>小</button>
             <button onClick={() => setMissionTextSize('medium')} className={`w-6 py-1 rounded-lg text-[11px] font-black transition-all ${missionTextSize === 'medium' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>中</button>

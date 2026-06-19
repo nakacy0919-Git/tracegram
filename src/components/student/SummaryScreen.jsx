@@ -6,7 +6,6 @@ import MissionPane from './MissionPane';
 import { useSummaryTrace } from '../../hooks/useSummaryTrace';
 
 export default function SummaryScreen({ onExit, summaryData }) {
-  // 🌟 UI設定用State
   const [leftWidth, setLeftWidth] = useState(50); 
   const [isDraggingSplit, setIsDraggingSplit] = useState(false);
   const containerRef = useRef(null);
@@ -15,12 +14,11 @@ export default function SummaryScreen({ onExit, summaryData }) {
   const [textSizeClass, setTextSizeClass] = useState('text-xl');
   const [fontClass, setFontClass] = useState('font-sans'); 
   const [readAloudTarget, setReadAloudTarget] = useState('mission'); 
-  const [missionTextSize, setMissionTextSize] = useState('medium'); 
+  
+  // 🌟 デフォルトを 'small'（小サイズ）に修正
+  const [missionTextSize, setMissionTextSize] = useState('small'); 
 
-  // 🌟 4つの学習モードを管理するState
   const [currentMode, setCurrentMode] = useState(null); 
-
-  // 🌟 進行管理用State
   const [currentPhase, setCurrentPhase] = useState('paragraphs'); 
   const [currentParagraphIdx, setCurrentParagraphIdx] = useState(0);
   const [currentTaskIdx, setCurrentTaskIdx] = useState(0); 
@@ -29,7 +27,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
 
   if (!summaryData) return null;
 
-  // データ構造解析セーフティガード
   const currentParagraph = summaryData.paragraphs[currentParagraphIdx];
   let currentTask = null;
 
@@ -47,7 +44,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
     }
   }
 
-  // なぞりエンジンの呼び出し
   const {
     selectedIndices, setSelectedIndices,
     traceFeedback, setTraceFeedback,
@@ -56,7 +52,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
     judgeTrace, handleShowAnswer
   } = useSummaryTrace(currentTask, currentPhase);
 
-  // モードや段落切り替え時のリセット
   useEffect(() => {
     setCurrentTaskIdx(0);
     setSelectedOption(null);
@@ -65,15 +60,12 @@ export default function SummaryScreen({ onExit, summaryData }) {
     setTraceFeedback('idle');
   }, [currentMode, currentParagraphIdx]);
 
-  // タスク切り替え時のリセット
   useEffect(() => {
     setSelectedOption(null);
     setIsAnswerRevealed(false);
     setSelectedIndices([]);
     setTraceFeedback('idle');
   }, [currentTaskIdx, currentPhase, setSelectedIndices, setTraceFeedback]);
-
-  // 🌟 【修正箇所】競合を起こしていた古い自動スクロールuseEffectをここから完全に削除しました
 
   const handleSplitMove = (clientX) => {
     if (!isDraggingSplit || !containerRef.current) return;
@@ -149,7 +141,6 @@ export default function SummaryScreen({ onExit, summaryData }) {
     setIsAnswerRevealed(true); 
   };
 
-  // モード定義
   const modesList = [
     { 
       id: 'comprehension', 
