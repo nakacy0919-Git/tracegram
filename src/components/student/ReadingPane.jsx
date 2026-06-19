@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { BookOpen, ArrowLeftRight } from 'lucide-react';
 
 export default function ReadingPane({
@@ -18,36 +18,6 @@ export default function ReadingPane({
   handleTracePointerMove,
   handleTracePointerUp
 }) {
-  const scrollContainerRef = useRef(null);
-  const paragraphRefs = useRef([]); 
-
-  // 🌟 最終奥義：画面上の「絶対座標」を測定して確実にスクロールさせる
-  useEffect(() => {
-    if (currentPhase === 'paragraphs') {
-      const timer = setTimeout(() => {
-        const container = scrollContainerRef.current;
-        const targetPara = paragraphRefs.current[currentParagraphIdx];
-
-        if (container && targetPara) {
-          // コンテナとターゲットの「画面上の実際のピクセル位置」を精密測定
-          const containerRect = container.getBoundingClientRect();
-          const targetRect = targetPara.getBoundingClientRect();
-
-          // ターゲットがコンテナの上端から「どれだけ離れているか」を計算
-          // -24 はヘッダーにピッタリくっつきすぎないための美しい余白です
-          const scrollDistance = targetRect.top - containerRect.top - 24;
-
-          // その差分の距離だけ、コンテナを強制的にスクロール（移動）させる
-          container.scrollBy({
-            top: scrollDistance,
-            behavior: 'smooth'
-          });
-        }
-      }, 150); 
-      return () => clearTimeout(timer);
-    }
-  }, [currentParagraphIdx, currentPhase]);
-
   if (!summaryData) return null;
 
   return (
@@ -75,8 +45,7 @@ export default function ReadingPane({
 
       {/* 📖 本文スクロールエリア */}
       <div 
-        ref={scrollContainerRef}
-        className="flex-1 overflow-y-auto p-4 md:p-8 pb-[80vh] relative" 
+        className="flex-1 overflow-y-auto p-4 md:p-8 pb-32 relative" 
         onPointerMove={handleTracePointerMove}
         onPointerUp={handleTracePointerUp}
         onTouchMove={handleTracePointerMove}
@@ -84,12 +53,18 @@ export default function ReadingPane({
       >
         <div className="max-w-3xl mx-auto flex flex-col gap-8">
           {summaryData.paragraphs.map((p, idx) => {
+            
+            // 🌟 先生の最強アイデア：「終わった問題（過去の段落）は非表示にする」
+            // これにより、今解いている段落が「常に一番上」に配置されます！
+            if (currentPhase === 'paragraphs' && idx < currentParagraphIdx) {
+              return null; 
+            }
+
             const isActive = currentPhase === 'paragraphs' && currentParagraphIdx === idx;
             
             return (
               <div 
                 key={p.p_id || idx} 
-                ref={(el) => (paragraphRefs.current[idx] = el)} 
                 className={`relative p-6 rounded-2xl transition-all duration-500 ${
                   isActive 
                     ? 'bg-white border-2 border-indigo-300 shadow-lg scale-[1.02] z-10' 
