@@ -23,6 +23,17 @@ export const fast_fashion_L1 = {
               { text: "People can buy trendy clothes at low prices.", isCorrect: true, explanationJa: "本文に「People can buy trendy clothes at low prices.」と明記されています。", explanationEn: "The text clearly states 'People can buy trendy clothes at low prices'." },
               { text: "Clothes are made to last a long time.", isCorrect: false, explanationJa: "長持ちするとは書かれていません。", explanationEn: "It is not mentioned that the clothes last a long time." }
             ]
+          },
+          // 🌟 NEW
+          {
+            type: "select",
+            instructionJa: "多くの店はどれくらいの頻度で新しいスタイルを販売していますか？",
+            instructionEn: "How often do many stores sell new styles?",
+            options: [
+              { text: "Every day", isCorrect: false, explanationJa: "毎日（every day）ではありません。", explanationEn: "It does not say 'every day'." },
+              { text: "Every week", isCorrect: true, explanationJa: "本文に「Many stores sell new styles every week.」と書かれています。", explanationEn: "The text states 'Many stores sell new styles every week'." },
+              { text: "Every month", isCorrect: false, explanationJa: "毎月（every month）ではありません。", explanationEn: "It does not say 'every month'." }
+            ]
           }
         ],
         structure: [
@@ -33,6 +44,15 @@ export const fast_fashion_L1 = {
             targetIndices: [25, 26, 27, 28], 
             explanationJa: "動詞は「has(持っている)」、目的語は「a hidden cost(隠された代償を)」です。",
             explanationEn: "The verb is 'has' and the object block is 'a hidden cost'."
+          },
+          // 🌟 NEW
+          {
+            type: "trace",
+            instructionJa: "「多くの店が」という、文の主語(S)のカタマリをなぞってください。",
+            instructionEn: "Trace the subject (S) block meaning 'Many stores'.",
+            targetIndices: [14, 15], 
+            explanationJa: "「Many stores(多くの店が)」が直後の動詞「sell(販売する)」の主語になっています。",
+            explanationEn: "'Many stores' is the subject of the verb 'sell'."
           }
         ],
         summary: [
@@ -43,6 +63,15 @@ export const fast_fashion_L1 = {
             targetIndices: [21, 22, 23, 24, 25, 26, 27, 28], 
             explanationJa: "前半のメリットを受けた上で、「However(しかし)」から始まるこの一文が、長文全体のテーマとなる核心です。",
             explanationEn: "Following the benefits, the sentence starting with 'However' presents the core theme of the entire passage."
+          },
+          // 🌟 NEW
+          {
+            type: "trace",
+            instructionJa: "ファストファッションの「現在のポジティブな状況」を端的に表している最初の一文をなぞってください。",
+            instructionEn: "Trace the first sentence that shows the 'positive current situation' of fast fashion.",
+            targetIndices: [0, 1, 2, 3, 4, 5], 
+            explanationJa: "世間ではとても人気がある、という現状の導入文です。",
+            explanationEn: "This is the introductory sentence showing its current popularity."
           }
         ],
         vocabulary: [
@@ -61,6 +90,15 @@ export const fast_fashion_L1 = {
             targetIndex: 31, 
             explanationJa: "serious problems で「深刻な問題」という意味になります。",
             explanationEn: "'Serious problems' means issues that are severe or very bad."
+          },
+          // 🌟 NEW
+          {
+            type: "tap",
+            instructionJa: "「地球、惑星」という意味の単語をタップしてください。",
+            instructionEn: "Tap the word that means 'the Earth' or 'world'.",
+            targetIndex: 35, 
+            explanationJa: "planet は「惑星」ですが、the planet や our planet の形で「地球環境」を指す際によく使われます。",
+            explanationEn: "'Planet' is often used to refer to the Earth, especially in environmental contexts."
           }
         ]
       }
@@ -81,6 +119,17 @@ export const fast_fashion_L1 = {
               { text: "Enough for one person to drink for two and a half years.", isCorrect: true, explanationJa: "「That is enough water for one person to drink for two and a half years!」と書かれています。", explanationEn: "It is exactly stated as 'enough water for one person to drink for two and a half years'." },
               { text: "Enough for animals to drink for one year.", isCorrect: false, explanationJa: "動物の飲み水の話ではありません。", explanationEn: "It is not about water for animals to drink." }
             ]
+          },
+          // 🌟 NEW
+          {
+            type: "select",
+            instructionJa: "工場は川に何を捨てることが多いですか？",
+            instructionEn: "What do factories often throw into rivers?",
+            options: [
+              { text: "Dirty clothes", isCorrect: false, explanationJa: "服ではなく、水です。", explanationEn: "It says water, not clothes." },
+              { text: "Dirty water", isCorrect: true, explanationJa: "「factories often throw dirty water into rivers.」と明記されています。", explanationEn: "The text explicitly states 'dirty water'." },
+              { text: "New styles", isCorrect: false, explanationJa: "新しいスタイル（服）を川に捨てるわけではありません。", explanationEn: "They don't throw new styles into rivers." }
+            ]
           }
         ],
         structure: [
@@ -91,6 +140,15 @@ export const fast_fashion_L1 = {
             targetIndices: [7, 8, 9, 10, 11], 
             explanationJa: "動名詞「Making(作ること)」がまとまって文の主語(S)になっています。動詞は takes です。",
             explanationEn: "The gerund phrase starting with 'Making' acts as the subject (S) of the verb 'takes'."
+          },
+          // 🌟 NEW
+          {
+            type: "trace",
+            instructionJa: "「川の中へ」という場所を表す前置詞のカタマリをなぞってください。",
+            instructionEn: "Trace the prepositional phrase meaning 'into rivers'.",
+            targetIndices: [39, 40], 
+            explanationJa: "into(〜の中へ)という前置詞と、rivers(川)がセットになっています。",
+            explanationEn: "'into' is a preposition showing direction, combined with the noun 'rivers'."
           }
         ],
         summary: [
@@ -101,6 +159,15 @@ export const fast_fashion_L1 = {
             targetIndices: [0, 1, 2, 3, 4, 5, 6], 
             explanationJa: "段落のトピックセンテンス（水の使用量が多すぎる）です。",
             explanationEn: "This is the topic sentence of the paragraph stating it uses too much water."
+          },
+          // 🌟 NEW
+          {
+            type: "trace",
+            instructionJa: "汚水を川に捨てることで「何が起こるか（被害）」をまとめている一文をなぞってください。",
+            instructionEn: "Trace the sentence that summarizes 'what happens (the damage)' due to throwing dirty water into rivers.",
+            targetIndices: [41, 42, 43, 44, 45, 46, 47], 
+            explanationJa: "「This(これ＝川に汚水を捨てること)」が環境汚染と動物への被害に繋がるという結論の文です。",
+            explanationEn: "This sentence concludes how 'This' (throwing dirty water) harms the environment and animals."
           }
         ],
         vocabulary: [
@@ -111,6 +178,15 @@ export const fast_fashion_L1 = {
             targetIndex: 42, 
             explanationJa: "pollute は「〜を汚染する」という重要な環境語彙です。",
             explanationEn: "'Pollute' is a crucial environmental vocabulary word meaning to make something dirty."
+          },
+          // 🌟 NEW
+          {
+            type: "tap",
+            instructionJa: "「環境」という意味の名詞をタップしてください。",
+            instructionEn: "Tap the noun that means 'the natural world (environment)'.",
+            targetIndex: 44, 
+            explanationJa: "environment は環境問題で必ずと言っていいほど出題される超重要単語です。",
+            explanationEn: "'Environment' is an essential word when discussing nature and ecology."
           }
         ]
       }
@@ -131,6 +207,17 @@ export const fast_fashion_L1 = {
               { text: "Because the clothes are cheap.", isCorrect: true, explanationJa: "「Because the clothes are cheap, they do not keep them...」と理由が明記されています。", explanationEn: "The text states 'Because the clothes are cheap, they do not keep them'." },
               { text: "Because the clothes are very dirty.", isCorrect: false, explanationJa: "服が汚いからではありません。", explanationEn: "It is not because the clothes are dirty." }
             ]
+          },
+          // 🌟 NEW
+          {
+            type: "select",
+            instructionJa: "毎年、何百万トンもの服は最終的にどうなりますか？",
+            instructionEn: "What happens to millions of tons of clothes every year?",
+            options: [
+              { text: "They are sold in stores.", isCorrect: false, explanationJa: "店で売られるわけではありません。", explanationEn: "They are not sold in stores." },
+              { text: "They are traded with friends.", isCorrect: false, explanationJa: "友達と交換するとは書かれていません。", explanationEn: "Trading with friends is not mentioned here." },
+              { text: "They end up in landfills.", isCorrect: true, explanationJa: "「end up in landfills（埋立地に行き着く）」と明記されています。", explanationEn: "The text says they 'end up in landfills'." }
+            ]
           }
         ],
         structure: [
@@ -141,6 +228,15 @@ export const fast_fashion_L1 = {
             targetIndices: [7, 8, 9, 10, 11], 
             explanationJa: "Because からコンマまでのカタマリが、主節（they do not keep them）の理由を説明する副詞節です。",
             explanationEn: "The phrase starting with 'Because' up to the comma acts as an adverbial clause explaining the reason."
+          },
+          // 🌟 NEW
+          {
+            type: "trace",
+            instructionJa: "「分解されるのに（分解するための）」という意味の、不定詞のカタマリをなぞってください。",
+            instructionEn: "Trace the infinitive phrase meaning 'to break down'.",
+            targetIndices: [39, 40, 41], 
+            explanationJa: "to + 動詞の原形で「〜するための（時間がかかる）」という修飾をしています。",
+            explanationEn: "This is an infinitive phrase (to + verb) modifying the noun 'time'."
           }
         ],
         summary: [
@@ -151,6 +247,15 @@ export const fast_fashion_L1 = {
             targetIndices: [0, 1, 2, 3, 4, 5, 6], 
             explanationJa: "人々がすぐに服を捨てる（大量廃棄）ことが第二のトピックです。",
             explanationEn: "Mass disposal of clothes is the second topic presented in this sentence."
+          },
+          // 🌟 NEW
+          {
+            type: "trace",
+            instructionJa: "「なぜ人々はすぐに服を捨ててしまうのか？」の理由を説明している一文をなぞってください。",
+            instructionEn: "Trace the sentence that explains 'why' people throw away clothes quickly.",
+            targetIndices: [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], 
+            explanationJa: "Because(〜だから)を使って、安いから長持ちさせないという心理構造を説明しています。",
+            explanationEn: "This sentence uses 'Because' to explain the reason behind their behavior."
           }
         ],
         vocabulary: [
@@ -169,6 +274,15 @@ export const fast_fashion_L1 = {
             targetIndex: 31, 
             explanationJa: "landfill は環境問題の長文で必ず登場する「埋立地」という単語です。",
             explanationEn: "'Landfill' is a must-know word for environmental topics, meaning a place to bury trash."
+          },
+          // 🌟 NEW
+          {
+            type: "trace",
+            instructionJa: "「分解される、細かく砕ける」という意味の2語の熟語をなぞってください。",
+            instructionEn: "Trace the two-word phrasal verb meaning 'to separate into simpler substances (decompose)'.",
+            targetIndices: [40, 41], 
+            explanationJa: "break down は「分解される」という意味で、自然環境問題で頻出します。",
+            explanationEn: "'Break down' is a key phrasal verb meaning to decompose."
           }
         ]
       }
@@ -189,6 +303,17 @@ export const fast_fashion_L1 = {
               { text: "Trading clothes with friends.", isCorrect: false, explanationJa: "友達と交換する（trade with friends）も提案されています。", explanationEn: "Trading with friends is suggested." },
               { text: "Washing clothes with less water.", isCorrect: true, explanationJa: "より少ない水で洗濯する、という提案は段落内には書かれていません。", explanationEn: "Washing with less water is not mentioned as a solution here." }
             ]
+          },
+          // 🌟 NEW
+          {
+            type: "select",
+            instructionJa: "なぜ私たちは「小さな変化」を起こすべきだと筆者は言っていますか？",
+            instructionEn: "Why does the author say we should make 'small changes'?",
+            options: [
+              { text: "To protect the Earth for the future.", isCorrect: true, explanationJa: "「we can protect the Earth for the future」と最後の文に書かれています。", explanationEn: "The final sentence states 'we can protect the Earth for the future'." },
+              { text: "To make cheaper clothes.", isCorrect: false, explanationJa: "もっと安い服を作るためではありません。", explanationEn: "It is not to make clothes cheaper." },
+              { text: "To buy more new styles.", isCorrect: false, explanationJa: "新しいスタイルをもっと買うためではありません。", explanationEn: "It is not to buy more styles." }
+            ]
           }
         ],
         structure: [
@@ -199,6 +324,15 @@ export const fast_fashion_L1 = {
             targetIndices: [4, 5, 6, 7], 
             explanationJa: "疑問詞 how が導く名詞節で、change の目的語(O)になっています。",
             explanationEn: "This is a noun clause led by 'how', acting as the object of 'change'."
+          },
+          // 🌟 NEW
+          {
+            type: "trace",
+            instructionJa: "「買うべきである」という意味の、助動詞＋動詞の原形のカタマリをなぞってください。",
+            instructionEn: "Trace the modal verb and base verb meaning 'should buy'.",
+            targetIndices: [9, 10], 
+            explanationJa: "助動詞 should(〜すべき) と動詞 buy(買う) の組み合わせです。",
+            explanationEn: "This is the modal verb 'should' combined with the base verb 'buy'."
           }
         ],
         summary: [
@@ -209,6 +343,15 @@ export const fast_fashion_L1 = {
             targetIndices: [27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39], 
             explanationJa: "If から始まる最後の文が、この長文全体の最終的な結論（解決への道）です。",
             explanationEn: "The final sentence starting with 'If' is the ultimate conclusion and message of the passage."
+          },
+          // 🌟 NEW
+          {
+            type: "trace",
+            instructionJa: "私たちが起こすべき「行動の変化（宣言）」を提示している最初の一文をなぞってください。",
+            instructionEn: "Trace the first sentence that declares the 'change in action' we must take.",
+            targetIndices: [0, 1, 2, 3, 4, 5, 6, 7], 
+            explanationJa: "「服の買い方を変える必要がある」という、この段落の軸となる文です。",
+            explanationEn: "This sets the theme for the paragraph: we need to change our buying habits."
           }
         ],
         vocabulary: [
@@ -219,6 +362,15 @@ export const fast_fashion_L1 = {
             targetIndices: [21], 
             explanationJa: "second-hand は「中古の」という意味の重要な形容詞です。",
             explanationEn: "'Second-hand' is an important adjective meaning previously owned."
+          },
+          // 🌟 NEW
+          {
+            type: "tap",
+            instructionJa: "「品質、質」という意味の名詞をタップしてください。",
+            instructionEn: "Tap the noun that means 'how good or bad something is (quality)'.",
+            targetIndex: 16, 
+            explanationJa: "quality は量（quantity）と対になる重要な単語で、「品質」を表します。",
+            explanationEn: "'Quality' is a crucial noun referring to how good a product is."
           }
         ]
       }
@@ -236,6 +388,17 @@ export const fast_fashion_L1 = {
           { text: "The Hidden Cost of Fast Fashion", isCorrect: true, explanationJa: "安さの裏にある環境への代償（水質汚染や大量廃棄）が全体のテーマです。", explanationEn: "The hidden environmental cost (water pollution, waste) behind cheap clothes is the main theme." },
           { text: "Why We Need More Landfills", isCorrect: false, explanationJa: "埋立地がもっと必要だとは主張していません。", explanationEn: "The author does not argue that we need more landfills." }
         ]
+      },
+      // 🌟 NEW
+      {
+        type: "select",
+        instructionJa: "この長文を書いた筆者の主な目的は何ですか？",
+        instructionEn: "What is the main purpose of the author?",
+        options: [
+          { text: "To teach how to wash clothes with less water.", isCorrect: false, explanationJa: "洗濯の方法を教えるのが目的ではありません。", explanationEn: "Teaching how to wash clothes is not the purpose." },
+          { text: "To warn about the negative effects of fast fashion.", isCorrect: true, explanationJa: "ファストファッションのネガティブな影響（水質汚染、廃棄）について警告し、行動を促すことが目的です。", explanationEn: "The purpose is to warn about the environmental damage of fast fashion." },
+          { text: "To advertise new trendy clothes.", isCorrect: false, explanationJa: "服を宣伝（advertise）しているわけではありません。", explanationEn: "The author is not advertising clothes." }
+        ]
       }
     ],
     structure: [
@@ -244,6 +407,13 @@ export const fast_fashion_L1 = {
         instructionJa: "最後に、長文全体を通して音読し、英語の構造を口から定着させましょう！",
         instructionEn: "Finally, read the whole passage aloud to master the structure!",
         targetSentence: "Fast fashion is very popular today. People can buy trendy clothes at low prices. Many stores sell new styles every week. However, this cheap fashion has a hidden cost. It causes serious problems for our planet."
+      },
+      // 🌟 NEW
+      {
+        type: "voice",
+        instructionJa: "第2段落の水質汚染に関する事実を音読して、文構造を定着させましょう。",
+        instructionEn: "Read the facts about water pollution aloud to master the structure.",
+        targetSentence: "First, fast fashion uses too much water. Making just one cotton shirt takes about 2,700 liters of water. Also, factories often throw dirty water into rivers."
       }
     ],
     summary: [
@@ -256,6 +426,17 @@ export const fast_fashion_L1 = {
           { text: "Fast fashion is good because we can buy cheap clothes. We should throw them away quickly to buy more new styles.", isCorrect: false, explanationJa: "筆者の主張と真逆の内容です。", explanationEn: "This is the exact opposite of what the author is arguing." },
           { text: "Cotton shirts need a lot of water to make. Therefore, we should never buy clothes again.", isCorrect: false, explanationJa: "決して服を買うな、とは言っていません。買い方を変えようと言っています。", explanationEn: "The author doesn't say never buy clothes again, but rather to change how we buy them." }
         ]
+      },
+      // 🌟 NEW
+      {
+        type: "select",
+        instructionJa: "長文全体の内容と「一致している文」を1つ選んでください。",
+        instructionEn: "Which statement is TRUE based on the whole text?",
+        options: [
+          { text: "Fast fashion helps the environment by reducing water usage.", isCorrect: false, explanationJa: "水の使用量を減らすどころか、大量に使っています。", explanationEn: "Fast fashion uses too much water, it doesn't reduce it." },
+          { text: "Fast fashion is affordable, but it creates serious environmental problems.", isCorrect: true, explanationJa: "手頃な価格（affordable）だが、環境に深刻な問題を引き起こしているという本文の趣旨と一致します。", explanationEn: "This perfectly aligns with the text: it's cheap but causes environmental issues." },
+          { text: "People keep cheap clothes for a very long time.", isCorrect: false, explanationJa: "安いからすぐ捨てる（do not keep them for a long time）と書かれています。", explanationEn: "The text states they do not keep them for a long time." }
+        ]
       }
     ],
     vocabulary: [
@@ -264,6 +445,13 @@ export const fast_fashion_L1 = {
         instructionJa: "今回登場した重要語彙を含む文を音読して、文脈ごとの意味をインプットしましょう！",
         instructionEn: "Read the sentence aloud to input the meaning in context!",
         targetSentence: "This cheap fashion has a hidden cost. Millions of tons of clothes end up in landfills."
+      },
+      // 🌟 NEW
+      {
+        type: "voice",
+        instructionJa: "未来を守るための重要フレーズを音読して、表現を自分のものにしましょう！",
+        instructionEn: "Read the key phrase for protecting the future aloud to make it your own!",
+        targetSentence: "If we make small changes, we can protect the Earth for the future."
       }
     ]
   }
