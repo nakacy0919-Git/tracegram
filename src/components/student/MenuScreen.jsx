@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, BookOpen, Layers, BarChart3, AlertTriangle, CheckCircle2, TrendingUp, Award, HelpCircle, Bug, Crosshair, FileText, Sparkles, ChevronRight, Leaf, Scroll, Cpu, Users, Globe, Brain, Landmark, Palette, PenTool, GraduationCap, Scale, HeartPulse, Rocket, Heart, Balance } from 'lucide-react';
+import { ArrowLeft, BookOpen, Layers, BarChart3, AlertTriangle, CheckCircle2, TrendingUp, Award, HelpCircle, Bug, Crosshair, FileText, Sparkles, ChevronRight, Leaf, Scroll, Cpu, Users, Globe, Brain, Landmark, Palette, PenTool, GraduationCap, Scale, HeartPulse, Rocket, Heart, HeartHandshake } from 'lucide-react';
 
 // 🌟 長文データのインポート
 import { fast_fashion_L1 } from '../../data/summary/fast_fashion/level1_a2.js';
@@ -28,7 +28,6 @@ const GRAMMAR_CATEGORIES = [
   { id: "formal_it", title: "形式主語・目的語", desc: "Itを仮のSやOに置く構文", bg: "bg-[#a5b4fc]", text: "text-[#312e81]" }
 ];
 
-// 🌟 精密再現された15のジャンルマスタデータ
 const GENRE_LIST = [
   { id: "nature", label: "L1", title: "自然", icon: <Leaf size={24} />, fromColor: "from-emerald-400 to-teal-500", border: "border-emerald-200", bgLight: "bg-emerald-50" },
   { id: "history", label: "L2", title: "歴史", icon: <Scroll size={24} />, fromColor: "from-amber-500 to-orange-600", border: "border-amber-200", bgLight: "bg-amber-50" },
@@ -44,17 +43,17 @@ const GENRE_LIST = [
   { id: "medicine", label: "L12", title: "医療・健康", icon: <HeartPulse size={24} />, fromColor: "from-teal-400 to-cyan-500", border: "border-teal-200", bgLight: "bg-teal-50" },
   { id: "space", label: "L13", title: "宇宙・未来", icon: <Rocket size={24} />, fromColor: "from-violet-500 to-purple-600", border: "border-violet-200", bgLight: "bg-violet-50" },
   { id: "marriage", label: "L14", title: "婚姻・交友", icon: <Heart size={24} />, fromColor: "from-pink-400 to-fuchsia-500", border: "border-pink-200", bgLight: "bg-pink-50" },
-  { id: "ethics", label: "L15", title: "倫理・道徳", icon: <Balance size={24} />, fromColor: "from-purple-600 to-rose-700", border: "border-purple-300", bgLight: "bg-purple-50" }
+  // 🌟 修正：一番最後のL15の icon を <HeartHandshake /> に変更しました
+  { id: "ethics", label: "L15", title: "倫理・道徳", icon: <HeartHandshake size={24} />, fromColor: "from-purple-600 to-rose-700", border: "border-purple-300", bgLight: "bg-purple-50" }
 ];
 
-// 🌟 長文マスタデータグループ（各ジャンルとの紐付け）
 const ARTICLES_MASTER = [
   {
     id: "fast_fashion",
     title: "ファストファッションの光と影",
     englishTitle: "The Hidden Impact of Fast Fashion",
     desc: "安くてオシャレな服の裏側に隠された、地球環境への代償と労働問題に迫る。",
-    genres: ["nature", "economics", "ethics"], // 自然、経済、倫理にマッピング
+    genres: ["nature", "economics", "ethics"], 
     levels: [
       { num: 1, name: "Level 1 (A2 - 初級)", data: fast_fashion_L1 },
       { num: 2, name: "Level 2 (B1 - 中級)", data: fast_fashion_L2 },
@@ -70,7 +69,6 @@ export default function MenuScreen({
   gameState, availableCategories, activeMain, activeCategory, isMultiplayer, isHost,
   setAppScreen, selectMainCategory, selectSubCategory, startGame,
   backToMain, backToSub, handleExitToTitle, setBattleSetup,
-  // 🌟 StudentModeから受け取ったState
   menuViewMode, setMenuViewMode,
   summaryStep, setSummaryStep,
   selectedGenreId, setSelectedGenreId,
@@ -81,7 +79,6 @@ export default function MenuScreen({
   const [tempCount, setTempCount] = useState(10);
 
   useEffect(() => {
-    // 常に最新の記録をロード
     const savedLogs = localStorage.getItem('tracegram_learning_logs');
     if (savedLogs) {
       try { setLogs(JSON.parse(savedLogs)); } catch (e) { console.error(e); }
@@ -150,7 +147,6 @@ export default function MenuScreen({
     selectSubCategory(pseudoCategory);
   };
 
-  // 🌟 長文階層用のカスタム戻るアクション
   const handleSummaryBack = () => {
     if (summaryStep === 'levels') {
       setSummaryStep('articles');
@@ -172,7 +168,6 @@ export default function MenuScreen({
     return (
       <div className="flex-1 flex flex-col items-center p-4 md:p-10 overflow-y-auto z-10 relative w-full bg-slate-50/50">
         
-        {/* 左上トップナビゲーション */}
         <div className="absolute top-6 left-6 z-20 flex items-center gap-3">
           {menuViewMode === 'summary' && summaryStep !== 'genres' ? (
             <BackButton onClick={handleSummaryBack} text="一つ前の画面に戻る" />
@@ -183,7 +178,6 @@ export default function MenuScreen({
         
         <div className="max-w-6xl w-full mt-16 md:mt-12 flex flex-col items-center">
           
-          {/* 👑 タブコントロール（弱点分析タブを削除して3つに統合） */}
           <div className="flex bg-slate-200/60 p-1.5 rounded-full mb-8 shadow-inner max-w-full overflow-x-auto hide-scrollbar border border-slate-300/40">
             <button 
               onClick={() => setMenuViewMode('element')}
@@ -207,11 +201,9 @@ export default function MenuScreen({
 
           <AnimatePresence mode="wait">
             
-            {/* ① 文の要素モード（トップに弱点分析レコードを埋め込み！） */}
             {menuViewMode === 'element' ? (
               <motion.div key="element" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="w-full flex flex-col gap-8">
                 
-                {/* 📊 【改修】最初の画面のトップに埋め込まれたスタイッシュな弱点分析ミニダッシュボード */}
                 {logs.length > 0 && (
                   <div className="w-full bg-white rounded-3xl p-5 border border-slate-200 shadow-sm grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
                     <div className="lg:border-r border-slate-100 lg:pr-6">
@@ -249,12 +241,15 @@ export default function MenuScreen({
                       const isAvailable = hasAnyProblems(cat.id);
                       return (
                         <motion.div key={cat.id} whileHover={isAvailable ? { scale: 1.02, y: -2 } : {}} onClick={() => isAvailable && selectMainCategory(cat.id)} className={`relative p-1 rounded-[28px] shadow-sm transition-all ${isAvailable ? 'cursor-pointer ' + cat.bg : 'cursor-not-allowed bg-slate-200 opacity-50'}`}>
-                          <div className="border-2 border-white border-dashed rounded-[24px] py-6 px-4 h-full flex flex-col items-center justify-between bg-white/10 min-h-[140px]">
-                            <h3 className="font-black text-white text-center drop-shadow-md text-3xl">{cat.id}</h3>
-                            <span className={`inline-block text-xs md:text-sm font-black bg-white/70 backdrop-blur-sm px-4 py-2 rounded-xl mt-4 ${isAvailable ? cat.text : 'text-slate-500'} shadow-2xs w-full text-center truncate`}>
-                              {cat.title}
-                            </span>
-                          </div>
+                          {/* 🌟 透明なFragmentで包んでVS Codeの赤線を消去 */}
+                          <>
+                            <div className="border-2 border-white border-dashed rounded-[24px] py-6 px-4 h-full flex flex-col items-center justify-between bg-white/10 min-h-[140px]">
+                              <h3 className="font-black text-white text-center drop-shadow-md text-3xl">{cat.id}</h3>
+                              <span className={`inline-block text-xs md:text-sm font-black bg-white/70 backdrop-blur-sm px-4 py-2 rounded-xl mt-4 ${isAvailable ? cat.text : 'text-slate-500'} shadow-2xs w-full text-center truncate`}>
+                                {cat.title}
+                              </span>
+                            </div>
+                          </>
                         </motion.div>
                       );
                     })}
@@ -262,27 +257,27 @@ export default function MenuScreen({
                 </div>
               </motion.div>
             ) : menuViewMode === 'grammar' ? (
-              /* ② 文法項目別モード */
               <motion.div key="grammar" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }} className="w-full">
                 <h2 className="text-xl md:text-2xl font-black text-slate-700 mb-6 text-center">特訓したい「文法項目」を選択してください</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   {GRAMMAR_CATEGORIES.map((gram) => (
                     <motion.div key={gram.id} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => handleGrammarSelect(gram.id, gram.title, gram.desc)} className={`relative p-1 rounded-[24px] shadow-sm transition-all cursor-pointer ${gram.bg}`}>
-                      <div className="border-2 border-white border-dashed rounded-[20px] py-5 px-3 h-full flex flex-col items-center justify-between bg-white/10 min-h-[120px]">
-                        <h3 className="font-black text-white text-lg md:text-xl text-center drop-shadow-md">{gram.title}</h3>
-                        <span className={`inline-block text-[11px] font-black bg-white/70 backdrop-blur-sm px-2 py-1.5 rounded-lg ${gram.text} w-full text-center mt-3 truncate`}>
-                          {gram.desc}
-                        </span>
-                      </div>
+                      {/* 🌟 透明なFragmentで包んでVS Codeの赤線を消去 */}
+                      <>
+                        <div className="border-2 border-white border-dashed rounded-[20px] py-5 px-3 h-full flex flex-col items-center justify-between bg-white/10 min-h-[120px]">
+                          <h3 className="font-black text-white text-lg md:text-xl text-center drop-shadow-md">{gram.title}</h3>
+                          <span className={`inline-block text-[11px] font-black bg-white/70 backdrop-blur-sm px-2 py-1.5 rounded-lg ${gram.text} w-full text-center mt-3 truncate`}>
+                            {gram.desc}
+                          </span>
+                        </div>
+                      </>
                     </motion.div>
                   ))}
                 </div>
               </motion.div>
             ) : menuViewMode === 'summary' ? (
-              /* ③ 【大改修】長文・要約トレース（15のジャンル多階層システム） */
               <motion.div key="summary" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="w-full">
                 
-                {/* 階層1: 15ジャンルのおしゃれカード選択画面 */}
                 {summaryStep === 'genres' && (
                   <div>
                     <div className="text-center mb-8">
@@ -292,7 +287,6 @@ export default function MenuScreen({
                     
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                       {GENRE_LIST.map((g) => {
-                        // 該当ジャンルに含まれる記事があるかカウント
                         const availableCount = ARTICLES_MASTER.filter(a => a.genres.includes(g.id)).length;
                         
                         return (
@@ -306,25 +300,28 @@ export default function MenuScreen({
                             }}
                             className={`bg-white rounded-2xl p-4 text-left border-2 ${g.border} shadow-sm flex flex-col justify-between items-start cursor-pointer transition-all h-[130px] group relative overflow-hidden`}
                           >
-                            <div className="flex justify-between items-center w-full">
-                              <span className="text-[10px] font-black tracking-widest text-slate-400 uppercase bg-slate-100 px-2 py-0.5 rounded-md">
-                                {g.label}
-                              </span>
-                              {availableCount > 0 && (
-                                <span className="text-[10px] bg-emerald-100 text-emerald-700 font-black px-1.5 py-0.5 rounded-md">
-                                  {availableCount} 記事
+                            {/* 🌟 透明なFragmentで包んでVS Codeの赤線を消去 */}
+                            <>
+                              <div className="flex justify-between items-center w-full">
+                                <span className="text-[10px] font-black tracking-widest text-slate-400 uppercase bg-slate-100 px-2 py-0.5 rounded-md">
+                                  {g.label}
                                 </span>
-                              )}
-                            </div>
-                            
-                            <div className="mt-auto w-full">
-                              <div className={`p-2 rounded-xl bg-gradient-to-br ${g.fromColor} text-white mb-2 w-max shadow-sm group-hover:scale-110 transition-transform`}>
-                                {g.icon}
+                                {availableCount > 0 && (
+                                  <span className="text-[10px] bg-emerald-100 text-emerald-700 font-black px-1.5 py-0.5 rounded-md">
+                                    {availableCount} 記事
+                                  </span>
+                                )}
                               </div>
-                              <h3 className="text-sm font-black text-slate-700 truncate w-full group-hover:text-indigo-600 transition-colors">
-                                {g.title}
-                              </h3>
-                            </div>
+                              
+                              <div className="mt-auto w-full">
+                                <div className={`p-2 rounded-xl bg-gradient-to-br ${g.fromColor} text-white mb-2 w-max shadow-sm group-hover:scale-110 transition-transform`}>
+                                  {g.icon}
+                                </div>
+                                <h3 className="text-sm font-black text-slate-700 truncate w-full group-hover:text-indigo-600 transition-colors">
+                                  {g.title}
+                                </h3>
+                              </div>
+                            </>
                           </motion.button>
                         );
                       })}
@@ -332,7 +329,6 @@ export default function MenuScreen({
                   </div>
                 )}
 
-                {/* 階層2: 選択されたジャンル内の記事リスト画面 */}
                 {summaryStep === 'articles' && (
                   <div className="w-full max-w-3xl mx-auto">
                     {(() => {
@@ -369,17 +365,20 @@ export default function MenuScreen({
                                   }}
                                   className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:border-indigo-300 cursor-pointer flex justify-between items-center group transition-all"
                                 >
-                                  <div className="min-w-0 pr-4">
-                                    <span className="text-[11px] font-black bg-emerald-50 text-emerald-600 border border-emerald-200 px-2.5 py-0.5 rounded-md">
-                                      Premium Article
-                                    </span>
-                                    <h4 className="text-lg font-black text-slate-800 mt-2 mb-1 group-hover:text-indigo-600 transition-colors">
-                                      {art.title}
-                                    </h4>
-                                    <p className="text-xs text-slate-400 font-medium italic mb-2">{art.englishTitle}</p>
-                                    <p className="text-xs text-slate-500 font-bold line-clamp-2">{art.desc}</p>
-                                  </div>
-                                  <ChevronRight size={20} className="text-slate-400 group-hover:text-indigo-500 transform group-hover:translate-x-1 transition-all flex-shrink-0" />
+                                  {/* 🌟 透明なFragmentで包んでVS Codeの赤線を消去 */}
+                                  <>
+                                    <div className="min-w-0 pr-4">
+                                      <span className="text-[11px] font-black bg-emerald-50 text-emerald-600 border border-emerald-200 px-2.5 py-0.5 rounded-md">
+                                        Premium Article
+                                      </span>
+                                      <h4 className="text-lg font-black text-slate-800 mt-2 mb-1 group-hover:text-indigo-600 transition-colors">
+                                        {art.title}
+                                      </h4>
+                                      <p className="text-xs text-slate-400 font-medium italic mb-2">{art.englishTitle}</p>
+                                      <p className="text-xs text-slate-500 font-bold line-clamp-2">{art.desc}</p>
+                                    </div>
+                                    <ChevronRight size={20} className="text-slate-400 group-hover:text-indigo-500 transform group-hover:translate-x-1 transition-all flex-shrink-0" />
+                                  </>
                                 </motion.div>
                               ))}
                             </div>
@@ -390,7 +389,6 @@ export default function MenuScreen({
                   </div>
                 )}
 
-                {/* 階層3: 選択された記事の難易度（Level 1〜4）選択画面 */}
                 {summaryStep === 'levels' && selectedArticle && (
                   <div className="w-full max-w-2xl mx-auto">
                     <div className="text-center mb-6">
@@ -401,7 +399,6 @@ export default function MenuScreen({
 
                     <div className="flex flex-col gap-4">
                       {selectedArticle.levels.map((lvl) => {
-                        // 各難易度カードの色味マッピング
                         const lvlMeta = 
                           lvl.num === 1 ? { bg: "bg-emerald-50/60 hover:bg-emerald-50 border-emerald-200", text: "text-emerald-700", label: "A2 Basic" } :
                           lvl.num === 2 ? { bg: "bg-cyan-50/60 hover:bg-cyan-50 border-cyan-200", text: "text-cyan-700", label: "B1 Intermediate" } :
@@ -414,25 +411,28 @@ export default function MenuScreen({
                             whileHover={{ y: -2, scale: 1.01 }}
                             whileTap={{ scale: 0.99 }}
                             onClick={() => {
-                              setActiveSummary(lvl.data); // 🌟 ここで選ばれたレベルのデータをセット
-                              setAppScreen('summary');   // 🌟 要約画面へ遷移
+                              setActiveSummary(lvl.data);
+                              setAppScreen('summary');
                             }}
                             className={`w-full p-5 rounded-2xl border-2 text-left shadow-2xs cursor-pointer transition-all flex items-center justify-between ${lvlMeta.bg}`}
                           >
-                            <div>
-                              <span className={`text-[10px] font-black px-2 py-0.5 rounded bg-white border ${lvlMeta.text}`}>
-                                {lvlMeta.label}
-                              </span>
-                              <h4 className="text-base font-black text-slate-700 mt-2">
-                                {lvl.name}
-                              </h4>
-                              <p className="text-xs text-slate-400 font-bold mt-0.5">
-                                単語数: {lvl.data.wordCount || 150} words / {lvl.data.paragraphs?.length || 4} パラグラフ構成
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-1 text-xs font-black text-indigo-500 bg-white shadow-3xs px-4 py-2 rounded-full border border-slate-100">
-                              4モード特訓を開く <Sparkles size={14} className="animate-pulse" />
-                            </div>
+                            {/* 🌟 透明なFragmentで包んでVS Codeの赤線を消去 */}
+                            <>
+                              <div>
+                                <span className={`text-[10px] font-black px-2 py-0.5 rounded bg-white border ${lvlMeta.text}`}>
+                                  {lvlMeta.label}
+                                </span>
+                                <h4 className="text-base font-black text-slate-700 mt-2">
+                                  {lvl.name}
+                                </h4>
+                                <p className="text-xs text-slate-400 font-bold mt-0.5">
+                                  単語数: {lvl.data.wordCount || 150} words / {lvl.data.paragraphs?.length || 4} パラグラフ構成
+                                </p>
+                              </div>
+                              <div className="flex items-center gap-1 text-xs font-black text-indigo-500 bg-white shadow-3xs px-4 py-2 rounded-full border border-slate-100">
+                                4モード特訓を開く <Sparkles size={14} className="animate-pulse" />
+                              </div>
+                            </>
                           </motion.button>
                         );
                       })}
@@ -448,7 +448,6 @@ export default function MenuScreen({
     );
   }
 
-  // 階層4（文の要素の下層）: サブカテゴリ選択画面
   if (gameState === 'sub_select') {
     const subCategories = availableCategories.filter(cat => SUB_MAPPING[activeMain].includes(cat.categoryId) && cat.problems?.length > 0);
     return (
@@ -460,11 +459,14 @@ export default function MenuScreen({
           <div className="flex flex-col gap-6">
             {subCategories.map((sub) => (
               <motion.div key={sub.categoryId} whileHover={{ scale: 1.02 }} onClick={() => selectSubCategory(sub)} className="p-6 bg-white rounded-[24px] cursor-pointer shadow-md flex justify-between items-center border-2 border-slate-100 hover:border-cyan-300 transition-colors">
-                <div>
-                  <h3 className="text-2xl font-black text-slate-700 mb-1">{sub.title}</h3>
-                  <p className="text-sm font-bold text-slate-500">{sub.description}</p>
-                </div>
-                <span className="bg-cyan-500 text-white px-6 py-3 rounded-full font-black text-sm shadow-sm hover:bg-cyan-400">選ぶ</span>
+                {/* 🌟 ユーザーの画像で波線が出ていた原因箇所！透明なFragmentで包みました */}
+                <>
+                  <div>
+                    <h3 className="text-2xl font-black text-slate-700 mb-1">{sub.title}</h3>
+                    <p className="text-sm font-bold text-slate-500">{sub.description}</p>
+                  </div>
+                  <span className="bg-cyan-500 text-white px-6 py-3 rounded-full font-black text-sm shadow-sm hover:bg-cyan-400">選ぶ</span>
+                </>
               </motion.div>
             ))}
           </div>
@@ -473,7 +475,6 @@ export default function MenuScreen({
     );
   }
 
-  // 階層5（文の要素の下層）: レベル選択・問題数設定画面
   if (gameState === 'level_select') {
     const levels = [{ num: 1, name: "Level 1 (初級)", bg: "bg-[#7ee2b8]", color: "text-[#065f46]"}, { num: 2, name: "Level 2 (中級)", bg: "bg-[#fbbf24]", color: "text-[#78350f]"}, { num: 3, name: "Level 3 (上級)", bg: "bg-[#fbb6d6]", color: "text-[#9d174d]"}];
     const isGrammarMode = activeCategory.title.includes('【文法特訓】');
@@ -522,43 +523,46 @@ export default function MenuScreen({
                   whileHover={hasProblems ? { scale: 1.02 } : {}} 
                   className={`p-6 md:p-8 rounded-[32px] shadow-md border-4 border-white flex justify-between items-center transition-all ${hasProblems ? lvl.bg : 'bg-slate-200 opacity-60'}`}
                 >
-                  <div>
-                    <h3 className={`text-3xl font-black ${hasProblems ? lvl.color : 'text-slate-500'} drop-shadow-sm`}>{lvl.name}</h3>
-                  </div>
-                  
-                  {hasProblems ? (
-                    <div className="flex flex-col sm:flex-row items-center gap-3">
-                      <select 
-                        value={tempCount}
-                        onChange={(e) => setTempCount(parseInt(e.target.value))}
-                        className="bg-white/90 border-2 border-slate-200 rounded-full px-4 py-3 font-black text-slate-600 focus:outline-none focus:border-cyan-400"
-                        onClick={(e) => e.stopPropagation()} 
-                      >
-                        <option value={10}>10問</option>
-                        <option value={20}>20問</option>
-                        <option value={50}>50問</option>
-                      </select>
-
-                      <button onClick={(e) => {
-                          e.stopPropagation();
-                          if (isMultiplayer && isHost) { 
-                            setBattleSetup({ mainId: activeMain, subCategory: activeCategory, level: lvl.num }); 
-                            setAppScreen('lobby'); 
-                          } 
-                          else { 
-                            startGame(lvl.num, tempCount); 
-                          }
-                        }} 
-                        className="bg-white/95 text-slate-800 px-6 py-3 md:px-8 md:py-4 rounded-full font-black text-lg md:text-xl hover:scale-105 active:scale-95 transition-transform shadow-lg border border-slate-100 flex items-center gap-2"
-                      >
-                        {isMultiplayer && isHost ? "👑 待機ルームを開く" : "START 🚀"}
-                      </button>
+                  {/* 🌟 透明なFragmentで包んでVS Codeの赤線を消去 */}
+                  <>
+                    <div>
+                      <h3 className={`text-3xl font-black ${hasProblems ? lvl.color : 'text-slate-500'} drop-shadow-sm`}>{lvl.name}</h3>
                     </div>
-                  ) : (
-                    <span className="bg-slate-300 text-slate-500 px-6 py-3 rounded-full font-black text-lg">
-                      該当問題なし
-                    </span>
-                  )}
+                    
+                    {hasProblems ? (
+                      <div className="flex flex-col sm:flex-row items-center gap-3">
+                        <select 
+                          value={tempCount}
+                          onChange={(e) => setTempCount(parseInt(e.target.value))}
+                          className="bg-white/90 border-2 border-slate-200 rounded-full px-4 py-3 font-black text-slate-600 focus:outline-none focus:border-cyan-400"
+                          onClick={(e) => e.stopPropagation()} 
+                        >
+                          <option value={10}>10問</option>
+                          <option value={20}>20問</option>
+                          <option value={50}>50問</option>
+                        </select>
+
+                        <button onClick={(e) => {
+                            e.stopPropagation();
+                            if (isMultiplayer && isHost) { 
+                              setBattleSetup({ mainId: activeMain, subCategory: activeCategory, level: lvl.num }); 
+                              setAppScreen('lobby'); 
+                            } 
+                            else { 
+                              startGame(lvl.num, tempCount); 
+                            }
+                          }} 
+                          className="bg-white/95 text-slate-800 px-6 py-3 md:px-8 md:py-4 rounded-full font-black text-lg md:text-xl hover:scale-105 active:scale-95 transition-transform shadow-lg border border-slate-100 flex items-center gap-2"
+                        >
+                          {isMultiplayer && isHost ? "👑 待機ルームを開く" : "START 🚀"}
+                        </button>
+                      </div>
+                    ) : (
+                      <span className="bg-slate-300 text-slate-500 px-6 py-3 rounded-full font-black text-lg">
+                        該当問題なし
+                      </span>
+                    )}
+                  </>
                 </motion.div>
               );
             })}
