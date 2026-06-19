@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { BookOpen, ArrowLeftRight } from 'lucide-react';
 
 export default function ReadingPane({
@@ -18,6 +18,30 @@ export default function ReadingPane({
   handleTracePointerMove,
   handleTracePointerUp
 }) {
+  const scrollContainerRef = useRef(null);
+  const paragraphRefs = useRef([]); 
+
+  useEffect(() => {
+    if (currentPhase === 'paragraphs') {
+      const timer = setTimeout(() => {
+        const container = scrollContainerRef.current;
+        const targetPara = paragraphRefs.current[currentParagraphIdx];
+
+        if (container && targetPara) {
+          const containerRect = container.getBoundingClientRect();
+          const targetRect = targetPara.getBoundingClientRect();
+          const scrollDistance = targetRect.top - containerRect.top - 24;
+
+          container.scrollBy({
+            top: scrollDistance,
+            behavior: 'smooth'
+          });
+        }
+      }, 150); 
+      return () => clearTimeout(timer);
+    }
+  }, [currentParagraphIdx, currentPhase]);
+
   if (!summaryData) return null;
 
   return (
@@ -45,6 +69,7 @@ export default function ReadingPane({
 
       {/* 📖 本文スクロールエリア */}
       <div 
+        ref={scrollContainerRef}
         className="flex-1 overflow-y-auto p-4 md:p-8 pb-32 relative" 
         onPointerMove={handleTracePointerMove}
         onPointerUp={handleTracePointerUp}
@@ -54,8 +79,6 @@ export default function ReadingPane({
         <div className="max-w-3xl mx-auto flex flex-col gap-8">
           {summaryData.paragraphs.map((p, idx) => {
             
-            // 🌟 先生の最強アイデア：「終わった問題（過去の段落）は非表示にする」
-            // これにより、今解いている段落が「常に一番上」に配置されます！
             if (currentPhase === 'paragraphs' && idx < currentParagraphIdx) {
               return null; 
             }
@@ -65,6 +88,7 @@ export default function ReadingPane({
             return (
               <div 
                 key={p.p_id || idx} 
+                ref={(el) => (paragraphRefs.current[idx] = el)} 
                 className={`relative p-6 rounded-2xl transition-all duration-500 ${
                   isActive 
                     ? 'bg-white border-2 border-indigo-300 shadow-lg scale-[1.02] z-10' 
@@ -77,15 +101,35 @@ export default function ReadingPane({
                 
                 <div className={`leading-[2.5em] tracking-wide ${fontClass} ${textSizeClass} ${isActive ? 'text-slate-800' : 'text-slate-500'}`}>
                   {p.tokens.map((token, tIdx) => {
+                    // 🌟 なぞり状態と前後の単語の繋がりをチェック
                     const isSelected = isActive && selectedIndices.includes(tIdx);
+                    const isPrevSelected = isActive && selectedIndices.includes(tIdx - 1);
+                    const isNextSelected = isActive && selectedIndices.includes(tIdx + 1);
+
                     let tokenBg = "bg-transparent";
-                    let tokenText = "text-inherit";
-                    
+                    let tokenText = isActive ? "text-slate-700 font-bold" : "text-slate-500 font-medium";
+                    let shapeClass = "rounded-lg"; 
+
+                    // 🌟 選ばれた単語の色と形のロジック
                     if (isSelected) {
-                      if (traceFeedback === 'wrong') { tokenBg = 'bg-rose-200'; tokenText = 'text-rose-900 shadow-[0_0_10px_rgba(254,205,211,0.8)]'; }
-                      else if (traceFeedback === 'partial') { tokenBg = 'bg-amber-200'; tokenText = 'text-amber-900 shadow-[0_0_10px_rgba(253,230,138,0.8)]'; }
-                      else if (traceFeedback === 'correct') { tokenBg = 'bg-emerald-200'; tokenText = 'text-emerald-900 shadow-[0_0_10px_rgba(167,243,208,0.8)]'; }
-                      else { tokenBg = 'bg-indigo-200'; tokenText = 'text-indigo-900 shadow-[0_0_10px_rgba(199,210,254,0.8)]'; }
+                      // 1. 本物の蛍光ペンのような鮮やかな色合い
+                      if (traceFeedback === 'wrong') { tokenBg = 'bg-rose-300'; tokenText = 'text-rose-950 font-bold shadow-sm'; }
+                      else if (traceFeedback === 'partial') { tokenBg = 'bg-amber-300'; tokenText = 'text-amber-950 font-bold shadow-sm'; }
+                      else if (traceFeedback === 'correct') { tokenBg = 'bg-emerald-300'; tokenText = 'text-emerald-950 font-bold shadow-sm'; }
+                      else { tokenBg = 'bg-cyan-300'; tokenText = 'text-cyan-950 font-bold shadow-sm'; }
+
+                      // 2. 自動結合ロジック：前後の単語が選ばれていたら角の丸みを消して合体させる
+                      if (isPrevSelected && isNextSelected) {
+                        shapeClass = "rounded-none";
+                      } else if (isPrevSelected && !isNextSelected) {
+                        shapeClass = "rounded-r-lg rounded-l-none";
+                      } else if (!isPrevSelected && isNextSelected) {
+                        shapeClass = "rounded-l-lg rounded-r-none";
+                      } else {
+                        shapeClass = "rounded-lg"; // 1語だけ選ばれた場合
+                      }
+                    } else if (isActive && isTraceTask) {
+                      tokenBg = "hover:bg-slate-200/50";
                     }
 
                     return (
@@ -93,7 +137,8 @@ export default function ReadingPane({
                         key={tIdx}
                         data-token-idx={tIdx}
                         onPointerDown={(e) => { if (isActive && isTraceTask) handleTracePointerDown(e, tIdx); }}
-                        className={`inline-block px-1 mx-0.5 rounded-lg transition-colors ${isActive && isTraceTask ? 'cursor-pointer hover:bg-indigo-100' : ''} ${tokenBg} ${tokenText} ${isSelected ? 'font-black scale-105 transform' : ''}`}
+                        // 🌟 px-1とmx-0によって「文字幅を全く変えずに背景色だけを繋げる」魔法のCSS
+                        className={`inline-block px-1 py-1 mx-0 select-none transition-colors duration-150 ${isActive && isTraceTask ? 'cursor-pointer' : ''} ${shapeClass} ${tokenBg} ${tokenText}`}
                       >
                         {token}
                       </span>
