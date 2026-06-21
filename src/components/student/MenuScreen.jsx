@@ -7,6 +7,10 @@ import { fast_fashion_L1 } from '../../data/summary/fast_fashion/level1_a2.js';
 import { fast_fashion_L2 } from '../../data/summary/fast_fashion/level2_b1.js';
 import { fast_fashion_L3 } from '../../data/summary/fast_fashion/level3_b2.js';
 import { fast_fashion_L4 } from '../../data/summary/fast_fashion/level4_c1.js';
+import { nature_L1 } from '../../data/summary/nature/level1_a2.js';
+import { nature_L2 } from '../../data/summary/nature/level2_b1.js';
+import { nature_L3 } from '../../data/summary/nature/level3_b2.js';
+import { nature_L4 } from '../../data/summary/nature/level4_c1.js'
 
 const SUB_MAPPING = {
   'BASIC': ['basic_find_verb', 'basic_remove_m', 'basic_5patterns'],
@@ -59,6 +63,21 @@ const ARTICLES_MASTER = [
       { num: 2, name: "Level 2 (B1 - 中級)", data: fast_fashion_L2 },
       { num: 3, name: "Level 3 (B2 - 上級)", data: fast_fashion_L3 },
       { num: 4, name: "Level 4 (C1 - 最上級)", data: fast_fashion_L4 }
+    ]
+  },
+  // ▼ 新しく追加する記事データ
+  {
+    id: "ocean_plastic",
+    title: "海洋プラスチックの脅威",
+    englishTitle: "The Threat of Marine Plastic Pollution",
+    desc: "私たちの海を汚染し、食物連鎖を通じて生態系を脅かすプラスチック問題の真実に迫る。",
+    // この記事を表示させたいジャンルを指定（複数可）
+    genres: ["nature", "science", "international"], 
+    levels: [
+      { num: 1, name: "Level 1 (A2 - 初級)", data: nature_L1 },
+      { num: 2, name: "Level 2 (B1 - 中級)", data: nature_L2 },
+      { num: 3, name: "Level 3 (B2 - 上級)", data: nature_L3 },
+      { num: 4, name: "Level 4 (C1 - 最上級)", data: nature_L4 }
     ]
   }
 ];
