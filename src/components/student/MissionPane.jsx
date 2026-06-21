@@ -57,6 +57,7 @@ export default function MissionPane({
     );
   }
 
+  // 🌟 ここが修正ポイント！タスクが無い場合の画面に「強制進行（スキップ）ボタン」を追加
   if (!currentTask) {
     return (
       <div className="max-w-2xl mx-auto w-full flex flex-col h-full relative">
@@ -72,9 +73,18 @@ export default function MissionPane({
           </div>
           <h3 className="text-xl font-black text-slate-700 mb-2">{modeMeta[currentMode].title}の土台が完成！</h3>
           <p className="text-slate-400 font-bold max-w-sm mb-6 text-sm leading-relaxed">{modeMeta[currentMode].desc}</p>
-          <div className="flex items-center gap-2 bg-amber-50 text-amber-700 px-4 py-2 rounded-xl text-xs font-black border border-amber-200">
+          <div className="flex items-center gap-2 bg-amber-50 text-amber-700 px-4 py-2 rounded-xl text-xs font-black border border-amber-200 mb-6">
             <Sparkles size={14} /> データ構造のパワーアップ待ちです
           </div>
+          
+          {/* 🌟 これを追加！スタック（進行不能）を防止し、次の問題やクリア画面へ強制的に進めるボタン */}
+          <button 
+            onClick={handleNextTask} 
+            className="flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-black transition-all shadow-sm hover:scale-105 active:scale-95"
+          >
+            次のタスクへ進む <ArrowRight size={18} />
+          </button>
+
         </div>
       </div>
     );
@@ -83,29 +93,41 @@ export default function MissionPane({
   const instructionText = lang === 'ja' ? (currentTask.instructionJa || currentTask.instruction) : (currentTask.instructionEn || currentTask.instruction);
 
   const renderMissionContent = () => {
+    
     // 🗣️ 音読ミッション
     if (currentTask.type === 'voice') {
-      let readText = currentTask.targetSentence;
+      let readText = currentTask.targetSentence || "";
       if (readAloudTarget === 'all') {
         readText = summaryData.paragraphs.map(p => p.rawText || p.tokens.join(' ')).join(' ');
       } else if (typeof readAloudTarget === 'number') {
         readText = summaryData.paragraphs[readAloudTarget].rawText || summaryData.paragraphs[readAloudTarget].tokens.join(' ');
       }
+
       return (
-        <div className="bg-white rounded-3xl p-6 md:p-8 shadow-md border-2 border-teal-100 flex flex-col h-full">
-          <span className="inline-block bg-indigo-100 text-indigo-700 font-black text-xs px-3 py-1 rounded-full mb-4 w-max flex-shrink-0">Final Task: Read Aloud</span>
-          <h3 className={`${tSize.instruction} font-black text-slate-800 mb-6 leading-relaxed text-left`}>{instructionText}</h3>
-          <div className="mb-4 flex-shrink-0">
-            <select value={readAloudTarget} onChange={(e) => { const val = e.target.value; setReadAloudTarget(val === 'all' ? val : parseInt(val, 10)); }} className="bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-lg px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-300 text-sm">
-              {/* 🌟 修正：「ハイライト文のみ読む」を削除し、全文通しがデフォルトに */}
+        <div className="flex flex-col h-full w-full relative min-h-0">
+          
+          {/* 🌟 ヘッダーパネル（固定） */}
+          <div className="bg-white rounded-3xl p-5 md:p-6 shadow-sm border-2 border-teal-100 mb-3 flex-shrink-0 z-30">
+            <span className="inline-block bg-indigo-100 text-indigo-700 font-black text-xs px-3 py-1.5 rounded-full mb-3 w-max">
+              Final Task: Read Aloud
+            </span>
+            <h3 className={`${tSize.instruction} font-black text-slate-800 mb-4 leading-snug text-left`}>
+              {instructionText}
+            </h3>
+            <select 
+              value={readAloudTarget} 
+              onChange={(e) => { const val = e.target.value; setReadAloudTarget(val === 'all' ? val : parseInt(val, 10)); }} 
+              className="bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-lg px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-300 text-sm"
+            >
               <option value="all">長文を全文通しで読む</option>
               {summaryData.paragraphs.map((p, i) => <option key={i} value={i}>第{i + 1}段落を読む</option>)}
             </select>
           </div>
-          {/* 🌟 ここが同期スクロールの受け皿になります */}
+
+          {/* 🌟 スクロール同期エリア */}
           <div 
             id="right-scroll-pane"
-            className="overflow-y-auto flex-1 min-h-0 relative"
+            className="flex-1 overflow-y-auto relative w-full pr-2 pb-6 min-h-0"
             onScroll={(e) => {
               if (window._isSyncingRight) {
                 window._isSyncingRight = false;
@@ -117,16 +139,66 @@ export default function MissionPane({
                 const leftScrollable = leftPane.scrollHeight - leftPane.clientHeight;
                 const rightScrollable = rightPane.scrollHeight - rightPane.clientHeight;
                 if (leftScrollable > 0 && rightScrollable > 0) {
-                  const ratio = rightPane.scrollTop / rightScrollable;
                   window._isSyncingLeft = true;
+                  const ratio = rightPane.scrollTop / rightScrollable;
                   leftPane.scrollTop = ratio * leftScrollable;
                 }
               }
             }}
           >
-            <PronunciationMission key={readAloudTarget} targetSentence={readText} onComplete={handleNextTask} />
+            {readAloudTarget === 'all' ? (
+              /* ▼ 全文通しの場合：常に上部に張り付く（Sticky）のでスクロールアップ不要 */
+              <div className="w-full pt-1 pb-4">
+                <div className="bg-white rounded-3xl p-5 md:p-6 border-4 border-teal-200 shadow-md">
+                  <PronunciationMission key="all" targetSentence={readText} onComplete={handleNextTask} />
+                </div>
+                <div className="flex justify-center mt-6">
+                  <button onClick={handleNextTask} className="text-slate-400 hover:text-slate-500 font-bold text-sm underline flex items-center justify-center gap-1 transition-all">
+                    このタスクをスキップして次へ
+                  </button>
+                </div>
+              </div>
+            ) : (
+              /* ▼ 段落指定の場合：左の長文と完全に平行移動してついてくる */
+              <div className="flex flex-col w-full relative pb-32">
+                {summaryData.paragraphs.map((p, i) => {
+                  const isTarget = readAloudTarget === i;
+                  return (
+                    <div key={i} className="w-full relative">
+                      
+                      {/* 👻 ゴーストテキスト：左の長文と「高さ」を合わせるためだけの透明なテキスト */}
+                      <div className="w-full p-4 text-transparent select-none pointer-events-none text-xl leading-[2.5em] tracking-wide font-sans" aria-hidden="true">
+                        <div className="mb-2">PARAGRAPH {i + 1}</div>
+                        {p.rawText || p.tokens.join(' ')}
+                      </div>
+
+                      {/* 🎯 アクティブなミッションパネル（透明なテキストの上に「絶対配置」で重なる） */}
+                      {isTarget && (
+                        <div className="absolute top-0 left-0 w-full z-20 pointer-events-auto">
+                          <motion.div 
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="bg-white rounded-3xl p-5 md:p-6 border-4 border-indigo-400 shadow-xl"
+                          >
+                            <div className="bg-indigo-500 text-white text-[11px] font-black px-3 py-1.5 rounded-full w-max mb-4 tracking-wider shadow-sm">
+                              第{i + 1}段落 集中音読特訓
+                            </div>
+                            <PronunciationMission key={i} targetSentence={readText} onComplete={handleNextTask} />
+                            
+                            <div className="flex justify-center mt-6">
+                              <button onClick={handleNextTask} className="text-slate-400 hover:text-slate-500 font-bold text-sm underline flex items-center justify-center gap-1 transition-all">
+                                スキップして次へ
+                              </button>
+                            </div>
+                          </motion.div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
-          <button onClick={handleNextTask} className="mt-4 text-slate-400 hover:text-slate-500 font-bold text-xs underline flex items-center justify-center gap-1 mx-auto flex-shrink-0">このタスクをスキップして次へ</button>
         </div>
       );
     }
