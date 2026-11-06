@@ -189,105 +189,58 @@ export default function SummaryScreen({ onExit, summaryData }) {
 
   if (currentMode === null) {
     return (
-      <div className="flex-1 flex flex-col h-full w-full bg-slate-50 overflow-y-auto p-6 md:p-12 selection:bg-indigo-100">
-        <div className="flex justify-between items-center max-w-6xl w-full mx-auto mb-8 md:mb-12">
-          <button onClick={onExit} className="flex items-center gap-2 font-black text-slate-500 hover:text-rose-500 transition-colors group">
-            <XCircle size={24} className="group-hover:scale-110 transition-transform" /> 記事選択へ戻る
+      <div className="tg-workspace flex-1 w-full overflow-y-auto p-4 md:p-10">
+        <div className="max-w-4xl mx-auto">
+          <button type="button" onClick={onExit}
+            className="inline-flex items-center gap-2 text-sm font-semibold text-[#4c6954] hover:underline py-2 mb-4">
+            <ChevronLeft size={17}/> 記事一覧へ
           </button>
-          <div className="flex items-center gap-2 bg-indigo-50 text-indigo-700 px-4 py-1.5 rounded-full text-xs font-black border border-indigo-100">
-            <Sparkles size={14} className="animate-pulse" /> 4つのアプローチで長文を解剖
+          <div className="tg-paper tg-margin tg-holes rounded-[22px] p-6 pl-12 md:p-10 md:pl-16">
+            <span className="tg-tag">READING NOTE / {summaryData.level}</span>
+            <h1 className="tg-serif text-2xl md:text-4xl font-bold text-[#2c3c31] mt-3 mb-2 leading-snug">{summaryData.title}</h1>
+            <p className="text-sm text-stone-500 mt-1 mb-7">学習する内容を選びましょう。</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {modesList.map((m, idx) => (
+                <button key={m.id} type="button" onClick={() => setCurrentMode(m.id)}
+                  className="tg-course border border-[#dedfd2] rounded-xl px-5 py-5 text-left flex items-center gap-4 bg-[#fffdf8]">
+                  <span className="tg-serif text-2xl text-[#8da596] shrink-0">0{idx + 1}</span>
+                  <span className="flex-1 min-w-0">
+                    <span className="font-semibold block text-base md:text-lg text-[#2d4334]">{m.label}</span>
+                    <span className="text-xs text-stone-500 block mt-1">{[
+                      '内容を確かめる', '文のかたまりをなぞる', '大事な情報をまとめる', '語句を文脈で学ぶ'
+                    ][idx]}</span>
+                  </span>
+                  <ArrowRight size={18} className="text-[#668677] shrink-0"/>
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
-
-        <div className="max-w-6xl w-full mx-auto text-center mb-10 md:mb-14">
-          <span className="text-xs font-black tracking-widest text-slate-400 bg-slate-200/60 px-3 py-1 rounded-full">{summaryData.level}</span>
-          <h1 className="text-3xl md:text-5xl font-black text-slate-800 mt-3 mb-4 tracking-tight leading-tight">{summaryData.title}</h1>
-          <p className="text-slate-500 font-bold max-w-2xl mx-auto text-sm md:text-base">
-            ひとつの良質な英文を、異なる4つの認知モードで攻略します。トレーニングしたいモードを選択してください。
-          </p>
-        </div>
-
-        <div className="max-w-6xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-          {modesList.map((m, idx) => (
-            <motion.button
-              key={m.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: idx * 0.08 }}
-              whileHover={{ y: -6, scale: 1.01 }}
-              whileTap={{ scale: 0.99 }}
-              onClick={() => setCurrentMode(m.id)}
-              className="bg-white rounded-3xl p-6 md:p-8 text-left border border-slate-200 shadow-xl flex flex-col md:flex-row gap-5 items-start cursor-pointer group hover:border-slate-300 transition-all relative overflow-hidden ring-4 ring-transparent"
-            >
-              <div className={`p-4 md:p-5 rounded-2xl bg-gradient-to-br ${m.color} text-white shadow-lg flex-shrink-0 transform group-hover:scale-105 transition-transform`}>
-                {m.icon}
-              </div>
-
-              <div className="flex-1 flex flex-col h-full justify-between z-10">
-                <div>
-                  <div className="flex items-baseline gap-2 mb-1">
-                    <h2 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight group-hover:text-indigo-600 transition-colors">
-                      {m.label}
-                    </h2>
-                    <span className="text-xs font-black tracking-wide text-slate-400 uppercase italic">
-                      {m.subLabel}
-                    </span>
-                  </div>
-                  <p className="text-slate-500 font-medium text-sm leading-relaxed mb-4">
-                    {m.desc}
-                  </p>
-                </div>
-                
-                <div className="flex items-center gap-1 text-sm font-black text-slate-400 group-hover:text-indigo-500 mt-auto transition-colors">
-                  このモードを開始する <ArrowRight size={16} className="transform group-hover:translate-x-1 transition-transform" />
-                </div>
-              </div>
-
-              <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 ${m.bgLight} transition-opacity duration-300 pointer-events-none z-0`} />
-            </motion.button>
-          ))}
         </div>
       </div>
     );
   }
 
   return (
-    <div className={`flex-1 flex flex-col h-full w-full bg-slate-50 relative ${isDraggingSplit ? 'select-none' : ''}`}>
+    <div className={`tg-workspace flex-1 flex flex-col h-full w-full relative ${isDraggingSplit ? 'select-none' : ''}`}>
       
-      <div className="flex justify-between items-center px-6 py-3 bg-white border-b border-slate-200 shadow-sm z-20 flex-shrink-0">
-        <div className="flex items-center gap-4">
-          <button 
-            onClick={() => setCurrentMode(null)} 
-            className="flex items-center gap-1 text-indigo-500 hover:text-indigo-700 font-black text-sm bg-indigo-50 px-3 py-2 rounded-xl border border-indigo-100 transition-all active:scale-95"
-          >
-            <ChevronLeft size={16} /> モード選択に戻る
-          </button>
-          <div>
-            <span className="text-xs font-black text-white bg-slate-500 px-2 py-0.5 rounded-full mr-2">{summaryData.level}</span>
-            <span className="text-lg font-black text-slate-700">{summaryData.title}</span>
-          </div>
+      <div className="bg-[#faf8f2] border-b border-[#dce0d5] px-3 md:px-7 py-2.5 flex items-center gap-3 shrink-0">
+        <button type="button" onClick={() => setCurrentMode(null)}
+          className="tg-outline rounded-full p-2.5" aria-label="学習モードを選び直す" title="戻る">
+          <ChevronLeft size={19}/>
+        </button>
+        <div className="min-w-0 flex-1">
+          <span className="tg-tag">READING / {summaryData.level}</span>
+          <h1 className="font-semibold text-[#314334] text-sm md:text-base truncate">{summaryData.title}</h1>
         </div>
-        <div className="text-sm font-black text-slate-400 hidden md:block">{modesList.find(m => m.id === currentMode)?.label || "長文学習"}</div>
       </div>
-
-      <div className="bg-white border-b border-slate-200 px-6 py-2 flex gap-2 overflow-x-auto z-20 flex-shrink-0 shadow-sm">
-        {modesList.map((m) => {
-          const isActive = currentMode === m.id;
-          return (
-            <button
-              key={m.id}
-              onClick={() => setCurrentMode(m.id)}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl font-black text-xs transition-all duration-200 ${
-                isActive 
-                  ? `${m.color.replace('text-white', '')} border-2 bg-slate-50 scale-102` 
-                  : 'bg-slate-50/50 text-slate-400 hover:text-slate-600 border-2 border-transparent'
-              }`}
-            >
-              <span className="scale-80">{m.icon}</span>
-              {m.label}
-            </button>
-          );
-        })}
+      <div className="flex gap-1.5 px-3 md:px-7 py-2 bg-[#f4f1e8] border-b border-[#dce0d5] overflow-x-auto shrink-0">
+        {modesList.map(m=>(
+          <button type="button" key={m.id} onClick={()=>setCurrentMode(m.id)}
+            aria-pressed={currentMode===m.id}
+            className={`tg-pill whitespace-nowrap !py-1.5 !px-3 ${currentMode===m.id?'is-active':''}`}>
+            {m.label}
+          </button>
+        ))}
       </div>
 
       <div ref={containerRef} style={{ '--left-pane-width': `${leftWidth}%`, '--right-pane-width': `${100 - leftWidth}%` }}
@@ -315,14 +268,14 @@ export default function SummaryScreen({ onExit, summaryData }) {
           />
         </div>
 
-        <div onMouseDown={() => setIsDraggingSplit(true)} onTouchStart={() => setIsDraggingSplit(true)} className="hidden lg:flex w-4 flex-col items-center justify-center bg-slate-200/50 hover:bg-indigo-200 cursor-col-resize group transition-colors shadow-inner z-10">
+        <div onMouseDown={() => setIsDraggingSplit(true)} onTouchStart={() => setIsDraggingSplit(true)} className="hidden lg:flex w-3 flex-col items-center justify-center bg-[#e0e1d4] hover:bg-[#ccd9cc] cursor-col-resize group z-10">
           <div className="h-16 w-1.5 bg-slate-400 group-hover:bg-indigo-500 rounded-full flex items-center justify-center transition-colors">
             <GripVertical size={12} className="text-white opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
         </div>
 
         <div className="w-full lg:w-[var(--right-pane-width)] min-h-[52dvh] lg:min-h-0 lg:h-full flex-shrink-0">
-          <div className="h-full overflow-y-auto bg-slate-100 p-4 md:p-6 shadow-inner flex flex-col">
+          <div className="h-full overflow-y-auto bg-[#f6f3ea] p-3 md:p-5 flex flex-col">
             <MissionPane 
               currentMode={currentMode}
               currentPhase={currentPhase}
