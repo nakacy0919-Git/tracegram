@@ -43,6 +43,23 @@ export function useTrace(categories) {
   const [dragMode, setDragMode] = useState('select'); 
 
   const mainContainerRef = useRef(null);
+  const selectedIndicesRef = useRef([]);
+  const draggingRef = useRef(false);
+  const advanceTimerRef = useRef(null);
+  const feedbackRef = useRef('idle');
+
+  const updateSelection = (change) => {
+    const next = change(selectedIndicesRef.current);
+    selectedIndicesRef.current = next;
+    setSelectedIndices(next);
+  };
+  const clearAdvance = () => {
+    if (advanceTimerRef.current !== null) {
+      clearTimeout(advanceTimerRef.current);
+      advanceTimerRef.current = null;
+    }
+  };
+  useEffect(() => () => clearTimeout(advanceTimerRef.current), []);
 
   useEffect(() => {
     if (filteredProblems && filteredProblems.length > 0 && filteredProblems[currentProblemIdx]) {
@@ -103,7 +120,10 @@ export function useTrace(categories) {
     let finalProblems = [...(extractedProblems || [])];
     
     if (finalProblems.length > 0) {
-      finalProblems.sort(() => Math.random() - 0.5);
+      for (let i = finalProblems.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [finalProblems[i], finalProblems[j]] = [finalProblems[j], finalProblems[i]];
+      }
       
       if (questionCount && questionCount !== 'all' && !isNaN(questionCount)) {
         const limit = parseInt(questionCount, 10);
@@ -111,6 +131,10 @@ export function useTrace(categories) {
       }
     }
 
+    clearAdvance();
+    selectedIndicesRef.current = [];
+    feedbackRef.current = 'idle';
+    draggingRef.current = false;
     setFilteredProblems(finalProblems);
     setCurrentProblemIdx(0);
     setScore(0);
@@ -132,33 +156,82 @@ export function useTrace(categories) {
   };
 
   const backToLevelSelect = () => {
+    clearAdvance();
+    selectedIndicesRef.current = [];
+    feedbackRef.current = 'idle';
     setSelectedIndices([]);
     setFeedbackState('idle');
     setGameState('level_select');
   };
 
-  const handlePointerDown = (e, idx) => {
-    if (feedbackState === 'correct') return;
 
-    if (feedbackState === 'wrong' || feedbackState === 'partial') {
-      setFeedbackState('idle');
-      setSelectedIndices([idx]);
-      setDragMode('select');
-      playTraceSound(1);
-      setIsDragging(true);
-      return;
+  // 判定には画面の再描画を待たず、最後に触れた単語まで確実に反映する。
+  const nextProblem = () => {
+    clearAdvance();
+    selectedIndicesRef.current = [];
+    feedbackRef.current = 'idle';
+    draggingRef.current = false;
+    setIsDragging(false);
+    setSelectedIndices([]);
+    setFeedbackState('idle');
+    if (currentProblemIdx + 1 < filteredProblems.length) {
+      setCurrentProblemIdx(currentProblemIdx + 1);
+    } else {
+      setGameState('result');
     }
+  };
 
+  const resetForRetry = () => {
+    clearAdvance();
+    selectedIndicesRef.current = [];
+    feedbackRef.current = 'idle';
+    draggingRef.current = false;
+    setIsDragging(false);
+    setSelectedIndices([]);
+    setFeedbackState('idle');
+  };
+
+  const submitAnswer = () => {
+    const chosen = selectedIndicesRef.current;
+    if (!activeProblem || !chosen.length || feedbackRef.current !== 'idle') return;
+    const targets = activeProblem.targetIndices ||
+      (activeProblem.targetIndex !== undefined ? [activeProblem.targetIndex] : []);
+    const normalize = (indices) => [...new Set(indices)].sort((a, b) => a - b);
+    const actual = normalize(chosen);
+    const expected = normalize(targets);
+    const perfect = actual.length === expected.length &&
+      actual.every((index, i) => index === expected[i]);
+
+    if (perfect) {
+      feedbackRef.current = 'correct';
+      setFeedbackState('correct');
+      setScore(prev => prev + 1000 + combo * 100);
+      setCombo(prev => prev + 1);
+      setCorrectCount(prev => prev + 1);
+      // 正解の光と音を楽しめる長さを確保。画面移動時はタイマーを取り消す。
+      advanceTimerRef.current = setTimeout(() => nextProblem(), 900);
+    } else {
+      feedbackRef.current = 'wrong';
+      setFeedbackState('wrong');
+      setCombo(0);
+    }
+  };
+
+  const handlePointerDown = (e, idx) => {
+    if (feedbackRef.current !== 'idle') return;
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    draggingRef.current = true;
     setIsDragging(true);
-    const isCurrentlySelected = selectedIndices.includes(idx);
+    const selected = selectedIndicesRef.current;
+    const isCurrentlySelected = selected.includes(idx);
     const newMode = isCurrentlySelected ? 'deselect' : 'select';
     setDragMode(newMode);
-
-    setSelectedIndices(prev => {
+    updateSelection(prev => {
       if (newMode === 'select' && !prev.includes(idx)) {
         playTraceSound(prev.length);
-        return [...prev, idx].sort((a, b) => a - b);
-      } else if (newMode === 'deselect' && prev.includes(idx)) {
+        return [...prev, idx].sort((a,b) => a-b);
+      }
+      if (newMode === 'deselect' && prev.includes(idx)) {
         playTraceSound(0, true);
         return prev.filter(i => i !== idx);
       }
@@ -167,83 +240,41 @@ export function useTrace(categories) {
   };
 
   const handlePointerMove = (e) => {
-    if (!isDragging || feedbackState === 'correct') return;
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    const element = document.elementFromPoint(clientX, clientY);
-
-    if (element && element.hasAttribute('data-token-idx')) {
-      const idx = parseInt(element.getAttribute('data-token-idx'), 10);
-      
-      setSelectedIndices(prev => {
-        if (dragMode === 'select' && !prev.includes(idx)) {
-          playTraceSound(prev.length);
-          return [...prev, idx].sort((a, b) => a - b);
-        } else if (dragMode === 'deselect' && prev.includes(idx)) {
-          playTraceSound(0, true);
-          return prev.filter(i => i !== idx);
-        }
-        return prev;
-      });
-    }
+    if (!draggingRef.current || feedbackRef.current !== 'idle') return;
+    const element = document.elementFromPoint(e.clientX, e.clientY);
+    const token = element?.closest?.('[data-token-idx]');
+    if (!token || !mainContainerRef.current?.contains(token)) return;
+    const idx = Number(token.dataset.tokenIdx);
+    if (!Number.isInteger(idx) || idx < 0 || idx >= (activeProblem?.tokens?.length || 0)) return;
+    updateSelection(prev => {
+      if (dragMode === 'select' && !prev.includes(idx)) {
+        playTraceSound(prev.length);
+        return [...prev, idx].sort((a,b) => a-b);
+      }
+      if (dragMode === 'deselect' && prev.includes(idx)) {
+        playTraceSound(0, true);
+        return prev.filter(i => i !== idx);
+      }
+      return prev;
+    });
   };
 
-  const handlePointerUp = () => {
+  const handlePointerUp = (autoJudge = false) => {
+    if (!draggingRef.current) return;
+    draggingRef.current = false;
     setIsDragging(false);
+    if (autoJudge && selectedIndicesRef.current.length) submitAnswer();
   };
 
   useEffect(() => {
-    if (isDragging) {
-      window.addEventListener('mouseup', handlePointerUp);
-      window.addEventListener('touchend', handlePointerUp);
-    } else {
-      window.removeEventListener('mouseup', handlePointerUp);
-      window.removeEventListener('touchend', handlePointerUp);
-    }
+    const release = () => { draggingRef.current = false; setIsDragging(false); };
+    window.addEventListener('pointercancel', release);
+    window.addEventListener('blur', release);
     return () => {
-      window.removeEventListener('mouseup', handlePointerUp);
-      window.removeEventListener('touchend', handlePointerUp);
+      window.removeEventListener('pointercancel', release);
+      window.removeEventListener('blur', release);
     };
-  }, [isDragging]);
-
-  const nextProblem = useCallback(() => {
-    setSelectedIndices([]);
-    setFeedbackState('idle');
-    
-    setCurrentProblemIdx(prevIdx => {
-      if (filteredProblems && prevIdx + 1 < filteredProblems.length) {
-        return prevIdx + 1;
-      } else {
-        setGameState('result');
-        return prevIdx;
-      }
-    });
-  }, [filteredProblems]);
-
-  const submitAnswer = () => {
-    if (!activeProblem || selectedIndices.length === 0) return;
-
-    const targets = activeProblem.targetIndices || (activeProblem.targetIndex !== undefined ? [activeProblem.targetIndex] : []);
-    const isPerfect = JSON.stringify([...selectedIndices].sort((a,b)=>a-b)) === JSON.stringify([...targets].sort((a,b)=>a-b));
-
-    if (isPerfect) {
-      setFeedbackState('correct');
-      const basePoints = 1000;
-      const comboBonus = combo * 100;
-      setScore(prev => prev + basePoints + comboBonus);
-      setCombo(prev => prev + 1);
-      setCorrectCount(prev => prev + 1);
-
-      // 🌟 【修正箇所】1200ms → 400ms に短縮し、超高速で次へ進むように変更
-      setTimeout(() => {
-        nextProblem();
-      }, 400);
-
-    } else {
-      setFeedbackState('wrong');
-      setCombo(0);
-    }
-  };
+  }, []);
 
   const addBonusScore = (scoreAmount) => {
     setScore(prev => prev + scoreAmount);
@@ -257,6 +288,6 @@ export function useTrace(categories) {
     setGameState, selectMainCategory, selectSubCategory, startGame,
     backToMain, backToSub, backToLevelSelect,
     handlePointerDown, handlePointerMove, handlePointerUp,
-    submitAnswer, nextProblem, addBonusScore
+    submitAnswer, nextProblem, resetForRetry, addBonusScore
   };
 }
