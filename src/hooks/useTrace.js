@@ -270,9 +270,11 @@ export function useTrace(categories) {
 
   useEffect(() => {
     const release = () => { draggingRef.current = false; setIsDragging(false); };
+    window.addEventListener('pointerup', release);
     window.addEventListener('pointercancel', release);
     window.addEventListener('blur', release);
     return () => {
+      window.removeEventListener('pointerup', release);
       window.removeEventListener('pointercancel', release);
       window.removeEventListener('blur', release);
     };
