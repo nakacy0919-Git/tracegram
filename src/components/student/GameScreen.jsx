@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, CheckCircle2, AlertTriangle, PencilLine, BookOpen } from 'lucide-react'; 
+import { ArrowLeft, CheckCircle2, AlertTriangle } from 'lucide-react'; 
 import PronunciationMission from './PronunciationMission'; 
 
 const playSlashSound = () => {
@@ -26,17 +26,6 @@ const playSlashSound = () => {
   } catch (e) {
     console.error("Audio playback failed", e);
   }
-};
-
-const getElementColor = (role) => {
-  if (!role) return { bg: "bg-cyan-200", text: "text-cyan-900", shadow: "shadow-[0_0_15px_rgba(165,243,252,0.8)]" };
-  const r = role.toUpperCase();
-  if (r.startsWith('S') || r.includes('主語')) return { bg: "bg-slate-300", text: "text-slate-800", shadow: "shadow-[0_0_15px_rgba(203,213,225,0.8)]" };
-  if (r.startsWith('V') || r.includes('動詞')) return { bg: "bg-orange-200", text: "text-orange-900", shadow: "shadow-[0_0_15px_rgba(253,186,116,0.8)]" };
-  if (r.startsWith('O') || r.includes('目的語')) return { bg: "bg-green-200", text: "text-green-900", shadow: "shadow-[0_0_15px_rgba(187,247,208,0.8)]" };
-  if (r.startsWith('C') || r.includes('補語')) return { bg: "bg-cyan-200", text: "text-cyan-900", shadow: "shadow-[0_0_15px_rgba(165,243,252,0.8)]" };
-  if (r.startsWith('M') || r.includes('修飾') || r.includes('副詞') || r.includes('形容詞') || r.includes('分詞')) return { bg: "bg-purple-200", text: "text-purple-900", shadow: "shadow-[0_0_15px_rgba(233,213,255,0.8)]" };
-  return { bg: "bg-cyan-200", text: "text-cyan-900", shadow: "shadow-[0_0_15px_rgba(165,243,252,0.8)]" };
 };
 
 export default function GameScreen({
@@ -127,7 +116,6 @@ export default function GameScreen({
   if (!activeProblem) return null;
 
   const cleanHint = (activeProblem.hint || '指定された文法のまとまりをなぞってください').replace(/【.*?】/, '').trim();
-  const roleColors = getElementColor(activeProblem.targetRole);
   const roleInitial = (activeProblem.targetRole || '?').charAt(0).toUpperCase();
   const sortedPlayers = Object.values(playersData || {}).sort((a, b) => b.score - a.score);
   const targets = [...(activeProblem.targetIndices || (activeProblem.targetIndex !== undefined ? [activeProblem.targetIndex] : []))].sort((a,b)=>a-b);
@@ -279,6 +267,12 @@ export default function GameScreen({
               </motion.div>
             ) : null}
           </AnimatePresence>
+          {gameMode === 'flow' && !requiresMultiStroke && feedbackState === 'idle' && isBugSlashed && (
+            <button type="button" onClick={submitAnswer} disabled={!selectedIndices.length}
+              className="sr-only focus:not-sr-only focus:mt-2 focus:rounded-xl focus:px-5 focus:py-3 focus:tg-primary">
+              選択した単語を判定する
+            </button>
+          )}
         </div>
 
       </div>
