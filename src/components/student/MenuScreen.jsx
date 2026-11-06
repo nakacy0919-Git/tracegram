@@ -5,6 +5,7 @@ import { CATALOG_GROUPS, getProblemLevel } from '../../data/mockData';
 import { READING_ARTICLES } from '../../data/readingCatalog';
 
 const STORAGE_LAST = 'tracegram_last_course';
+const STORAGE_SESSION = 'tracegram_active_session';
 const STORAGE_MISTAKES = 'tracegram_mistakes';
 const card = 'rounded-[24px] border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-cyan-300 hover:shadow-lg active:scale-[0.99]';
 const groupStyles = {
@@ -46,7 +47,7 @@ function Feature({ icon: Icon, title, caption, theme, onClick, detail }) {
 export default function MenuScreen({
   gameMode, setGameMode, setActiveSummary,
   gameState, roomId, connectionStatus, availableCategories, activeCategory, isMultiplayer, isHost,
-  setAppScreen, selectSubCategory, startGame, backToMain, setBattleSetup,
+  setAppScreen, selectSubCategory, startGame, resumeGame, backToMain, setBattleSetup,
   menuViewMode, setMenuViewMode, selectedArticle, setSelectedArticle,
 }) {
   const view = ['home', 'grammar', 'reading', 'review'].includes(menuViewMode) ? menuViewMode : 'home';
@@ -54,12 +55,15 @@ export default function MenuScreen({
   const [group, setGroup] = useState('ALL');
   const [count, setCount] = useState(10);
   const [last, setLast] = useState(null);
+  const [session, setSession] = useState(null);
   const [mistakes, setMistakes] = useState({});
   const [logs, setLogs] = useState([]);
 
   useEffect(() => {
     const stored = safeRead(STORAGE_LAST, null);
     if (stored && typeof stored.categoryId === 'string') setLast(stored);
+    const active = safeRead(STORAGE_SESSION, null);
+    setSession(active && Array.isArray(active.problemIds) ? active : null);
     const items = safeRead(STORAGE_MISTAKES, {});
     setMistakes(items && typeof items === 'object' && !Array.isArray(items) ? items : {});
     const learningLogs = safeRead('tracegram_learning_logs', []);
@@ -79,6 +83,7 @@ export default function MenuScreen({
   const missedProblems = Object.keys(mistakes).map(id => byProblemId.get(id)).filter(Boolean);
   const latestLog = logs[logs.length - 1] || null;
   const recentCategory = last && byId.get(last.categoryId);
+  const canResume = recentCategory && session?.categoryId === recentCategory.categoryId && session.problemIds.length > 0;
   const filteredCourses = allCategories.filter(c => {
     if (group !== 'ALL' && (c.groupId || 'CUSTOM') !== group) return false;
     if (!search.trim()) return true;
@@ -90,6 +95,7 @@ export default function MenuScreen({
 
   const go = (next) => {
     setSearch('');
+    setGroup('ALL');
     setMenuViewMode(next);
     setSelectedArticle(null);
     if (gameState !== 'main_select') backToMain();
@@ -229,7 +235,7 @@ export default function MenuScreen({
               <div className="grid grid-cols-2 gap-3">
                 <div className="border border-slate-200 rounded-xl bg-white px-4 py-3">
                   <span className="text-xs text-slate-500 font-bold">前回の初回正答率</span>
-                  <span className="block font-black text-lg text-cyan-700">{latestLog.totalCount ? Math.round((latestLog.firstTryCount ?? latestLog.correctCount ?? 0) / latestLog.totalCount * 100) : 0}%</span>
+                  <span className="block font-black text-lg text-cyan-700">{Number.isInteger(latestLog.firstTryCount) && latestLog.totalCount ? `${Math.round(latestLog.firstTryCount / latestLog.totalCount * 100)}%` : '旧記録'}</span>
                 </div>
                 <div className="border border-slate-200 rounded-xl bg-white px-4 py-3">
                   <span className="text-xs text-slate-500 font-bold">前回の誤答回数</span>
@@ -237,18 +243,21 @@ export default function MenuScreen({
                 </div>
               </div>
             )}
-            {recentCategory && (
+            {recentCategory && !isMultiplayer && (
               <section className="rounded-2xl bg-slate-900 text-white px-5 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div className="flex gap-3 items-center">
                   <span className="bg-white/15 p-2.5 rounded-xl"><Clock3 size={20}/></span>
                   <div>
-                    <div className="text-xs text-cyan-200 font-bold">前回の教材から再開</div>
+                    <div className="text-xs text-cyan-200 font-bold">{canResume ? `続きから再開 · Q${session.index + 1}/${session.problemIds.length}` : '前回の教材をもう一度'}</div>
                     <div className="font-black">{recentCategory.title} · Lv.{last.level}</div>
                   </div>
                 </div>
-                <button type="button" onClick={() => { setGameMode(last.mode || 'flow'); launch(last.level, last.count || 10, recentCategory); }}
+                <button type="button" onClick={() => {
+                  setGameMode(['flow', 'normal', 'bug_slash'].includes(last.mode) ? last.mode : 'flow');
+                  if (!canResume || !resumeGame(recentCategory, session)) launch(last.level, last.count || 10, recentCategory);
+                }}
                   className="bg-white text-slate-900 px-5 py-3 rounded-xl font-black flex items-center gap-2 hover:bg-cyan-100">
-                  <Play size={16} fill="currentColor"/> もう一度学習
+                  <Play size={16} fill="currentColor"/> {canResume ? '続きから' : 'もう一度学習'}
                 </button>
               </section>
             )}
