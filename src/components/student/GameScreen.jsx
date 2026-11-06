@@ -269,7 +269,7 @@ export default function GameScreen({
           </AnimatePresence>
           {gameMode === 'flow' && !requiresMultiStroke && feedbackState === 'idle' && isBugSlashed && (
             <button type="button" onClick={submitAnswer} disabled={!selectedIndices.length}
-              className="sr-only focus:not-sr-only focus:mt-2 focus:rounded-xl focus:px-5 focus:py-3 focus:tg-primary">
+              className="sr-only focus:not-sr-only focus:mt-2 focus:rounded-xl focus:px-5 focus:py-3 focus:bg-[#3e6558] focus:text-white">
               選択した単語を判定する
             </button>
           )}
