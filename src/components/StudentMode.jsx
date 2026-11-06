@@ -17,7 +17,7 @@ export default function StudentMode({ categories }) {
     selectedLevel, filteredProblems, setGameState,
     selectMainCategory, selectSubCategory, startGame, 
     backToMain, backToSub, backToLevelSelect,
-    handlePointerDown, handlePointerMove, handlePointerUp, submitAnswer, nextProblem,
+    handlePointerDown, handlePointerMove, handlePointerUp, submitAnswer, nextProblem, resetForRetry,
     addBonusScore
   } = useTrace(categories);
 
@@ -33,7 +33,7 @@ export default function StudentMode({ categories }) {
   const [pendingBattle, setPendingBattle] = useState(null);
 
   const [hasSeenSplash, setHasSeenSplash] = useState(false);
-  const [gameMode, setGameMode] = useState('normal');
+  const [gameMode, setGameMode] = useState('flow');
 
   // 🌟 長文データを管理するState
   const [activeSummary, setActiveSummary] = useState(null);
@@ -213,6 +213,7 @@ export default function StudentMode({ categories }) {
       filteredProblems={filteredProblems}
       activeProblem={activeProblem}
       score={score}
+      combo={combo}
       selectedIndices={selectedIndices}
       feedbackState={feedbackState}
       lastBonus={lastBonus}
@@ -222,7 +223,7 @@ export default function StudentMode({ categories }) {
       handlePointerUp={handlePointerUp}
       submitAnswer={submitAnswer}
       onExit={() => { if(isMultiplayer) setAppScreen('lobby'); else backToLevelSelect(); }}
-      onNextProblem={nextProblem}
+      onRetryTrace={resetForRetry}
     />
   );
 }
