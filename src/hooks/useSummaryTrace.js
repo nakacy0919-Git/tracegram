@@ -1,26 +1,5 @@
+import { playTraceSound } from '../lib/traceAudio';
 import { useState, useEffect } from 'react';
-
-// 🎵 なぞったときの効果音
-const playTraceSound = (count, isDeselect = false) => {
-  try {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContext) return;
-    const ctx = new AudioContext();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.type = 'triangle';
-    const baseFreq = isDeselect ? 300 : 440;
-    osc.frequency.setValueAtTime(baseFreq + (count * 30), ctx.currentTime);
-    gain.gain.setValueAtTime(0.1, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.1);
-  } catch (e) {
-    console.warn("Audio play failed", e);
-  }
-};
 
 export function useSummaryTrace(currentTask, currentPhase) {
   const [selectedIndices, setSelectedIndices] = useState([]);
