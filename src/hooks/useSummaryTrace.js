@@ -1,4 +1,5 @@
 import { playTraceSound } from '../lib/traceAudio';
+import { updateTokenSelection, sameSelectedIndices } from '../lib/traceSelection';
 import { useState, useEffect } from 'react';
 
 export function useSummaryTrace(currentTask, currentPhase) {
@@ -12,14 +13,9 @@ export function useSummaryTrace(currentTask, currentPhase) {
 
   const updateTraceSelection = (idx, mode) => {
     setSelectedIndices(prev => {
-      if (mode === 'select' && !prev.includes(idx)) {
-        playTraceSound(prev.length);
-        return [...prev, idx].sort((a, b) => a - b);
-      } else if (mode === 'deselect' && prev.includes(idx)) {
-        playTraceSound(0, true);
-        return prev.filter(i => i !== idx);
-      }
-      return prev;
+      const next = updateTokenSelection(prev, idx, mode);
+      if (next !== prev) playTraceSound(prev.length, mode === 'deselect');
+      return next;
     });
   };
 
@@ -86,7 +82,7 @@ export function useSummaryTrace(currentTask, currentPhase) {
       partial = currentTask.partialIndices || [];
     }
 
-    const isPerfect = JSON.stringify(selectedIndices) === JSON.stringify(target);
+    const isPerfect = sameSelectedIndices(selectedIndices, target);
     const isPartial = selectedIndices.some(idx => target.includes(idx) || partial.includes(idx));
 
     if (isPerfect) setTraceFeedback('correct');
