@@ -45,6 +45,7 @@ export function useTrace(categories) {
   const mainContainerRef = useRef(null);
   const selectedIndicesRef = useRef([]);
   const draggingRef = useRef(false);
+  const dragModeRef = useRef('select');
   const advanceTimerRef = useRef(null);
   const feedbackRef = useRef('idle');
 
@@ -226,6 +227,7 @@ export function useTrace(categories) {
     const isCurrentlySelected = selected.includes(idx);
     const newMode = isCurrentlySelected ? 'deselect' : 'select';
     setDragMode(newMode);
+    dragModeRef.current = newMode;
     updateSelection(prev => {
       if (newMode === 'select' && !prev.includes(idx)) {
         playTraceSound(prev.length);
@@ -247,11 +249,11 @@ export function useTrace(categories) {
     const idx = Number(token.dataset.tokenIdx);
     if (!Number.isInteger(idx) || idx < 0 || idx >= (activeProblem?.tokens?.length || 0)) return;
     updateSelection(prev => {
-      if (dragMode === 'select' && !prev.includes(idx)) {
+      if (dragModeRef.current === 'select' && !prev.includes(idx)) {
         playTraceSound(prev.length);
         return [...prev, idx].sort((a,b) => a-b);
       }
-      if (dragMode === 'deselect' && prev.includes(idx)) {
+      if (dragModeRef.current === 'deselect' && prev.includes(idx)) {
         playTraceSound(0, true);
         return prev.filter(i => i !== idx);
       }
