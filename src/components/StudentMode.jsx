@@ -98,6 +98,12 @@ export default function StudentMode({ categories }) {
     }
   }, [activeCategory, pendingBattle, battleConfig, startGame]);
 
+  useEffect(() => {
+    if (appScreen === 'title' && connectionStatus === 'connected') {
+      setAppScreen(isHost ? 'main' : 'lobby');
+    }
+  }, [appScreen, connectionStatus, isHost]);
+
   const handleExitToTitle = () => {
     exitMultiplayer();
     setAppScreen('main');
@@ -111,10 +117,10 @@ export default function StudentMode({ categories }) {
         hasSeenSplash={hasSeenSplash}
         onSplashComplete={() => setHasSeenSplash(true)}
         onSinglePlayer={() => setAppScreen('main')}
-        onCreateRoom={() => { createRoom(); setAppScreen('main'); }}
+        onCreateRoom={() => createRoom()}
         joinPin={joinPin}
         setJoinPin={setJoinPin}
-        onJoinRoom={(pin) => { joinRoom(pin); setAppScreen('lobby'); }}
+        onJoinRoom={(pin) => joinRoom(pin)}
         connectionStatus={connectionStatus}
         errorMessage={errorMessage}
       />
@@ -159,6 +165,8 @@ export default function StudentMode({ categories }) {
         setGameMode={setGameMode}
         setActiveSummary={setActiveSummary} 
         gameState={gameState}
+        roomId={roomId}
+        connectionStatus={connectionStatus}
         availableCategories={availableCategories}
         activeMain={activeMain}
         activeCategory={activeCategory}
