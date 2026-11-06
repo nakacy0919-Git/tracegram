@@ -7,7 +7,7 @@ import { fast_fashion_L1 } from '../../data/summary/fast_fashion/level1_a2.js';
 import { fast_fashion_L2 } from '../../data/summary/fast_fashion/level2_b1.js';
 import { fast_fashion_L3 } from '../../data/summary/fast_fashion/level3_b2.js';
 import { fast_fashion_L4 } from '../../data/summary/fast_fashion/level4_c1.js';
-import { nature_L1 } from '../../data/summary/nature/level1_a2.js';
+import { nature_L1 } from '../../data/summary/nature/level_a2.js';
 import { nature_L2 } from '../../data/summary/nature/level2_b1.js';
 import { nature_L3 } from '../../data/summary/nature/level3_b2.js';
 import { nature_L4 } from '../../data/summary/nature/level4_c1.js'
@@ -513,7 +513,15 @@ export default function MenuScreen({
                </p>
             )}
           </div>
-           <div className="bg-white/80 backdrop-blur-md p-2 rounded-2xl shadow-sm border border-slate-200 mb-10 flex justify-center mx-auto max-w-lg">
+           <div className="bg-white/80 backdrop-blur-md p-2 rounded-2xl shadow-sm border border-slate-200 mb-3 flex flex-wrap sm:flex-nowrap justify-center mx-auto max-w-3xl">
+            <button
+              onClick={() => setGameMode('flow')}
+              className={`flex-1 min-w-[150px] flex items-center justify-center gap-2 py-3 rounded-xl font-black text-sm md:text-base transition-all ${
+                gameMode === 'flow' ? 'bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-md' : 'text-slate-500 hover:bg-slate-100'
+              }`}
+            >
+              <Sparkles size={18} /> ⚡ 一筆フロー
+            </button>
             <button 
               onClick={() => setGameMode('normal')}
               className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-black text-sm md:text-base transition-all ${
@@ -531,6 +539,7 @@ export default function MenuScreen({
               <Bug size={18} /> バグ・スラッシュ
             </button>
           </div>
+          <p className="text-center text-sm font-bold text-slate-500 mb-8">{gameMode === 'flow' ? '⚡ 答えのカタマリを一筆でなぞり、指を離すとすぐ判定。正解をつなげてコンボを伸ばそう！' : gameMode === 'bug_slash' ? '🪲 余分な単語を見つけて破壊してから、構造をなぞろう。' : '🖐 単語をタップ・なぞって選択し、Answerで判定できます。'}</p>
           <div className="flex flex-col gap-6">
             {levels.map((lvl) => {
               const levelKey = lvl.num === 1 ? '-b-' : lvl.num === 2 ? '-i-' : '-a-';
