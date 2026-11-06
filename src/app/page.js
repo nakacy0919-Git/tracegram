@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import StudentMode from '../components/StudentMode';
 import TeacherMode from '../components/TeacherMode';
-import { PROBLEM_SETS } from '../data/mockData';
+import { PROBLEM_SETS, getProblemLevel } from '../data/mockData';
 // 🛠️ 変更点: lucide-react から Settings（ギア）と Users（生徒）アイコンをインポート
 import { Settings, Users } from 'lucide-react'; 
 
@@ -24,7 +24,7 @@ export default function TraceGramApp() {
       if (valid.length) {
         setCategories(prev => [...prev.filter(c => c.categoryId !== 'custom'), {
           categoryId: 'custom', title: '🌟 先生のオリジナル課題',
-          description: 'この端末で作成した特別トレーニングです。', problems: valid
+          description: 'この端末で作成した特別トレーニングです。', groupId: 'CUSTOM', problems: valid.map(p => ({...p, level: getProblemLevel(p)}))
         }]);
       }
     } catch { /* 不正な保存データは読み込まない */ }
@@ -40,10 +40,10 @@ export default function TraceGramApp() {
       const customIndex = prev.findIndex(c => c.categoryId === "custom");
       if (customIndex >= 0) {
         const updatedCategories = [...prev];
-        updatedCategories[customIndex] = { ...updatedCategories[customIndex], problems: [...updatedCategories[customIndex].problems, newProblem].slice(-100) };
+        updatedCategories[customIndex] = { ...updatedCategories[customIndex], problems: [...updatedCategories[customIndex].problems, {...newProblem, level: 1}].slice(-100) };
         return updatedCategories;
       } else {
-        return [...prev, { categoryId: "custom", title: "🌟 先生のオリジナル課題", description: "先生が新しく作成した特別トレーニングです。", problems: [newProblem] }];
+        return [...prev, { categoryId: "custom", title: "🌟 先生のオリジナル課題", description: "先生が新しく作成した特別トレーニングです。", groupId: "CUSTOM", problems: [{...newProblem, level: 1}] }];
       }
     });
   };
@@ -65,19 +65,19 @@ export default function TraceGramApp() {
       {/* ▼ 変更点：モード切り替えボタンのコンテンツを修正し、アイコンをギアマークなどに変更 */}
       <button 
         onClick={() => setMode(mode === 'student' ? 'teacher' : 'student')} 
-        className="fixed bottom-6 right-6 z-[99999] bg-white/90 backdrop-blur-sm shadow-lg hover:scale-110 active:scale-95 transition-all text-slate-600 px-6 py-4 rounded-full font-black text-sm border-2 border-slate-200 flex items-center gap-3"
+        className="fixed top-3 right-3 z-[100] bg-white/95 backdrop-blur-sm shadow-sm hover:bg-slate-100 active:scale-95 transition-all text-slate-600 px-3 py-2 rounded-full font-bold text-xs border border-slate-200 flex items-center gap-2"
       >
         {mode === 'student' ? (
           /* 🎓 生徒の時は「先生モードへ」のギアアイコン */
           <>
             <Settings size={20} className="text-slate-500" />
-            <span>先生モードへ</span>
+            <span>教材作成</span>
           </>
         ) : (
           /* 🧑‍🏫 先生の時は「生徒モードへ」のユーザーアイコン */
           <>
             <Users size={20} className="text-slate-500" />
-            <span>生徒モードへ</span>
+            <span>学習画面へ</span>
           </>
         )}
       </button>
