@@ -5,12 +5,19 @@ const folder = join(process.cwd(), 'src/data/categories');
 const files = readdirSync(folder).filter(name => name.endsWith('.js'));
 let checked = 0;
 const errors = [];
+const seenProblemIds = new Set();
 const problemsRegex = /tokens:\s*\[([\s\S]*?)\]\s*,\s*targetIndices:\s*\[([\s\S]*?)\]/g;
 const stringRegex = /(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')/g;
 
 for (const file of files) {
   const source = readFileSync(join(folder, file), 'utf8');
   const tokenFields = (source.match(/\btokens:\s*\[/g) || []).length;
+  const problemIds = [...source.matchAll(/\bid:\s*["']([^"']+)["']/g)].map(match => match[1]);
+  for (const id of problemIds) {
+    if (!/-[bia]-\d+$/i.test(id)) errors.push(`${file}: problem ID ${id} has no readable level code`);
+    if (seenProblemIds.has(id)) errors.push(`${file}: duplicate problem ID ${id}`);
+    seenProblemIds.add(id);
+  }
   let matched = 0;
   for (const match of source.matchAll(problemsRegex)) {
     matched++;
@@ -22,6 +29,7 @@ for (const file of files) {
       new Set(targetIndices).size !== targetIndices.length;
     if (invalid) errors.push(`${file} problem #${matched}: invalid indices ${JSON.stringify(targetIndices)} for ${tokenCount} tokens`);
   }
+  if (problemIds.length !== matched) errors.push(`${file}: ${problemIds.length} IDs but ${matched} recognized exercises`);
   if (tokenFields !== matched) {
     errors.push(`${file}: ${tokenFields} token fields but only ${matched} validated targetIndices`);
   }
