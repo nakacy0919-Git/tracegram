@@ -1,4 +1,5 @@
 import { playTraceSound } from '../lib/traceAudio';
+import { updateTokenSelection, sameSelectedIndices } from '../lib/traceSelection';
 import { useState, useEffect, useRef } from 'react';
 import { getProblemLevel } from '../data/mockData';
 
@@ -201,11 +202,7 @@ export function useTrace(categories) {
     if (!activeProblem || !chosen.length || feedbackRef.current !== 'idle') return;
     const targets = activeProblem.targetIndices ||
       (activeProblem.targetIndex !== undefined ? [activeProblem.targetIndex] : []);
-    const normalize = (indices) => [...new Set(indices)].sort((a, b) => a - b);
-    const actual = normalize(chosen);
-    const expected = normalize(targets);
-    const perfect = actual.length === expected.length &&
-      actual.every((index, i) => index === expected[i]);
+    const perfect = sameSelectedIndices(chosen, targets);
 
     if (perfect) {
       if (!failedProblemIdsRef.current.has(activeProblem.id)) {
@@ -256,15 +253,9 @@ export function useTrace(categories) {
     setDragMode(newMode);
     dragModeRef.current = newMode;
     updateSelection(prev => {
-      if (newMode === 'select' && !prev.includes(idx)) {
-        playTraceSound(prev.length);
-        return [...prev, idx].sort((a,b) => a-b);
-      }
-      if (newMode === 'deselect' && prev.includes(idx)) {
-        playTraceSound(0, true);
-        return prev.filter(i => i !== idx);
-      }
-      return prev;
+      const next = updateTokenSelection(prev, idx, newMode);
+      if (next !== prev) playTraceSound(prev.length, newMode === 'deselect');
+      return next;
     });
   };
 
@@ -276,15 +267,9 @@ export function useTrace(categories) {
     const idx = Number(token.dataset.tokenIdx);
     if (!Number.isInteger(idx) || idx < 0 || idx >= (activeProblem?.tokens?.length || 0)) return;
     updateSelection(prev => {
-      if (dragModeRef.current === 'select' && !prev.includes(idx)) {
-        playTraceSound(prev.length);
-        return [...prev, idx].sort((a,b) => a-b);
-      }
-      if (dragModeRef.current === 'deselect' && prev.includes(idx)) {
-        playTraceSound(0, true);
-        return prev.filter(i => i !== idx);
-      }
-      return prev;
+      const next = updateTokenSelection(prev, idx, dragModeRef.current);
+      if (next !== prev) playTraceSound(prev.length, dragModeRef.current === 'deselect');
+      return next;
     });
   };
 
