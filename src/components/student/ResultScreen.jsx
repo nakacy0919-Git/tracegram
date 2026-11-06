@@ -1,142 +1,83 @@
+"use client";
 import React, { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { ArrowLeft, Crown } from 'lucide-react';
+import { ArrowLeft, Home, NotebookPen, RotateCcw } from 'lucide-react';
 
 export default function ResultScreen({
-  isMultiplayer,
-  playersData,
-  myPeerId,
-  score,
-  // 🌟 追加：学習記録に必要なデータを受け取る
-  activeCategory,
-  selectedLevel,
-  correctCount,
-  firstTryCount = 0,
-  wrongAttempts = 0,
-  totalCount,
-  onBackToLobby,
-  onBackToLevelSelect,
-  onBackToHome
+  isMultiplayer, playersData, myPeerId, score, activeCategory,
+  selectedLevel, correctCount, firstTryCount = 0, wrongAttempts = 0,
+  totalCount, onBackToLobby, onBackToLevelSelect, onBackToHome
 }) {
-  const sortedPlayers = Object.values(playersData || {}).sort((a, b) => b.score - a.score);
-  
-  // 🌟 追加：Reactの仕様で2回保存されてしまうのを防ぐためのストッパー
-  const hasLogged = useRef(false);
+  const saved = useRef(false);
+  const players = Object.values(playersData || {}).sort((a,b)=>(b.score||0)-(a.score||0));
+  useEffect(()=>{
+    if (isMultiplayer || saved.current || !activeCategory) return;
+    try {
+      const existing = JSON.parse(localStorage.getItem('tracegram_learning_logs') || '[]');
+      const list = Array.isArray(existing) ? existing : [];
+      const log = {
+        id:Date.now(),date:new Date().toISOString(),
+        categoryTitle:activeCategory.title,categoryId:activeCategory.categoryId,
+        level:selectedLevel,score,correctCount:correctCount||0,
+        firstTryCount:firstTryCount||0,wrongAttempts:wrongAttempts||0,
+        totalCount:totalCount||0
+      };
+      localStorage.setItem('tracegram_learning_logs',JSON.stringify([...list,log].slice(-100)));
+      saved.current = true;
+    } catch(e) { console.warn('Could not save learning log',e); }
+  },[isMultiplayer,activeCategory,selectedLevel,score,correctCount,firstTryCount,wrongAttempts,totalCount]);
 
-  // 🌟 追加：画面が表示された瞬間にローカルストレージへ記録を保存する
-  useEffect(() => {
-    // マルチプレイではない ＆ まだ保存していない ＆ カテゴリ情報がある場合のみ保存
-    if (!isMultiplayer && !hasLogged.current && activeCategory) {
-      try {
-        const existingLogs = JSON.parse(localStorage.getItem('tracegram_learning_logs') || '[]');
-        
-        const newLog = {
-          id: Date.now(),
-          date: new Date().toISOString(),
-          categoryTitle: activeCategory.title,
-          categoryId: activeCategory.categoryId,
-          level: selectedLevel,
-          score: score,
-          correctCount: correctCount || 0,
-          firstTryCount: firstTryCount || 0,
-          wrongAttempts: wrongAttempts || 0,
-          totalCount: totalCount || 0
-        };
-
-        localStorage.setItem('tracegram_learning_logs', JSON.stringify([...(Array.isArray(existingLogs) ? existingLogs : []), newLog].slice(-100)));
-        hasLogged.current = true; // 保存完了フラグを立てる
-      } catch (e) {
-        console.error("Failed to save learning log", e);
-      }
-    }
-  }, [isMultiplayer, activeCategory, selectedLevel, score, correctCount, firstTryCount, wrongAttempts, totalCount]);
-
-  return (
-    <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-12 z-10 relative overflow-y-auto">
-      <div className="max-w-3xl w-full text-center">
-        <motion.h2 
-          initial={{ scale: 0.8, opacity: 0 }} 
-          animate={{ scale: 1, opacity: 1 }} 
-          className="text-4xl md:text-6xl font-black text-slate-700 mb-8"
-        >
-          🏆 RESULT
-        </motion.h2>
-        
-        {isMultiplayer && sortedPlayers.length > 0 ? (
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 md:p-10 shadow-xl border-2 border-slate-100 mb-10">
-            <h3 className="text-2xl font-black text-slate-600 mb-6 tracking-widest">最終ランキング</h3>
-            <div className="flex flex-col gap-4">
-              {sortedPlayers.map((player, index) => {
-                const isMe = player.id === myPeerId;
-                const isTop = index === 0;
-                
-                return (
-                  <motion.div 
-                    key={player.id}
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.15 }}
-                    className={`flex items-center justify-between p-4 md:p-6 rounded-2xl border-2 ${
-                      index === 0 ? 'bg-gradient-to-r from-yellow-100 to-yellow-50 border-yellow-400 shadow-md' :
-                      index === 1 ? 'bg-slate-50 border-slate-300' :
-                      index === 2 ? 'bg-orange-50 border-orange-300' :
-                      'bg-white border-slate-200'
-                    } ${isMe ? 'ring-4 ring-cyan-400 ring-opacity-50' : ''}`}
-                  >
-                    <div className="flex items-center gap-4">
-                      <span className={`text-3xl md:text-5xl font-black italic w-10 text-left ${
-                        index === 0 ? 'text-yellow-500 drop-shadow-sm' :
-                        index === 1 ? 'text-slate-400' :
-                        index === 2 ? 'text-orange-400' :
-                        'text-slate-300'
-                      }`}>
-                        {index + 1}
-                      </span>
-                      <span className={`text-xl md:text-3xl font-bold ${isMe ? 'text-cyan-700' : 'text-slate-700'}`}>
-                        {player.name === 'Host (You)' && isMe ? 'あなた' : player.name}
-                      </span>
-                      {isTop && <Crown className="text-yellow-500 ml-2 animate-bounce" size={32} />}
-                    </div>
-                    <span className="text-4xl md:text-6xl font-black tracking-tighter text-slate-800">
-                      {player.score} <span className="text-lg md:text-2xl text-slate-400 font-bold tracking-normal">pts</span>
-                    </span>
-                  </motion.div>
-                );
-              })}
-            </div>
+  const accuracy = totalCount ? Math.round(firstTryCount / totalCount * 100) : 0;
+  return <main className="tg-workspace flex-1 min-h-[100dvh] overflow-y-auto px-4 py-8 md:py-12">
+    <div className="max-w-[740px] mx-auto space-y-5">
+      <div className="tg-paper tg-margin tg-holes rounded-[22px] p-5 pl-12 md:p-10 md:pl-16">
+        <span className="tg-tag">TRACEGRAM · YOUR NOTE</span>
+        <h1 className="tg-serif text-3xl md:text-4xl font-bold text-[#2d4535] mt-2">
+          {isMultiplayer ? '対戦の記録' : '今日の学習記録'}
+        </h1>
+        <p className="mt-1 text-stone-500 text-sm">{activeCategory?.title || 'Tracegram'}</p>
+        <div className="h-px bg-[#d9dfd3] mt-6 mb-6"/>
+        {isMultiplayer ? (
+          <div className="space-y-2">
+            {players.map((person,index)=>(
+              <div key={person.id || index}
+                className={`rounded-xl px-4 py-3 border flex justify-between items-center gap-3 ${person.id===myPeerId?'bg-[#e9f0e6] border-[#afc5b2]':'bg-white/60 border-[#e5e5d9]'}`}>
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className="tg-serif text-xl text-[#65816d] w-7">{index+1}.</span>
+                  <span className="font-semibold text-[#2c4134] truncate">{person.id===myPeerId?'あなた':person.name}</span>
+                </div>
+                <span className="tabular-nums font-bold text-[#355845] whitespace-nowrap">{Number(person.score||0).toLocaleString()} pt</span>
+              </div>
+            ))}
           </div>
         ) : (
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-12 shadow-xl border-2 border-slate-100 mb-10 flex flex-col items-center">
-            <span className="text-slate-400 font-bold mb-2 tracking-widest text-xl">FINAL SCORE</span>
-            <span className="text-8xl md:text-9xl font-black text-cyan-600 drop-shadow-md">{score}</span>
-          </div>
-        )}
-
-        {!isMultiplayer && (
-          <div className="grid grid-cols-2 gap-3 mb-6 text-left">
-            <div className="bg-white rounded-2xl p-4 border border-slate-200">
-              <p className="text-xs font-bold text-slate-500">初回正答率</p>
-              <p className="text-2xl font-black text-cyan-700">{totalCount ? Math.round(firstTryCount / totalCount * 100) : 0}%</p>
+          <>
+            <div className="flex items-baseline gap-2 mb-6">
+              <strong className="tg-serif text-5xl md:text-6xl text-[#3d6d53] tabular-nums">{Number(score||0).toLocaleString()}</strong>
+              <span className="text-stone-500 text-sm">pts</span>
             </div>
-            <div className="bg-white rounded-2xl p-4 border border-slate-200">
-              <p className="text-xs font-bold text-slate-500">誤答した回数</p>
-              <p className="text-2xl font-black text-amber-600">{wrongAttempts} 回</p>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="border-l-[3px] border-[#86a98c] pl-3 py-1">
+                <div className="text-xs text-stone-500 font-semibold">初回正答率</div>
+                <div className="text-2xl font-bold text-[#315640] tabular-nums mt-1">{accuracy}%</div>
+              </div>
+              <div className="border-l-[3px] border-[#cbb395] pl-3 py-1">
+                <div className="text-xs text-stone-500 font-semibold">誤答回数</div>
+                <div className="text-2xl font-bold text-[#8c694f] tabular-nums mt-1">{wrongAttempts} <span className="text-sm">回</span></div>
+              </div>
             </div>
-          </div>
+          </>
         )}
-        <button
-          onClick={isMultiplayer ? onBackToLobby : onBackToLevelSelect} 
-          className="mx-auto px-8 py-5 font-black text-2xl flex items-center justify-center gap-3 bg-white hover:bg-slate-50 text-slate-700 transition-transform hover:scale-105 active:scale-95 rounded-2xl shadow-md border-2 border-slate-200"
-        >
-          <ArrowLeft size={28} /> {isMultiplayer ? "ロビーに戻る" : "レベル選択へ戻る"}
-        </button>
-        {!isMultiplayer && onBackToHome && (
-          <button type="button" onClick={onBackToHome}
-            className="mt-3 mx-auto px-5 py-3 text-sm font-bold text-cyan-700 underline hover:text-cyan-600">
-            学習ホームへ戻る
+        <div className="flex flex-wrap gap-2 mt-8">
+          <button type="button" onClick={isMultiplayer?onBackToLobby:onBackToLevelSelect}
+            className="tg-primary rounded-xl px-6 py-3.5 font-semibold flex items-center gap-2">
+            <RotateCcw size={18}/> {isMultiplayer?'ロビーへ戻る':'もう一度なぞる'}
           </button>
-        )}
+          {!isMultiplayer && onBackToHome && <button type="button" onClick={onBackToHome}
+            className="tg-outline rounded-xl px-6 py-3.5 font-semibold inline-flex items-center gap-2">
+            <Home size={18}/> ホーム
+          </button>}
+        </div>
       </div>
     </div>
-  );
+  </main>;
 }
