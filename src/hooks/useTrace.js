@@ -1,11 +1,15 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
-// 🎵 なぞったときの効果音
+// 🎵 オーディオコンテキストは使い回し、長時間の音読学習でリソースを使い切らない。
+let traceAudioContext = null;
 const playTraceSound = (count, isDeselect = false) => {
   try {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     if (!AudioContext) return;
-    const ctx = new AudioContext();
+    const ctx = traceAudioContext && traceAudioContext.state !== 'closed'
+      ? traceAudioContext : new AudioContext();
+    traceAudioContext = ctx;
+    if (ctx.state === 'suspended') ctx.resume().catch(() => {});
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.connect(gain);
