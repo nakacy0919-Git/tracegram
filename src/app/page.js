@@ -4,7 +4,7 @@ import StudentMode from '../components/StudentMode';
 import TeacherMode from '../components/TeacherMode';
 import { PROBLEM_SETS, getProblemLevel } from '../data/mockData';
 // 🛠️ 変更点: lucide-react から Settings（ギア）と Users（生徒）アイコンをインポート
-import { Settings, Users } from 'lucide-react'; 
+import { ArrowLeft } from 'lucide-react'; 
 
 export default function TraceGramApp() {
   const [mode, setMode] = useState('student');
@@ -49,39 +49,18 @@ export default function TraceGramApp() {
   };
 
   return (
-    <div className="min-h-screen text-slate-800 flex flex-col font-sans select-none bg-slate-50 relative">
-      
-      {/* 🌟 沒入感維持のため、ヘッダーは削除したままです */}
-
-      {/* メインエリア */}
+    <div className="min-h-screen text-[#2b332e] flex flex-col relative tg-workspace">
       <main className="flex-1 flex flex-col">
-        {mode === 'student' ? (
-          <StudentMode categories={categories} />
-        ) : (
-          <TeacherMode addCustomProblem={addCustomProblem} />
-        )}
+        {mode === 'student'
+          ? <StudentMode categories={categories} onTeacherOpen={() => setMode('teacher')} />
+          : <TeacherMode addCustomProblem={addCustomProblem} />}
       </main>
-
-      {/* ▼ 変更点：モード切り替えボタンのコンテンツを修正し、アイコンをギアマークなどに変更 */}
-      <button 
-        onClick={() => setMode(mode === 'student' ? 'teacher' : 'student')} 
-        className="fixed top-3 right-3 z-[100] bg-white/95 backdrop-blur-sm shadow-sm hover:bg-slate-100 active:scale-95 transition-all text-slate-600 px-3 py-2 rounded-full font-bold text-xs border border-slate-200 flex items-center gap-2"
-      >
-        {mode === 'student' ? (
-          /* 🎓 生徒の時は「先生モードへ」のギアアイコン */
-          <>
-            <Settings size={20} className="text-slate-500" />
-            <span>教材作成</span>
-          </>
-        ) : (
-          /* 🧑‍🏫 先生の時は「生徒モードへ」のユーザーアイコン */
-          <>
-            <Users size={20} className="text-slate-500" />
-            <span>学習画面へ</span>
-          </>
-        )}
-      </button>
-
+      {mode === 'teacher' && (
+        <button type="button" onClick={() => setMode('student')}
+          className="fixed top-3 right-3 z-[100] tg-outline shadow-sm px-4 py-2 rounded-full font-semibold text-sm flex items-center gap-2">
+          <ArrowLeft size={17}/> 学習画面へ
+        </button>
+      )}
     </div>
   );
 }
