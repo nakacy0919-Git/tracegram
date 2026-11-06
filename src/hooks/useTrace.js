@@ -1,31 +1,6 @@
+import { playTraceSound } from '../lib/traceAudio';
 import { useState, useEffect, useRef } from 'react';
 import { getProblemLevel } from '../data/mockData';
-
-// 🎵 オーディオコンテキストは使い回し、長時間の音読学習でリソースを使い切らない。
-let traceAudioContext = null;
-const playTraceSound = (count, isDeselect = false) => {
-  try {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContext) return;
-    const ctx = traceAudioContext && traceAudioContext.state !== 'closed'
-      ? traceAudioContext : new AudioContext();
-    traceAudioContext = ctx;
-    if (ctx.state === 'suspended') ctx.resume().catch(() => {});
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.type = 'triangle';
-    const baseFreq = isDeselect ? 300 : 440;
-    osc.frequency.setValueAtTime(baseFreq + (count * 30), ctx.currentTime);
-    gain.gain.setValueAtTime(0.1, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.1);
-  } catch (e) {
-    console.warn("Audio play failed", e);
-  }
-};
 
 export function useTrace(categories) {
   const [gameState, setGameState] = useState('main_select'); 
