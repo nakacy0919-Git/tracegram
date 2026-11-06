@@ -11,7 +11,7 @@ import ResultScreen from './student/ResultScreen';
 import GameScreen from './student/GameScreen';
 import SummaryScreen from './student/SummaryScreen';
 
-export default function StudentMode({ categories }) {
+export default function StudentMode({ categories, onTeacherOpen }) {
   const {
     gameState, availableCategories, activeMain, activeCategory, activeProblem, currentProblemIdx,
     score, combo, correctCount, firstTryCount, wrongAttempts, selectedIndices, feedbackState, mainContainerRef, lastBonus,
@@ -174,6 +174,7 @@ export default function StudentMode({ categories }) {
         gameMode={gameMode}
         setGameMode={setGameMode}
         onReplayOpening={() => setShowOpening(true)}
+        onTeacherOpen={onTeacherOpen}
         setActiveSummary={setActiveSummary} 
         gameState={gameState}
         roomId={roomId}
