@@ -15,7 +15,7 @@ export default function StudentMode({ categories }) {
     gameState, availableCategories, activeMain, activeCategory, activeProblem, currentProblemIdx,
     score, combo, correctCount, firstTryCount, wrongAttempts, selectedIndices, feedbackState, mainContainerRef, lastBonus,
     selectedLevel, filteredProblems, setGameState,
-    selectMainCategory, selectSubCategory, startGame, 
+    selectMainCategory, selectSubCategory, startGame, resumeGame, 
     backToMain, backToSub, backToLevelSelect,
     handlePointerDown, handlePointerMove, handlePointerUp, submitAnswer, nextProblem, resetForRetry,
     addBonusScore
@@ -176,6 +176,7 @@ export default function StudentMode({ categories }) {
         selectMainCategory={selectMainCategory}
         selectSubCategory={selectSubCategory}
         startGame={startGame}
+        resumeGame={resumeGame}
         backToMain={backToMain}
         backToSub={backToSub}
         handleExitToTitle={handleExitToTitle}
