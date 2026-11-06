@@ -18,7 +18,8 @@ const SUB_MAPPING = {
   'VERB': ['verb_transitive', 'verb_tense', 'verb_passive', 'verb_phrasal'],
   'OBJECT': ['obj_svoo', 'obj_verbal', 'obj_clause', 'obj_it'],
   'COMPLEMENT': ['comp_svc', 'comp_svoc', 'comp_causative', 'comp_clause'],
-  'MODIFIER': ['mod_adj', 'mod_adv', 'mod_participle']
+  'MODIFIER': ['mod_adj', 'mod_adv', 'mod_participle'],
+  'CUSTOM': ['custom']
 };
 
 const GRAMMAR_CATEGORIES = [
@@ -182,6 +183,9 @@ export default function MenuScreen({
       { id: 'OBJECT', title: '目的語マスター', desc: '動作の対象を見極めろ！', bg: "bg-[#fbbf24]", text: "text-[#78350f]" },
       { id: 'COMPLEMENT', title: '補語マスター', desc: 'SやOのイコール状態を暴け！', bg: "bg-[#7ee2b8]", text: "text-[#065f46]" },
       { id: 'MODIFIER', title: '修飾語マスター', desc: '文を長くする飾りを仕分けろ！', bg: "bg-[#8bbff5]", text: "text-[#1d4ed8]" },
+       ...(availableCategories.some(c => c.categoryId === 'custom' && c.problems?.length)
+         ? [{ id: 'CUSTOM', title: '先生のオリジナル課題', desc: 'この端末で作成した問題', bg: 'bg-[#5eead4]', text: 'text-[#134e4a]' }]
+         : []),
     ];
 
     return (
@@ -543,7 +547,9 @@ export default function MenuScreen({
           <div className="flex flex-col gap-6">
             {levels.map((lvl) => {
               const levelKey = lvl.num === 1 ? '-b-' : lvl.num === 2 ? '-i-' : '-a-';
-              const hasProblems = activeCategory.problems.some(p => p.id.includes(levelKey));
+              const hasProblems = activeCategory.categoryId === 'custom'
+                ? lvl.num === 1 && activeCategory.problems.length > 0
+                : activeCategory.problems.some(p => typeof p.id === 'string' && p.id.includes(levelKey));
 
               return (
                 <motion.div 
