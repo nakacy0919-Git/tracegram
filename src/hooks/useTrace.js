@@ -2,6 +2,8 @@ import { playTraceSound } from '../lib/traceAudio';
 import { useState, useEffect, useRef } from 'react';
 import { getProblemLevel } from '../data/mockData';
 
+const SESSION_KEY = 'tracegram_active_session';
+
 export function useTrace(categories) {
   const [gameState, setGameState] = useState('main_select'); 
   const [activeMain, setActiveMain] = useState(null);
@@ -101,6 +103,51 @@ export function useTrace(categories) {
     return true;
   };
 
+  const resumeGame = (course, saved) => {
+    if (!course?.problems || !saved || saved.categoryId !== course.categoryId || !Array.isArray(saved.problemIds)) return false;
+    const byId = new Map(course.problems.map(p => [p.id, p]));
+    const problems = saved.problemIds.map(id => byId.get(id)).filter(Boolean);
+    if (problems.length !== saved.problemIds.length || !problems.length) return false;
+    const index = Math.min(Math.max(0, Number(saved.index) || 0), problems.length - 1);
+    clearAdvance();
+    selectedIndicesRef.current = [];
+    feedbackRef.current = 'idle';
+    failedProblemIdsRef.current = new Set();
+    draggingRef.current = false;
+    setActiveCategory(course);
+    setSelectedLevel(saved.level || 1);
+    setFilteredProblems(problems);
+    setCurrentProblemIdx(index);
+    setActiveProblem(problems[index]);
+    setScore(Number(saved.score) || 0);
+    setCombo(Number(saved.combo) || 0);
+    setCorrectCount(Number(saved.correctCount) || 0);
+    setFirstTryCount(Number(saved.firstTryCount) || 0);
+    setWrongAttempts(Number(saved.wrongAttempts) || 0);
+    setSelectedIndices([]);
+    setFeedbackState('idle');
+    setGameState('game');
+    return true;
+  };
+
+  useEffect(() => {
+    if (gameState !== 'game' || !activeCategory?.categoryId || !filteredProblems.length) return;
+    try {
+      localStorage.setItem(SESSION_KEY, JSON.stringify({
+        categoryId: activeCategory.categoryId,
+        level: selectedLevel,
+        problemIds: filteredProblems.map(p => p.id),
+        index: currentProblemIdx,
+        score,
+        combo,
+        correctCount,
+        firstTryCount,
+        wrongAttempts,
+        at: Date.now(),
+      }));
+    } catch {}
+  }, [gameState, activeCategory, selectedLevel, filteredProblems, currentProblemIdx, score, combo, correctCount, firstTryCount, wrongAttempts]);
+
   const backToMain = () => {
     setActiveMain(null);
     setGameState('main_select');
@@ -133,6 +180,7 @@ export function useTrace(categories) {
     if (currentProblemIdx + 1 < filteredProblems.length) {
       setCurrentProblemIdx(currentProblemIdx + 1);
     } else {
+      try { localStorage.removeItem(SESSION_KEY); } catch {}
       setGameState('result');
     }
   };
@@ -267,7 +315,7 @@ export function useTrace(categories) {
     gameState, availableCategories: categories, activeMain, activeCategory, activeProblem,
     currentProblemIdx, score, combo, correctCount, firstTryCount, wrongAttempts, selectedIndices, feedbackState,
     mainContainerRef, lastBonus, selectedLevel, filteredProblems,
-    setGameState, selectMainCategory, selectSubCategory, startGame,
+    setGameState, selectMainCategory, selectSubCategory, startGame, resumeGame,
     backToMain, backToSub, backToLevelSelect,
     handlePointerDown, handlePointerMove, handlePointerUp,
     submitAnswer, nextProblem, resetForRetry, addBonusScore
