@@ -69,7 +69,8 @@ export default function StudentMode({ categories }) {
 
         const now = ctx.currentTime;
         playNote(880, now, 0.4); 
-        playNote(1108.73, now + 0.1, 0.6); 
+        playNote(1108.73, now + 0.1, 0.6);
+        setTimeout(() => ctx.close().catch(() => {}), 850); 
       } catch (e) {
         console.error("Audio playback failed", e);
       }
