@@ -107,7 +107,7 @@ export default function TeacherMode({ addCustomProblem }) {
   };
 
   return (
-    <div className="tg-workspace flex-1 p-4 md:p-8 overflow-y-auto touch-none" onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onTouchMove={handlePointerMove} onTouchEnd={handlePointerUp}>
+    <div className="tg-workspace flex-1 p-4 md:p-8 overflow-y-auto" onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onTouchMove={handlePointerMove} onTouchEnd={handlePointerUp}>
       <div className="max-w-4xl mx-auto mt-6">
         <h2 className="tg-serif text-2xl md:text-3xl font-bold text-[#31503a] mb-8 text-center">問題作成（先生モード）</h2>
 
@@ -134,7 +134,7 @@ export default function TeacherMode({ addCustomProblem }) {
               </button>
             </div>
             
-            <div className="tg-note flex flex-wrap gap-x-2 gap-y-3 p-4 md:p-6 bg-[#f7f5eb] rounded-xl border border-[#d7ddce] mb-8">
+            <div className="tg-note touch-none flex flex-wrap gap-x-2 gap-y-3 p-4 md:p-6 bg-[#f7f5eb] rounded-xl border border-[#d7ddce] mb-8">
               {tokens.map((token, idx) => {
                 const isSelected = selectedIndices.includes(idx);
                 const isGlowing = modifiedIndices.includes(idx); // ★ 複数選択に対応
