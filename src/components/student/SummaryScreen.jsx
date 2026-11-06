@@ -67,6 +67,13 @@ export default function SummaryScreen({ onExit, summaryData }) {
     setTraceFeedback('idle');
   }, [currentTaskIdx, currentPhase, setSelectedIndices, setTraceFeedback]);
 
+  useEffect(() => {
+    // 別の学習モードを選択したら先頭の段落から始める。
+    setCurrentPhase('paragraphs');
+    setCurrentParagraphIdx(0);
+    setCurrentTaskIdx(0);
+  }, [currentMode]);
+
   const handleSplitMove = (clientX) => {
     if (!isDraggingSplit || !containerRef.current) return;
     const containerRect = containerRef.current.getBoundingClientRect();
@@ -260,7 +267,7 @@ export default function SummaryScreen({ onExit, summaryData }) {
             <span className="text-lg font-black text-slate-700">{summaryData.title}</span>
           </div>
         </div>
-        <div className="text-sm font-black text-slate-400">要約チャレンジモード</div>
+        <div className="text-sm font-black text-slate-400 hidden md:block">{modesList.find(m => m.id === currentMode)?.label || "長文学習"}</div>
       </div>
 
       <div className="bg-white border-b border-slate-200 px-6 py-2 flex gap-2 overflow-x-auto z-20 flex-shrink-0 shadow-sm">
@@ -283,9 +290,10 @@ export default function SummaryScreen({ onExit, summaryData }) {
         })}
       </div>
 
-      <div ref={containerRef} className={`flex-1 flex w-full h-full overflow-hidden relative ${isSwapped ? 'flex-row-reverse' : 'flex-row'}`}>
+      <div ref={containerRef} style={{ '--left-pane-width': `${leftWidth}%`, '--right-pane-width': `${100 - leftWidth}%` }}
+        className={`flex-1 flex w-full h-full min-h-0 overflow-y-auto lg:overflow-hidden relative ${isSwapped ? 'flex-col-reverse lg:flex-row-reverse' : 'flex-col lg:flex-row'}`}>
         
-        <div style={{ width: `${leftWidth}%` }} className="h-full">
+        <div className="w-full lg:w-[var(--left-pane-width)] h-[42dvh] lg:h-full flex-shrink-0">
           <ReadingPane 
             summaryData={summaryData}
             currentPhase={currentPhase}
@@ -307,14 +315,14 @@ export default function SummaryScreen({ onExit, summaryData }) {
           />
         </div>
 
-        <div onMouseDown={() => setIsDraggingSplit(true)} onTouchStart={() => setIsDraggingSplit(true)} className="w-4 flex flex-col items-center justify-center bg-slate-200/50 hover:bg-indigo-200 cursor-col-resize group transition-colors shadow-inner z-10">
+        <div onMouseDown={() => setIsDraggingSplit(true)} onTouchStart={() => setIsDraggingSplit(true)} className="hidden lg:flex w-4 flex-col items-center justify-center bg-slate-200/50 hover:bg-indigo-200 cursor-col-resize group transition-colors shadow-inner z-10">
           <div className="h-16 w-1.5 bg-slate-400 group-hover:bg-indigo-500 rounded-full flex items-center justify-center transition-colors">
             <GripVertical size={12} className="text-white opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
         </div>
 
-        <div style={{ width: `${100 - leftWidth}%` }} className="h-full">
-          <div className="h-full overflow-y-auto bg-slate-100 p-6 md:p-10 shadow-inner flex flex-col">
+        <div className="w-full lg:w-[var(--right-pane-width)] min-h-[52dvh] lg:min-h-0 lg:h-full flex-shrink-0">
+          <div className="h-full overflow-y-auto bg-slate-100 p-4 md:p-6 shadow-inner flex flex-col">
             <MissionPane 
               currentMode={currentMode}
               currentPhase={currentPhase}

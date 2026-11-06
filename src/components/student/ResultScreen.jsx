@@ -11,9 +11,12 @@ export default function ResultScreen({
   activeCategory,
   selectedLevel,
   correctCount,
+  firstTryCount = 0,
+  wrongAttempts = 0,
   totalCount,
   onBackToLobby,
-  onBackToLevelSelect
+  onBackToLevelSelect,
+  onBackToHome
 }) {
   const sortedPlayers = Object.values(playersData || {}).sort((a, b) => b.score - a.score);
   
@@ -35,6 +38,8 @@ export default function ResultScreen({
           level: selectedLevel,
           score: score,
           correctCount: correctCount || 0,
+          firstTryCount: firstTryCount || 0,
+          wrongAttempts: wrongAttempts || 0,
           totalCount: totalCount || 0
         };
 
@@ -44,7 +49,7 @@ export default function ResultScreen({
         console.error("Failed to save learning log", e);
       }
     }
-  }, [isMultiplayer, activeCategory, selectedLevel, score, correctCount, totalCount]);
+  }, [isMultiplayer, activeCategory, selectedLevel, score, correctCount, firstTryCount, wrongAttempts, totalCount]);
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-12 z-10 relative overflow-y-auto">
@@ -107,12 +112,30 @@ export default function ResultScreen({
           </div>
         )}
 
-        <button 
+        {!isMultiplayer && (
+          <div className="grid grid-cols-2 gap-3 mb-6 text-left">
+            <div className="bg-white rounded-2xl p-4 border border-slate-200">
+              <p className="text-xs font-bold text-slate-500">初回正答率</p>
+              <p className="text-2xl font-black text-cyan-700">{totalCount ? Math.round(firstTryCount / totalCount * 100) : 0}%</p>
+            </div>
+            <div className="bg-white rounded-2xl p-4 border border-slate-200">
+              <p className="text-xs font-bold text-slate-500">誤答した回数</p>
+              <p className="text-2xl font-black text-amber-600">{wrongAttempts} 回</p>
+            </div>
+          </div>
+        )}
+        <button
           onClick={isMultiplayer ? onBackToLobby : onBackToLevelSelect} 
           className="mx-auto px-8 py-5 font-black text-2xl flex items-center justify-center gap-3 bg-white hover:bg-slate-50 text-slate-700 transition-transform hover:scale-105 active:scale-95 rounded-2xl shadow-md border-2 border-slate-200"
         >
           <ArrowLeft size={28} /> {isMultiplayer ? "ロビーに戻る" : "レベル選択へ戻る"}
         </button>
+        {!isMultiplayer && onBackToHome && (
+          <button type="button" onClick={onBackToHome}
+            className="mt-3 mx-auto px-5 py-3 text-sm font-bold text-cyan-700 underline hover:text-cyan-600">
+            学習ホームへ戻る
+          </button>
+        )}
       </div>
     </div>
   );

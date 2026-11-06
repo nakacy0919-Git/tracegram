@@ -1,26 +1,6 @@
+import { playTraceSound } from '../lib/traceAudio';
+import { updateTokenSelection, sameSelectedIndices } from '../lib/traceSelection';
 import { useState, useEffect } from 'react';
-
-// 🎵 なぞったときの効果音
-const playTraceSound = (count, isDeselect = false) => {
-  try {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContext) return;
-    const ctx = new AudioContext();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.type = 'triangle';
-    const baseFreq = isDeselect ? 300 : 440;
-    osc.frequency.setValueAtTime(baseFreq + (count * 30), ctx.currentTime);
-    gain.gain.setValueAtTime(0.1, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.1);
-  } catch (e) {
-    console.warn("Audio play failed", e);
-  }
-};
 
 export function useSummaryTrace(currentTask, currentPhase) {
   const [selectedIndices, setSelectedIndices] = useState([]);
@@ -33,14 +13,9 @@ export function useSummaryTrace(currentTask, currentPhase) {
 
   const updateTraceSelection = (idx, mode) => {
     setSelectedIndices(prev => {
-      if (mode === 'select' && !prev.includes(idx)) {
-        playTraceSound(prev.length);
-        return [...prev, idx].sort((a, b) => a - b);
-      } else if (mode === 'deselect' && prev.includes(idx)) {
-        playTraceSound(0, true);
-        return prev.filter(i => i !== idx);
-      }
-      return prev;
+      const next = updateTokenSelection(prev, idx, mode);
+      if (next !== prev) playTraceSound(prev.length, mode === 'deselect');
+      return next;
     });
   };
 
@@ -107,7 +82,7 @@ export function useSummaryTrace(currentTask, currentPhase) {
       partial = currentTask.partialIndices || [];
     }
 
-    const isPerfect = JSON.stringify(selectedIndices) === JSON.stringify(target);
+    const isPerfect = sameSelectedIndices(selectedIndices, target);
     const isPartial = selectedIndices.some(idx => target.includes(idx) || partial.includes(idx));
 
     if (isPerfect) setTraceFeedback('correct');

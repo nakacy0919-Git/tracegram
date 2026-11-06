@@ -1,30 +1,9 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { playTraceSound } from '../lib/traceAudio';
+import { updateTokenSelection, sameSelectedIndices } from '../lib/traceSelection';
+import { useState, useEffect, useRef } from 'react';
+import { getProblemLevel } from '../data/mockData';
 
-// 🎵 オーディオコンテキストは使い回し、長時間の音読学習でリソースを使い切らない。
-let traceAudioContext = null;
-const playTraceSound = (count, isDeselect = false) => {
-  try {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContext) return;
-    const ctx = traceAudioContext && traceAudioContext.state !== 'closed'
-      ? traceAudioContext : new AudioContext();
-    traceAudioContext = ctx;
-    if (ctx.state === 'suspended') ctx.resume().catch(() => {});
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.type = 'triangle';
-    const baseFreq = isDeselect ? 300 : 440;
-    osc.frequency.setValueAtTime(baseFreq + (count * 30), ctx.currentTime);
-    gain.gain.setValueAtTime(0.1, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.1);
-  } catch (e) {
-    console.warn("Audio play failed", e);
-  }
-};
+const SESSION_KEY = 'tracegram_active_session';
 
 export function useTrace(categories) {
   const [gameState, setGameState] = useState('main_select'); 
@@ -40,6 +19,9 @@ export function useTrace(categories) {
   const [combo, setCombo] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [lastBonus, setLastBonus] = useState(0);
+  const [firstTryCount, setFirstTryCount] = useState(0);
+  const [wrongAttempts, setWrongAttempts] = useState(0);
+  const failedProblemIdsRef = useRef(new Set());
 
   const [selectedIndices, setSelectedIndices] = useState([]);
   const [feedbackState, setFeedbackState] = useState('idle'); 
@@ -84,71 +66,89 @@ export function useTrace(categories) {
     setGameState('level_select');
   };
 
-  const startGame = (level, questionCount) => {
-    setSelectedLevel(level);
-    
-    let extractedProblems = [];
-    
-    if (activeCategory) {
-      if (activeCategory.problems) {
-        if (typeof activeCategory.problems === 'object' && !Array.isArray(activeCategory.problems)) {
-          extractedProblems = activeCategory.problems[level] || activeCategory.problems[String(level)] || [];
-        } else if (Array.isArray(activeCategory.problems)) {
-          const hasLevelProp = activeCategory.problems.some(p => p && p.level !== undefined);
-          if (hasLevelProp) {
-            extractedProblems = activeCategory.problems.filter(p => p && String(p.level) === String(level));
-          } else {
-            extractedProblems = activeCategory.problems;
-          }
-        }
-      } else if (activeCategory[level] && Array.isArray(activeCategory[level])) {
-        extractedProblems = activeCategory[level];
-      } else if (activeCategory[String(level)] && Array.isArray(activeCategory[String(level)])) {
-        extractedProblems = activeCategory[String(level)];
-      } else if (activeCategory.levels && activeCategory.levels[level]) {
-        extractedProblems = activeCategory.levels[level].problems || activeCategory.levels[level] || [];
-      } else if (activeCategory.levels && activeCategory.levels[String(level)]) {
-        extractedProblems = activeCategory.levels[String(level)].problems || activeCategory.levels[String(level)] || [];
-      }
-    }
 
-    if ((!extractedProblems || extractedProblems.length === 0) && activeCategory) {
-      const keys = Object.keys(activeCategory);
-      for (const key of keys) {
-        if (Array.isArray(activeCategory[key]) && activeCategory[key].length > 0) {
-          extractedProblems = activeCategory[key];
-          break;
-        }
-      }
-    }
+  const startGame = (level, questionCount = 10, categoryOverride = null) => {
+    const course = categoryOverride || activeCategory;
+    if (!course?.problems || !Array.isArray(course.problems)) return false;
+    let extracted = level === 'all' ? [...course.problems] :
+      course.problems.filter(problem => getProblemLevel(problem) === Number(level));
+    if (!extracted.length) return false;
 
-    let finalProblems = [...(extractedProblems || [])];
-    
-    if (finalProblems.length > 0) {
-      for (let i = finalProblems.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [finalProblems[i], finalProblems[j]] = [finalProblems[j], finalProblems[i]];
-      }
-      
-      if (questionCount && questionCount !== 'all' && !isNaN(questionCount)) {
-        const limit = parseInt(questionCount, 10);
-        finalProblems = finalProblems.slice(0, limit);
-      }
+    // Uniform difficulty parsing for ID-based and explicit-level exercises.
+    const problems = [...extracted];
+    for (let i = problems.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [problems[i], problems[j]] = [problems[j], problems[i]];
     }
+    const limit = Number.parseInt(questionCount, 10);
+    const finalProblems = Number.isInteger(limit) && limit > 0 ? problems.slice(0, limit) : problems;
 
     clearAdvance();
+    failedProblemIdsRef.current = new Set();
     selectedIndicesRef.current = [];
     feedbackRef.current = 'idle';
     draggingRef.current = false;
+    setActiveCategory(course);
+    setSelectedLevel(level);
     setFilteredProblems(finalProblems);
     setCurrentProblemIdx(0);
+    setActiveProblem(finalProblems[0] || null);
     setScore(0);
     setCombo(0);
     setCorrectCount(0);
+    setFirstTryCount(0);
+    setWrongAttempts(0);
     setSelectedIndices([]);
     setFeedbackState('idle');
     setGameState('game');
+    return true;
   };
+
+  const resumeGame = (course, saved) => {
+    if (!course?.problems || !saved || saved.categoryId !== course.categoryId || !Array.isArray(saved.problemIds)) return false;
+    const byId = new Map(course.problems.map(p => [p.id, p]));
+    const problems = saved.problemIds.map(id => byId.get(id)).filter(Boolean);
+    if (problems.length !== saved.problemIds.length || !problems.length) return false;
+    const index = Math.min(Math.max(0, Number(saved.index) || 0), problems.length - 1);
+    clearAdvance();
+    selectedIndicesRef.current = [];
+    feedbackRef.current = 'idle';
+    failedProblemIdsRef.current = new Set((Array.isArray(saved.failedProblemIds) ? saved.failedProblemIds : []).filter(id => typeof id === 'string'));
+    draggingRef.current = false;
+    setActiveCategory(course);
+    setSelectedLevel(saved.level || 1);
+    setFilteredProblems(problems);
+    setCurrentProblemIdx(index);
+    setActiveProblem(problems[index]);
+    setScore(Number(saved.score) || 0);
+    setCombo(Number(saved.combo) || 0);
+    setCorrectCount(Number(saved.correctCount) || 0);
+    setFirstTryCount(Number(saved.firstTryCount) || 0);
+    setWrongAttempts(Number(saved.wrongAttempts) || 0);
+    setSelectedIndices([]);
+    setFeedbackState('idle');
+    setGameState('game');
+    return true;
+  };
+
+  useEffect(() => {
+    if (gameState !== 'game' || !activeCategory?.categoryId || !filteredProblems.length) return;
+    try {
+      localStorage.setItem(SESSION_KEY, JSON.stringify({
+        categoryId: activeCategory.categoryId,
+        level: selectedLevel,
+        problemIds: filteredProblems.map(p => p.id),
+        index: currentProblemIdx,
+        score,
+        combo,
+        correctCount,
+        firstTryCount,
+        wrongAttempts,
+        failedProblemIds: [...failedProblemIdsRef.current],
+        at: Date.now(),
+      }));
+    } catch {}
+  }, [gameState, activeCategory, selectedLevel, filteredProblems, currentProblemIdx, score, combo, correctCount, firstTryCount, wrongAttempts]);
 
   const backToMain = () => {
     setActiveMain(null);
@@ -182,6 +182,7 @@ export function useTrace(categories) {
     if (currentProblemIdx + 1 < filteredProblems.length) {
       setCurrentProblemIdx(currentProblemIdx + 1);
     } else {
+      try { localStorage.removeItem(SESSION_KEY); } catch {}
       setGameState('result');
     }
   };
@@ -201,13 +202,21 @@ export function useTrace(categories) {
     if (!activeProblem || !chosen.length || feedbackRef.current !== 'idle') return;
     const targets = activeProblem.targetIndices ||
       (activeProblem.targetIndex !== undefined ? [activeProblem.targetIndex] : []);
-    const normalize = (indices) => [...new Set(indices)].sort((a, b) => a - b);
-    const actual = normalize(chosen);
-    const expected = normalize(targets);
-    const perfect = actual.length === expected.length &&
-      actual.every((index, i) => index === expected[i]);
+    const perfect = sameSelectedIndices(chosen, targets);
 
     if (perfect) {
+      if (!failedProblemIdsRef.current.has(activeProblem.id)) {
+        setFirstTryCount(prev => prev + 1);
+      }
+      if (activeCategory?.categoryId === 'review' && activeProblem.id) {
+        try {
+          const saved = JSON.parse(localStorage.getItem('tracegram_mistakes') || '{}');
+          if (saved && typeof saved === 'object') {
+            delete saved[activeProblem.id];
+            localStorage.setItem('tracegram_mistakes', JSON.stringify(saved));
+          }
+        } catch {}
+      }
       feedbackRef.current = 'correct';
       setFeedbackState('correct');
       setScore(prev => prev + 1000 + combo * 100);
@@ -216,6 +225,17 @@ export function useTrace(categories) {
       // 正解の光と音を楽しめる長さを確保。画面移動時はタイマーを取り消す。
       advanceTimerRef.current = setTimeout(() => nextProblem(), 900);
     } else {
+      failedProblemIdsRef.current.add(activeProblem.id);
+      setWrongAttempts(prev => prev + 1);
+      if (activeProblem.id) {
+        try {
+          const saved = JSON.parse(localStorage.getItem('tracegram_mistakes') || '{}');
+          const valid = saved && typeof saved === 'object' && !Array.isArray(saved) ? saved : {};
+          valid[activeProblem.id] = { count: Math.min(999, (valid[activeProblem.id]?.count || 0) + 1), at: Date.now() };
+          const entries = Object.entries(valid).sort((a,b)=> (b[1].at || 0) - (a[1].at || 0)).slice(0, 300);
+          localStorage.setItem('tracegram_mistakes', JSON.stringify(Object.fromEntries(entries)));
+        } catch {}
+      }
       feedbackRef.current = 'wrong';
       setFeedbackState('wrong');
       setCombo(0);
@@ -233,15 +253,9 @@ export function useTrace(categories) {
     setDragMode(newMode);
     dragModeRef.current = newMode;
     updateSelection(prev => {
-      if (newMode === 'select' && !prev.includes(idx)) {
-        playTraceSound(prev.length);
-        return [...prev, idx].sort((a,b) => a-b);
-      }
-      if (newMode === 'deselect' && prev.includes(idx)) {
-        playTraceSound(0, true);
-        return prev.filter(i => i !== idx);
-      }
-      return prev;
+      const next = updateTokenSelection(prev, idx, newMode);
+      if (next !== prev) playTraceSound(prev.length, newMode === 'deselect');
+      return next;
     });
   };
 
@@ -253,15 +267,9 @@ export function useTrace(categories) {
     const idx = Number(token.dataset.tokenIdx);
     if (!Number.isInteger(idx) || idx < 0 || idx >= (activeProblem?.tokens?.length || 0)) return;
     updateSelection(prev => {
-      if (dragModeRef.current === 'select' && !prev.includes(idx)) {
-        playTraceSound(prev.length);
-        return [...prev, idx].sort((a,b) => a-b);
-      }
-      if (dragModeRef.current === 'deselect' && prev.includes(idx)) {
-        playTraceSound(0, true);
-        return prev.filter(i => i !== idx);
-      }
-      return prev;
+      const next = updateTokenSelection(prev, idx, dragModeRef.current);
+      if (next !== prev) playTraceSound(prev.length, dragModeRef.current === 'deselect');
+      return next;
     });
   };
 
@@ -291,9 +299,9 @@ export function useTrace(categories) {
 
   return {
     gameState, availableCategories: categories, activeMain, activeCategory, activeProblem,
-    currentProblemIdx, score, combo, correctCount, selectedIndices, feedbackState,
+    currentProblemIdx, score, combo, correctCount, firstTryCount, wrongAttempts, selectedIndices, feedbackState,
     mainContainerRef, lastBonus, selectedLevel, filteredProblems,
-    setGameState, selectMainCategory, selectSubCategory, startGame,
+    setGameState, selectMainCategory, selectSubCategory, startGame, resumeGame,
     backToMain, backToSub, backToLevelSelect,
     handlePointerDown, handlePointerMove, handlePointerUp,
     submitAnswer, nextProblem, resetForRetry, addBonusScore

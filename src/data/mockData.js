@@ -29,11 +29,13 @@ import { compClauseCategory } from './categories/comp_clause';
 import { participleCategory } from './categories/participle'; // ← mod_adj の代わり
 import { modAdvCategory } from './categories/mod_adv';
 import { modParticipleCategory } from './categories/mod_participle';
+import { modAdjCategory } from './categories/mod_adj';
+import { relativeClauseCategory } from './categories/relativeClause';
 
 // ==========================================
 // 2. アプリのメニューに表示するリスト
 // ==========================================
-export const PROBLEM_SETS = [
+const REGISTERED_SETS = [
   // 🔰 0. BASIC (基礎固め)
   { categoryId: 'basic_find_verb', title: 'Step 1: 動詞(V)の発見', description: '長い文の中から「動詞」だけを見つけ出す特訓', problems: basicFindVerbCategory.problems },
   { categoryId: 'basic_remove_m', title: 'Step 2: 飾り(M)を捨てる', description: '前置詞のカタマリをなぞって除外する特訓', problems: basicRemoveMCategory.problems },
@@ -68,4 +70,44 @@ export const PROBLEM_SETS = [
   { categoryId: 'mod_adj', title: 'Sub-1: 形容詞のカタマリ', description: '名詞を修飾する分詞・関係詞・同格のthat', problems: participleCategory.problems },
   { categoryId: 'mod_adv', title: 'Sub-2: 副詞のカタマリ', description: '動詞・文全体を修飾する前置詞句や副詞節', problems: modAdvCategory.problems },
   { categoryId: 'mod_participle', title: 'Sub-3: 分詞構文', description: 'Seeing the police... のように現れる副詞句', problems: modParticipleCategory.problems },
+  { categoryId: 'mod_adj_extended', title: '形容詞句・関係詞の応用', description: '後置修飾・分詞・関係詞をより深く学ぶ', problems: modAdjCategory.problems },
+  { categoryId: 'relative_clause', title: '関係詞節マスター', description: '関係代名詞・関係副詞のまとまりを見つける', problems: relativeClauseCategory.problems },
 ];
+ 
+// カタログはここだけを情報源にする。メニュー、難易度、検索、復習で共用する。
+export const CATALOG_GROUPS = [
+  { id: 'BASIC', title: '基礎', subtitle: '動詞の発見と5文型', accent: 'rose' },
+  { id: 'SUBJECT', title: '主語 S', subtitle: '長い主語・名詞節', accent: 'violet' },
+  { id: 'VERB', title: '動詞 V', subtitle: '時制・受動態・群動詞', accent: 'amber' },
+  { id: 'OBJECT', title: '目的語 O', subtitle: '目的語・準動詞・名詞節', accent: 'blue' },
+  { id: 'COMPLEMENT', title: '補語 C', subtitle: '第2・第5文型', accent: 'emerald' },
+  { id: 'MODIFIER', title: '修飾語 M', subtitle: '分詞・関係詞・副詞句', accent: 'cyan' },
+  { id: 'CUSTOM', title: '先生の教材', subtitle: 'この端末で作成', accent: 'teal' },
+];
+
+const CATEGORY_GROUPS = {
+  BASIC: ['basic_find_verb', 'basic_remove_m', 'basic_5patterns'],
+  SUBJECT: ['subj_prep', 'subj_verbal', 'subj_clause', 'subj_it', 'subj_inversion'],
+  VERB: ['verb_transitive', 'verb_tense', 'verb_passive', 'verb_phrasal'],
+  OBJECT: ['obj_svoo', 'obj_verbal', 'obj_clause', 'obj_it'],
+  COMPLEMENT: ['comp_svc', 'comp_svoc', 'comp_causative', 'comp_clause'],
+  MODIFIER: ['mod_adj', 'mod_adv', 'mod_participle', 'mod_adj_extended', 'relative_clause'],
+  CUSTOM: ['custom'],
+};
+
+export const getCategoryGroup = (id) =>
+  Object.keys(CATEGORY_GROUPS).find(group => CATEGORY_GROUPS[group].includes(id)) || 'CUSTOM';
+
+export const getProblemLevel = (problem) => {
+  if (problem && Number.isInteger(Number(problem.level)) &&
+      Number(problem.level) >= 1 && Number(problem.level) <= 3) return Number(problem.level);
+  const match = String(problem?.id || '').match(/-([bia])-\d+$/i);
+  return match ? ({ b: 1, i: 2, a: 3 })[match[1].toLowerCase()] : 1;
+};
+
+// 教材原本は変更せず、画面表示に必要な属性だけ補う。
+export const PROBLEM_SETS = REGISTERED_SETS.map(category => ({
+  ...category,
+  groupId: getCategoryGroup(category.categoryId),
+  problems: category.problems.map(problem => ({ ...problem, level: getProblemLevel(problem) })),
+}));

@@ -1,145 +1,56 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Gamepad2, Crown, LogIn, ArrowRight } from 'lucide-react';
+"use client";
+import React from 'react';
+import { Users, Crown, ArrowLeft, LogIn, ShieldCheck, LoaderCircle, Hash } from 'lucide-react';
 
 export default function TitleScreen({
-  hasSeenSplash, // ← ★追加
-  onSplashComplete, // ← ★追加
-  onSinglePlayer,
-  onCreateRoom,
-  joinPin,
-  setJoinPin,
-  onJoinRoom,
-  connectionStatus,
-  errorMessage
+  onSinglePlayer, onCreateRoom, joinPin, setJoinPin, onJoinRoom,
+  connectionStatus, errorMessage,
 }) {
-  // ▼ 変更：既に見たことがあれば最初から 'menu' にする
-  const [step, setStep] = useState(hasSeenSplash ? 'menu' : 'splash');
-
+  const connecting = connectionStatus === 'connecting';
   return (
-    <AnimatePresence mode="wait">
-      {step === 'splash' ? (
-        <motion.div 
-          key="splash"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
-          className="!fixed inset-0 !z-[9999] flex flex-col items-center justify-center overflow-hidden bg-slate-900 w-full h-full"
-        >
-          <motion.div 
-            animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }} 
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-1/4 left-1/4 w-[30rem] h-[30rem] bg-cyan-600/30 rounded-full blur-[100px] pointer-events-none"
-          />
-          <motion.div 
-            animate={{ scale: [1, 1.5, 1], opacity: [0.1, 0.3, 0.1] }} 
-            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-            className="absolute bottom-1/4 right-1/4 w-[40rem] h-[40rem] bg-indigo-600/30 rounded-full blur-[120px] pointer-events-none"
-          />
-
-          <div className="relative z-10 flex flex-col items-center">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, delay: 0.2, ease: "easeOut" }}
-              className="mb-8"
-            >
-              <img 
-                src="/tracegramlogo.png" 
-                alt="TraceGram Logo" 
-                className="w-40 h-40 md:w-56 md:h-56 object-contain drop-shadow-[0_0_30px_rgba(34,211,238,0.3)]" 
-              />
-            </motion.div>
-
-            <motion.h1 
-              initial={{ opacity: 0, letterSpacing: "0px" }}
-              animate={{ opacity: 1, letterSpacing: "8px" }}
-              transition={{ duration: 1.5, delay: 0.6, ease: "easeOut" }}
-              className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-200 to-indigo-300 mb-16 drop-shadow-lg text-center"
-            >
-              TraceGram
-            </motion.h1>
-
-            <motion.button
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(34,211,238,0.4)" }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ duration: 0.8, delay: 1.4 }}
-              onClick={() => {
-                // ▼ 変更：メニューへ移行すると同時に、「見たよ！」という記憶を保存する
-                setStep('menu');
-                if (onSplashComplete) onSplashComplete();
-              }}
-              className="px-10 py-5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md text-white font-bold text-xl md:text-2xl tracking-[0.2em] hover:bg-white/20 transition-all flex items-center gap-4 group shadow-2xl"
-            >
-              Start TraceGram
-              <motion.span 
-                animate={{ x: [0, 5, 0] }} 
-                transition={{ duration: 1.5, repeat: Infinity }}
-                className="text-cyan-300 group-hover:text-white"
-              >
-                <ArrowRight size={28} />
-              </motion.span>
-            </motion.button>
-          </div>
-        </motion.div>
-      ) : (
-        <motion.div 
-          key="menu"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="flex-1 flex flex-col items-center justify-center p-6 bg-slate-50 relative overflow-hidden z-10 w-full h-full"
-        >
-          <div className="text-center mb-16 relative">
-            <h1 className="text-7xl md:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-500 tracking-tighter drop-shadow-sm mb-4">
-              TraceGram
-            </h1>
-            <p className="text-xl md:text-2xl font-bold text-slate-500 tracking-widest">英語の「骨格」をなぞって見つけ出せ！</p>
-          </div>
-
-          <div className="flex flex-col md:flex-row gap-8 w-full max-w-4xl">
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={onSinglePlayer} className="flex-1 bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.08)] border-2 border-slate-100 cursor-pointer flex flex-col items-center justify-center group hover:border-cyan-400 transition-colors">
-              <div className="w-20 h-20 bg-cyan-100 text-cyan-600 rounded-full flex items-center justify-center mb-6 group-hover:bg-cyan-500 group-hover:text-white transition-colors">
-                <Gamepad2 size={40} />
-              </div>
-              <h2 className="text-3xl font-black text-slate-700 mb-2">ひとりで特訓</h2>
-              <p className="text-slate-500 font-bold">自分のペースで構造をマスター</p>
-            </motion.div>
-
-            <div className="flex-1 flex flex-col gap-4">
-              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={onCreateRoom} className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white p-6 rounded-3xl shadow-lg flex items-center gap-4">
-                <div className="bg-white/20 p-3 rounded-full"><Crown size={28} /></div>
-                <div className="text-left">
-                  <div className="text-2xl font-black">対戦ルームを作る</div>
-                  <div className="text-sm font-bold opacity-80">最大4人でのグループ対戦（ホスト）</div>
-                </div>
-              </motion.button>
-
-              <div className="w-full bg-white p-6 rounded-3xl shadow-md border-2 border-slate-100 flex flex-col gap-3">
-                <div className="flex items-center gap-2 text-slate-600 font-black mb-1"><LogIn size={20}/> ルームに参加する</div>
-                <div className="flex gap-2">
-                  <input 
-                    type="number" placeholder="6桁のID" value={joinPin} onChange={(e) => setJoinPin(e.target.value)}
-                    className="flex-1 bg-slate-100 border-none rounded-xl px-4 text-2xl font-black tracking-widest text-center text-slate-700 focus:ring-4 focus:ring-emerald-400 outline-none"
-                    maxLength={6}
-                  />
-                  <button 
-                    onClick={() => onJoinRoom(joinPin)}
-                    disabled={joinPin.length !== 6 || connectionStatus === 'connecting'}
-                    className="bg-emerald-500 hover:bg-emerald-400 text-white px-6 rounded-xl font-black text-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    入室
-                  </button>
-                </div>
-                {errorMessage && <p className="text-rose-500 text-sm font-bold mt-2">{errorMessage}</p>}
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <div className="min-h-[100dvh] flex-1 overflow-y-auto bg-[#f5f8fc] px-4 py-10">
+      <div className="max-w-3xl mx-auto">
+        <button type="button" onClick={onSinglePlayer} className="inline-flex items-center gap-2 font-bold text-slate-600 bg-white border border-slate-200 rounded-full px-4 py-2 mb-6 hover:bg-slate-100">
+          <ArrowLeft size={17}/> 学習ホームに戻る
+        </button>
+        <div className="rounded-[30px] bg-slate-900 text-white p-7 md:p-10 mb-5">
+          <div className="flex gap-2 items-center text-cyan-300 text-xs font-black mb-2 tracking-widest"><Users size={17}/> TRACEGRAM BATTLE</div>
+          <h1 className="text-3xl md:text-4xl font-black mb-3">友達と、なぞって対戦。</h1>
+          <p className="text-slate-300 leading-relaxed text-sm md:text-base">2〜4人で同じ英文法をトレース。ホストが教材を選んで対戦を始めます。</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <section className="rounded-3xl bg-white border border-slate-200 shadow-sm p-6 space-y-4">
+            <span className="inline-flex p-3 rounded-2xl bg-violet-50 text-violet-700"><Crown size={27}/></span>
+            <h2 className="text-xl font-black text-slate-800">対戦ルームを作る</h2>
+            <p className="text-sm text-slate-500">ルームを作成した後、学習ホームから教材とレベルを選べます。</p>
+            <button type="button" disabled={connecting} onClick={onCreateRoom}
+              className="w-full flex gap-2 items-center justify-center rounded-xl bg-violet-600 hover:bg-violet-500 disabled:bg-slate-300 text-white py-4 font-black">
+              {connecting ? <LoaderCircle className="animate-spin" size={20}/> : <Crown size={20}/>}
+              {connecting ? '接続しています…' : '新しいルームを作成'}
+            </button>
+          </section>
+          <section className="rounded-3xl bg-white border border-slate-200 shadow-sm p-6 space-y-4">
+            <span className="inline-flex p-3 rounded-2xl bg-cyan-50 text-cyan-700"><LogIn size={27}/></span>
+            <h2 className="text-xl font-black text-slate-800">ルームに参加する</h2>
+            <p className="text-sm text-slate-500">ホストが表示する6桁の番号を入力してください。</p>
+            <label className="block text-xs text-slate-500 font-bold" htmlFor="battle-pin">ルーム番号</label>
+            <input id="battle-pin" inputMode="numeric" autoComplete="off" maxLength={6} pattern="[0-9]{6}"
+              value={joinPin} onChange={e=>setJoinPin(e.target.value.replace(/\D/g,'').slice(0,6))}
+              placeholder="123456"
+              className="w-full text-center rounded-xl bg-slate-50 border border-slate-200 px-4 py-3 text-xl tracking-[0.3em] font-black outline-none focus:ring-2 focus:ring-cyan-400"/>
+            <button type="button" disabled={connecting || !/^\d{6}$/.test(joinPin)}
+              onClick={()=>onJoinRoom(joinPin)}
+              className="w-full flex justify-center items-center gap-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 disabled:bg-slate-300 py-4 text-white font-black">
+              <LogIn size={19}/> 参加する
+            </button>
+          </section>
+        </div>
+        {errorMessage && <p role="alert" className="rounded-xl border border-rose-200 bg-rose-50 text-rose-700 mt-5 p-4 font-bold text-sm">{errorMessage}</p>}
+        <div className="flex gap-2 items-start text-slate-500 text-sm mt-6">
+          <ShieldCheck size={19} className="shrink-0"/>
+          ルーム番号を共有する相手とだけ接続してください。現在の対戦スコアは端末側で計算されます。
+        </div>
+      </div>
+    </div>
   );
 }

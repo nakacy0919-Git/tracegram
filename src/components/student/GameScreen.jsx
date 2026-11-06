@@ -128,9 +128,12 @@ export default function GameScreen({
   const roleColors = getElementColor(activeProblem.targetRole);
   const roleInitial = (activeProblem.targetRole || '?').charAt(0).toUpperCase();
   const sortedPlayers = Object.values(playersData || {}).sort((a, b) => b.score - a.score);
+  const targets = [...(activeProblem.targetIndices || (activeProblem.targetIndex !== undefined ? [activeProblem.targetIndex] : []))].sort((a,b)=>a-b);
+  const requiresMultiStroke = targets.some((index, i) => i > 0 && index !== targets[i - 1] + 1);
+  const flowAutoJudge = gameMode === 'flow' && !requiresMultiStroke;
 
   return (
-    <div className="flex-1 flex flex-col relative z-10 w-full overflow-y-auto overflow-x-hidden" ref={mainContainerRef} onPointerMove={handlePointerMove} onPointerUp={() => handlePointerUp(gameMode === 'flow')} onPointerCancel={() => handlePointerUp(false)}>
+    <div className="flex-1 flex flex-col relative z-10 w-full overflow-y-auto overflow-x-hidden" ref={mainContainerRef} onPointerMove={handlePointerMove} onPointerUp={() => handlePointerUp(flowAutoJudge)} onPointerCancel={() => handlePointerUp(false)}>
       
       {isMultiplayer && sortedPlayers.length > 0 && (
         <div className="absolute top-[80px] md:top-[90px] left-0 w-full z-40 flex flex-row flex-wrap justify-center gap-2 md:gap-4 px-2 pointer-events-none">
@@ -182,7 +185,7 @@ export default function GameScreen({
           </div>
         </div>
 
-        {gameMode === 'flow' && <div className="self-start mb-2 px-4 py-1.5 bg-amber-100 text-amber-800 rounded-full text-sm font-black flex items-center gap-2"><Zap size={16} /> 一筆でなぞる → 離した瞬間に判定！</div>}
+        {gameMode === 'flow' && <div className="self-start mb-2 px-4 py-1.5 bg-amber-100 text-amber-800 rounded-full text-sm font-black flex items-center gap-2"><Zap size={16} /> {requiresMultiStroke ? '離れた語句を選んで「判定する」を押そう' : '一筆でなぞる → 離した瞬間に判定！'}</div>}
         <motion.div 
           animate={shake ? { x: [-10, 10, -10, 10, 0] } : {}}
           transition={{ duration: 0.4 }}

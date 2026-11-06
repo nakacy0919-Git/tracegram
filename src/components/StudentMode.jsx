@@ -13,9 +13,9 @@ import SummaryScreen from './student/SummaryScreen';
 export default function StudentMode({ categories }) {
   const {
     gameState, availableCategories, activeMain, activeCategory, activeProblem, currentProblemIdx,
-    score, combo, correctCount, selectedIndices, feedbackState, mainContainerRef, lastBonus,
+    score, combo, correctCount, firstTryCount, wrongAttempts, selectedIndices, feedbackState, mainContainerRef, lastBonus,
     selectedLevel, filteredProblems, setGameState,
-    selectMainCategory, selectSubCategory, startGame, 
+    selectMainCategory, selectSubCategory, startGame, resumeGame, 
     backToMain, backToSub, backToLevelSelect,
     handlePointerDown, handlePointerMove, handlePointerUp, submitAnswer, nextProblem, resetForRetry,
     addBonusScore
@@ -27,19 +27,19 @@ export default function StudentMode({ categories }) {
     createRoom, joinRoom, syncMyScore, startBattle, exitMultiplayer
   } = useMultiplayer();
 
-  const [appScreen, setAppScreen] = useState('title'); 
+  const [appScreen, setAppScreen] = useState('main'); 
   const [joinPin, setJoinPin] = useState('');
   const [battleSetup, setBattleSetup] = useState(null);
   const [pendingBattle, setPendingBattle] = useState(null);
 
-  const [hasSeenSplash, setHasSeenSplash] = useState(false);
+  const [hasSeenSplash, setHasSeenSplash] = useState(true);
   const [gameMode, setGameMode] = useState('flow');
 
   // 🌟 長文データを管理するState
   const [activeSummary, setActiveSummary] = useState(null);
 
   // 🌟 【超重要】メニュー画面の状態をホイスティング（画面を切り替えても記憶しておくため）
-  const [menuViewMode, setMenuViewMode] = useState('element'); 
+  const [menuViewMode, setMenuViewMode] = useState('home'); 
   const [summaryStep, setSummaryStep] = useState('genres');
   const [selectedGenreId, setSelectedGenreId] = useState(null);
   const [selectedArticle, setSelectedArticle] = useState(null);
@@ -98,9 +98,16 @@ export default function StudentMode({ categories }) {
     }
   }, [activeCategory, pendingBattle, battleConfig, startGame]);
 
+  useEffect(() => {
+    if (appScreen === 'title' && connectionStatus === 'connected') {
+      setAppScreen(isHost ? 'main' : 'lobby');
+    }
+  }, [appScreen, connectionStatus, isHost]);
+
   const handleExitToTitle = () => {
     exitMultiplayer();
-    setAppScreen('title');
+    setAppScreen('main');
+    setMenuViewMode('home');
     setGameState('main_select');
   };
 
@@ -109,11 +116,11 @@ export default function StudentMode({ categories }) {
       <TitleScreen 
         hasSeenSplash={hasSeenSplash}
         onSplashComplete={() => setHasSeenSplash(true)}
-        onSinglePlayer={() => setAppScreen('main')} // 'game'から'main'に変更して確実にMenuScreenへ
-        onCreateRoom={() => { createRoom(); setAppScreen('main'); }}
+        onSinglePlayer={() => setAppScreen('main')}
+        onCreateRoom={() => createRoom()}
         joinPin={joinPin}
         setJoinPin={setJoinPin}
-        onJoinRoom={(pin) => { joinRoom(pin); setAppScreen('lobby'); }}
+        onJoinRoom={(pin) => joinRoom(pin)}
         connectionStatus={connectionStatus}
         errorMessage={errorMessage}
       />
@@ -131,7 +138,7 @@ export default function StudentMode({ categories }) {
         onStartBattle={() => {
           if (Object.values(playersData).length >= 2) {
             startBattle(battleSetup);
-            startGame(battleSetup.level);
+            startGame(battleSetup.level, battleSetup.questionCount || 10, battleSetup.subCategory);
             setAppScreen('game');
           }
         }}
@@ -158,6 +165,8 @@ export default function StudentMode({ categories }) {
         setGameMode={setGameMode}
         setActiveSummary={setActiveSummary} 
         gameState={gameState}
+        roomId={roomId}
+        connectionStatus={connectionStatus}
         availableCategories={availableCategories}
         activeMain={activeMain}
         activeCategory={activeCategory}
@@ -167,6 +176,7 @@ export default function StudentMode({ categories }) {
         selectMainCategory={selectMainCategory}
         selectSubCategory={selectSubCategory}
         startGame={startGame}
+        resumeGame={resumeGame}
         backToMain={backToMain}
         backToSub={backToSub}
         handleExitToTitle={handleExitToTitle}
@@ -194,9 +204,12 @@ export default function StudentMode({ categories }) {
         activeCategory={activeCategory}
         selectedLevel={selectedLevel}
         correctCount={correctCount}
+        firstTryCount={firstTryCount}
+        wrongAttempts={wrongAttempts}
         totalCount={filteredProblems?.length || 0}
         onBackToLobby={() => setAppScreen('lobby')}
         onBackToLevelSelect={backToLevelSelect}
+        onBackToHome={() => { backToMain(); setMenuViewMode('home'); setAppScreen('main'); }}
       />
     );
   }
