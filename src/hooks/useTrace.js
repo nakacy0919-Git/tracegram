@@ -112,7 +112,7 @@ export function useTrace(categories) {
     clearAdvance();
     selectedIndicesRef.current = [];
     feedbackRef.current = 'idle';
-    failedProblemIdsRef.current = new Set();
+    failedProblemIdsRef.current = new Set((Array.isArray(saved.failedProblemIds) ? saved.failedProblemIds : []).filter(id => typeof id === 'string'));
     draggingRef.current = false;
     setActiveCategory(course);
     setSelectedLevel(saved.level || 1);
@@ -143,6 +143,7 @@ export function useTrace(categories) {
         correctCount,
         firstTryCount,
         wrongAttempts,
+        failedProblemIds: [...failedProblemIdsRef.current],
         at: Date.now(),
       }));
     } catch {}
