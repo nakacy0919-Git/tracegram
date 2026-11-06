@@ -299,7 +299,7 @@ export const relativeClauseCategory = {
     { 
       id: "rel-i-15", 
       tokens: ["He", "didn't", "tell", "me", "the", "reason", "why", "he", "quit."], 
-      targetIndices: [6, 7, 8, 9], 
+      targetIndices: [6, 7, 8], 
       targetRole: "M (関係副詞節)", 
       hint: "【中級】光っている名詞（先行詞）を修飾している関係副詞（why）の塊をなぞってください。", 
       translation: "彼は辞めた理由を私に言わなかった。", 
