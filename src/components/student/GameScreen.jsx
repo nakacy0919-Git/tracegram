@@ -22,6 +22,7 @@ const playSlashSound = () => {
     
     osc.start();
     osc.stop(ctx.currentTime + 0.15);
+    osc.onended = () => { osc.disconnect(); gain.disconnect(); ctx.close().catch(() => {}); };
   } catch (e) {
     console.error("Audio playback failed", e);
   }
