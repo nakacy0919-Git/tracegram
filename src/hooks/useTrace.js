@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { getProblemLevel } from '../data/mockData';
 
 // 🎵 オーディオコンテキストは使い回し、長時間の音読学習でリソースを使い切らない。
 let traceAudioContext = null;
@@ -40,6 +41,9 @@ export function useTrace(categories) {
   const [combo, setCombo] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [lastBonus, setLastBonus] = useState(0);
+  const [firstTryCount, setFirstTryCount] = useState(0);
+  const [wrongAttempts, setWrongAttempts] = useState(0);
+  const failedProblemIdsRef = useRef(new Set());
 
   const [selectedIndices, setSelectedIndices] = useState([]);
   const [feedbackState, setFeedbackState] = useState('idle'); 
@@ -84,70 +88,42 @@ export function useTrace(categories) {
     setGameState('level_select');
   };
 
-  const startGame = (level, questionCount) => {
-    setSelectedLevel(level);
-    
-    let extractedProblems = [];
-    
-    if (activeCategory) {
-      if (activeCategory.problems) {
-        if (typeof activeCategory.problems === 'object' && !Array.isArray(activeCategory.problems)) {
-          extractedProblems = activeCategory.problems[level] || activeCategory.problems[String(level)] || [];
-        } else if (Array.isArray(activeCategory.problems)) {
-          const hasLevelProp = activeCategory.problems.some(p => p && p.level !== undefined);
-          if (hasLevelProp) {
-            extractedProblems = activeCategory.problems.filter(p => p && String(p.level) === String(level));
-          } else {
-            extractedProblems = activeCategory.problems;
-          }
-        }
-      } else if (activeCategory[level] && Array.isArray(activeCategory[level])) {
-        extractedProblems = activeCategory[level];
-      } else if (activeCategory[String(level)] && Array.isArray(activeCategory[String(level)])) {
-        extractedProblems = activeCategory[String(level)];
-      } else if (activeCategory.levels && activeCategory.levels[level]) {
-        extractedProblems = activeCategory.levels[level].problems || activeCategory.levels[level] || [];
-      } else if (activeCategory.levels && activeCategory.levels[String(level)]) {
-        extractedProblems = activeCategory.levels[String(level)].problems || activeCategory.levels[String(level)] || [];
-      }
-    }
 
-    if ((!extractedProblems || extractedProblems.length === 0) && activeCategory) {
-      const keys = Object.keys(activeCategory);
-      for (const key of keys) {
-        if (Array.isArray(activeCategory[key]) && activeCategory[key].length > 0) {
-          extractedProblems = activeCategory[key];
-          break;
-        }
-      }
-    }
+  const startGame = (level, questionCount = 10, categoryOverride = null) => {
+    const course = categoryOverride || activeCategory;
+    if (!course?.problems || !Array.isArray(course.problems)) return false;
+    let extracted = level === 'all' ? [...course.problems] :
+      course.problems.filter(problem => getProblemLevel(problem) === Number(level));
+    if (!extracted.length) return false;
 
-    let finalProblems = [...(extractedProblems || [])];
-    
-    if (finalProblems.length > 0) {
-      for (let i = finalProblems.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [finalProblems[i], finalProblems[j]] = [finalProblems[j], finalProblems[i]];
-      }
-      
-      if (questionCount && questionCount !== 'all' && !isNaN(questionCount)) {
-        const limit = parseInt(questionCount, 10);
-        finalProblems = finalProblems.slice(0, limit);
-      }
+    // Uniform difficulty parsing for ID-based and explicit-level exercises.
+    const problems = [...extracted];
+    for (let i = problems.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [problems[i], problems[j]] = [problems[j], problems[i]];
     }
+    const limit = Number.parseInt(questionCount, 10);
+    const finalProblems = Number.isInteger(limit) && limit > 0 ? problems.slice(0, limit) : problems;
 
     clearAdvance();
+    failedProblemIdsRef.current = new Set();
     selectedIndicesRef.current = [];
     feedbackRef.current = 'idle';
     draggingRef.current = false;
+    setActiveCategory(course);
+    setSelectedLevel(level);
     setFilteredProblems(finalProblems);
     setCurrentProblemIdx(0);
+    setActiveProblem(finalProblems[0] || null);
     setScore(0);
     setCombo(0);
     setCorrectCount(0);
+    setFirstTryCount(0);
+    setWrongAttempts(0);
     setSelectedIndices([]);
     setFeedbackState('idle');
     setGameState('game');
+    return true;
   };
 
   const backToMain = () => {
@@ -208,6 +184,18 @@ export function useTrace(categories) {
       actual.every((index, i) => index === expected[i]);
 
     if (perfect) {
+      if (!failedProblemIdsRef.current.has(activeProblem.id)) {
+        setFirstTryCount(prev => prev + 1);
+      }
+      if (activeCategory?.categoryId === 'review' && activeProblem.id) {
+        try {
+          const saved = JSON.parse(localStorage.getItem('tracegram_mistakes') || '{}');
+          if (saved && typeof saved === 'object') {
+            delete saved[activeProblem.id];
+            localStorage.setItem('tracegram_mistakes', JSON.stringify(saved));
+          }
+        } catch {}
+      }
       feedbackRef.current = 'correct';
       setFeedbackState('correct');
       setScore(prev => prev + 1000 + combo * 100);
@@ -216,6 +204,17 @@ export function useTrace(categories) {
       // 正解の光と音を楽しめる長さを確保。画面移動時はタイマーを取り消す。
       advanceTimerRef.current = setTimeout(() => nextProblem(), 900);
     } else {
+      failedProblemIdsRef.current.add(activeProblem.id);
+      setWrongAttempts(prev => prev + 1);
+      if (activeProblem.id) {
+        try {
+          const saved = JSON.parse(localStorage.getItem('tracegram_mistakes') || '{}');
+          const valid = saved && typeof saved === 'object' && !Array.isArray(saved) ? saved : {};
+          valid[activeProblem.id] = { count: Math.min(999, (valid[activeProblem.id]?.count || 0) + 1), at: Date.now() };
+          const entries = Object.entries(valid).sort((a,b)=> (b[1].at || 0) - (a[1].at || 0)).slice(0, 300);
+          localStorage.setItem('tracegram_mistakes', JSON.stringify(Object.fromEntries(entries)));
+        } catch {}
+      }
       feedbackRef.current = 'wrong';
       setFeedbackState('wrong');
       setCombo(0);
@@ -291,7 +290,7 @@ export function useTrace(categories) {
 
   return {
     gameState, availableCategories: categories, activeMain, activeCategory, activeProblem,
-    currentProblemIdx, score, combo, correctCount, selectedIndices, feedbackState,
+    currentProblemIdx, score, combo, correctCount, firstTryCount, wrongAttempts, selectedIndices, feedbackState,
     mainContainerRef, lastBonus, selectedLevel, filteredProblems,
     setGameState, selectMainCategory, selectSubCategory, startGame,
     backToMain, backToSub, backToLevelSelect,
