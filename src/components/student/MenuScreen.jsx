@@ -45,7 +45,7 @@ function Feature({ icon: Icon, title, caption, theme, onClick, detail }) {
 
 export default function MenuScreen({
   gameMode, setGameMode, setActiveSummary,
-  gameState, availableCategories, activeCategory, isMultiplayer, isHost,
+  gameState, roomId, connectionStatus, availableCategories, activeCategory, isMultiplayer, isHost,
   setAppScreen, selectSubCategory, startGame, backToMain, setBattleSetup,
   menuViewMode, setMenuViewMode, selectedArticle, setSelectedArticle,
 }) {
@@ -55,12 +55,15 @@ export default function MenuScreen({
   const [count, setCount] = useState(10);
   const [last, setLast] = useState(null);
   const [mistakes, setMistakes] = useState({});
+  const [logs, setLogs] = useState([]);
 
   useEffect(() => {
     const stored = safeRead(STORAGE_LAST, null);
     if (stored && typeof stored.categoryId === 'string') setLast(stored);
     const items = safeRead(STORAGE_MISTAKES, {});
     setMistakes(items && typeof items === 'object' && !Array.isArray(items) ? items : {});
+    const learningLogs = safeRead('tracegram_learning_logs', []);
+    setLogs(Array.isArray(learningLogs) ? learningLogs : []);
   }, [gameState]);
 
   const allCategories = useMemo(() => availableCategories.filter(c =>
@@ -74,6 +77,7 @@ export default function MenuScreen({
     return result;
   }, [allCategories]);
   const missedProblems = Object.keys(mistakes).map(id => byProblemId.get(id)).filter(Boolean);
+  const latestLog = logs[logs.length - 1] || null;
   const recentCategory = last && byId.get(last.categoryId);
   const filteredCourses = allCategories.filter(c => {
     if (group !== 'ALL' && (c.groupId || 'CUSTOM') !== group) return false;
@@ -209,12 +213,30 @@ export default function MenuScreen({
 
         {home && (
           <>
+            {isMultiplayer && isHost && (
+              <div className="rounded-xl bg-violet-100 border border-violet-200 px-5 py-4 flex flex-col sm:flex-row gap-3 sm:items-center justify-between">
+                <div className="font-black text-violet-900">対戦ルーム準備完了 <span className="font-medium">— 次に教材を選んでください</span></div>
+                <span className="font-mono tracking-widest font-black bg-white px-4 py-2 rounded-xl text-violet-800 text-lg">ID: {roomId}</span>
+              </div>
+            )}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Feature icon={Layers3} title="文法トレース" caption="主語・動詞・目的語・関係詞などを直感的に分析" theme="grammar" detail={`${allCategories.length}分野・${totalQuestions.toLocaleString()}問`} onClick={()=>go('grammar')}/>
               <Feature icon={BookOpen} title="長文トレース" caption="英文を読みながら構造・読解・要約を学ぶ" theme="reading" detail={`${READING_ARTICLES.length}記事 / 4段階の難易度`} onClick={()=>go('reading')}/>
               <Feature icon={Target} title="苦手克服" caption="前に間違えた英文だけを集中的にトレース" theme="review" detail={`${missedProblems.length}問の復習候補`} onClick={()=>go('review')}/>
-              <Feature icon={Users} title="みんなで対戦" caption="友達と同じ文法問題に挑戦。最大4人まで" theme="battle" onClick={()=>setAppScreen('title')}/>
+              <Feature icon={Users} title="みんなで対戦" caption="友達と同じ文法問題に挑戦。最大4人まで" theme="battle" onClick={()=>isMultiplayer && isHost ? go('grammar') : setAppScreen('title')}/>
             </div>
+            {latestLog && (
+              <div className="grid grid-cols-2 gap-3">
+                <div className="border border-slate-200 rounded-xl bg-white px-4 py-3">
+                  <span className="text-xs text-slate-500 font-bold">前回の初回正答率</span>
+                  <span className="block font-black text-lg text-cyan-700">{latestLog.totalCount ? Math.round((latestLog.firstTryCount ?? latestLog.correctCount ?? 0) / latestLog.totalCount * 100) : 0}%</span>
+                </div>
+                <div className="border border-slate-200 rounded-xl bg-white px-4 py-3">
+                  <span className="text-xs text-slate-500 font-bold">前回の誤答回数</span>
+                  <span className="block font-black text-lg text-amber-700">{latestLog.wrongAttempts ?? '記録なし'}</span>
+                </div>
+              </div>
+            )}
             {recentCategory && (
               <section className="rounded-2xl bg-slate-900 text-white px-5 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div className="flex gap-3 items-center">
