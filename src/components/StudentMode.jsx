@@ -17,7 +17,7 @@ export default function StudentMode({ categories }) {
     selectedLevel, filteredProblems, setGameState,
     selectMainCategory, selectSubCategory, startGame, 
     backToMain, backToSub, backToLevelSelect,
-    handlePointerDown, handlePointerMove, handlePointerUp, submitAnswer, nextProblem,
+    handlePointerDown, handlePointerMove, handlePointerUp, submitAnswer, nextProblem, resetForRetry,
     addBonusScore
   } = useTrace(categories);
 
@@ -33,7 +33,7 @@ export default function StudentMode({ categories }) {
   const [pendingBattle, setPendingBattle] = useState(null);
 
   const [hasSeenSplash, setHasSeenSplash] = useState(false);
-  const [gameMode, setGameMode] = useState('normal');
+  const [gameMode, setGameMode] = useState('flow');
 
   // 🌟 長文データを管理するState
   const [activeSummary, setActiveSummary] = useState(null);
@@ -69,7 +69,8 @@ export default function StudentMode({ categories }) {
 
         const now = ctx.currentTime;
         playNote(880, now, 0.4); 
-        playNote(1108.73, now + 0.1, 0.6); 
+        playNote(1108.73, now + 0.1, 0.6);
+        setTimeout(() => ctx.close().catch(() => {}), 850); 
       } catch (e) {
         console.error("Audio playback failed", e);
       }
@@ -213,6 +214,7 @@ export default function StudentMode({ categories }) {
       filteredProblems={filteredProblems}
       activeProblem={activeProblem}
       score={score}
+      combo={combo}
       selectedIndices={selectedIndices}
       feedbackState={feedbackState}
       lastBonus={lastBonus}
@@ -222,7 +224,7 @@ export default function StudentMode({ categories }) {
       handlePointerUp={handlePointerUp}
       submitAnswer={submitAnswer}
       onExit={() => { if(isMultiplayer) setAppScreen('lobby'); else backToLevelSelect(); }}
-      onNextProblem={nextProblem}
+      onRetryTrace={resetForRetry}
     />
   );
 }

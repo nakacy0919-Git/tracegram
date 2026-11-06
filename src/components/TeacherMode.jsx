@@ -86,17 +86,21 @@ export default function TeacherMode({ addCustomProblem }) {
       alert("正解となる単語を選択（なぞって指定）してください！"); return;
     }
 
+    if (tokens.length > 80 || tokens.join(' ').length > 800) {
+      alert("英文は80語・800文字以内にしてください。"); return;
+    }
     const newProblem = {
       id: `custom-${Date.now()}`,
-      tokens: tokens,
-      targetIndices: selectedIndices,
-      targetRole: targetRole,
-      hint: hint,
-      modifiedIndices: modifiedIndices // ★ 複数の光る単語を保存
+      tokens: [...tokens],
+      targetIndices: [...selectedIndices],
+      targetRole,
+      hint: hint.trim().slice(0, 250),
+      translation: translation.trim().slice(0, 400),
+      modifiedIndices: [...modifiedIndices]
     };
 
     addCustomProblem(newProblem); 
-    setSavedMessage("課題を登録しました！生徒モードで遊べます。");
+    setSavedMessage("課題を保存しました！このブラウザの生徒モードで遊べます。");
     setTimeout(() => setSavedMessage(""), 3000);
     
     setInputText(""); setTokens([]); setSelectedIndices([]); setModifiedIndices([]); setTranslation("");

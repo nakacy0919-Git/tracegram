@@ -38,7 +38,7 @@ export default function ResultScreen({
           totalCount: totalCount || 0
         };
 
-        localStorage.setItem('tracegram_learning_logs', JSON.stringify([...existingLogs, newLog]));
+        localStorage.setItem('tracegram_learning_logs', JSON.stringify([...(Array.isArray(existingLogs) ? existingLogs : []), newLog].slice(-100)));
         hasLogged.current = true; // 保存完了フラグを立てる
       } catch (e) {
         console.error("Failed to save learning log", e);

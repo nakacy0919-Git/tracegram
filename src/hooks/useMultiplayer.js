@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 
 export const useMultiplayer = () => {
   const [isMultiplayer, setIsMultiplayer] = useState(false);
@@ -30,7 +30,9 @@ export const useMultiplayer = () => {
     setErrorMessage('');
     
     const { default: Peer } = await import('peerjs');
-    const newRoomId = Math.floor(100000 + Math.random() * 900000).toString();
+    const random = new Uint32Array(1);
+    window.crypto.getRandomValues(random);
+    const newRoomId = String(100000 + (random[0] % 900000));
     const peerId = `tracegram-room-${newRoomId}`;
     
     // 🌟 変更：オプションを渡してPeerを作成
@@ -50,6 +52,7 @@ export const useMultiplayer = () => {
 
     peer.on('connection', (conn) => {
       conn.on('open', () => {
+        if (connectionsRef.current.length >= 3) { conn.close(); return; }
         connectionsRef.current.push(conn);
         const guestIndex = connectionsRef.current.length;
         setPlayersData(prev => {
@@ -60,13 +63,16 @@ export const useMultiplayer = () => {
       });
 
       conn.on('data', (payload) => {
-        if (payload.type === 'UPDATE_SCORE') {
-          setPlayersData(prev => {
-            const newData = { ...prev, [payload.peerId]: { ...prev[payload.peerId], score: payload.score, combo: payload.combo } };
-            broadcast({ type: 'SYNC_SCORES', data: newData });
-            return newData;
-          });
-        }
+        if (payload?.type !== 'UPDATE_SCORE' ||
+            !Number.isSafeInteger(payload.score) || payload.score < 0 || payload.score > 10000000 ||
+            !Number.isSafeInteger(payload.combo) || payload.combo < 0 || payload.combo > 10000) return;
+        // クライアントが別人の peerId を名乗って順位を変更することを防ぐ。
+        setPlayersData(prev => {
+          if (!prev[conn.peer]) return prev;
+          const newData = { ...prev, [conn.peer]: { ...prev[conn.peer], score: payload.score, combo: payload.combo } };
+          broadcast({ type: 'SYNC_SCORES', data: newData });
+          return newData;
+        });
       });
 
       conn.on('close', () => {
@@ -87,7 +93,7 @@ export const useMultiplayer = () => {
   }, []);
 
   const joinRoom = useCallback(async (joinId) => {
-    if (joinId.length !== 6) {
+    if (!/^\d{6}$/.test(joinId)) {
       setErrorMessage('6桁のIDを入力してください。');
       return;
     }
@@ -114,10 +120,14 @@ export const useMultiplayer = () => {
       });
 
       conn.on('data', (payload) => {
-        if (payload.type === 'SYNC_SCORES') {
-          setPlayersData(payload.data);
+        if (!payload || typeof payload !== 'object') return;
+        if (payload.type === 'SYNC_SCORES' && payload.data && typeof payload.data === 'object' && !Array.isArray(payload.data)) {
+          const safe = Object.fromEntries(Object.entries(payload.data).slice(0, 4).filter(([id, p]) =>
+            id.length < 120 && p && typeof p.name === 'string' && p.name.length <= 80 &&
+            Number.isFinite(p.score) && p.score >= 0 && p.score <= 10000000));
+          setPlayersData(safe);
         }
-        if (payload.type === 'BATTLE_START') {
+        if (payload.type === 'BATTLE_START' && payload.config?.subCategory?.categoryId) {
           setBattleConfig(payload.config);
         }
       });
@@ -179,6 +189,8 @@ export const useMultiplayer = () => {
     setBattleConfig(null);
     setConnectionStatus('idle');
   }, []);
+
+  useEffect(() => () => { peerRef.current?.destroy(); }, []);
 
   return {
     isMultiplayer, isHost, roomId, connectionStatus, errorMessage,

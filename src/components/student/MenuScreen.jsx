@@ -7,7 +7,7 @@ import { fast_fashion_L1 } from '../../data/summary/fast_fashion/level1_a2.js';
 import { fast_fashion_L2 } from '../../data/summary/fast_fashion/level2_b1.js';
 import { fast_fashion_L3 } from '../../data/summary/fast_fashion/level3_b2.js';
 import { fast_fashion_L4 } from '../../data/summary/fast_fashion/level4_c1.js';
-import { nature_L1 } from '../../data/summary/nature/level1_a2.js';
+import { nature_L1 } from '../../data/summary/nature/level_a2.js';
 import { nature_L2 } from '../../data/summary/nature/level2_b1.js';
 import { nature_L3 } from '../../data/summary/nature/level3_b2.js';
 import { nature_L4 } from '../../data/summary/nature/level4_c1.js'
@@ -18,7 +18,8 @@ const SUB_MAPPING = {
   'VERB': ['verb_transitive', 'verb_tense', 'verb_passive', 'verb_phrasal'],
   'OBJECT': ['obj_svoo', 'obj_verbal', 'obj_clause', 'obj_it'],
   'COMPLEMENT': ['comp_svc', 'comp_svoc', 'comp_causative', 'comp_clause'],
-  'MODIFIER': ['mod_adj', 'mod_adv', 'mod_participle']
+  'MODIFIER': ['mod_adj', 'mod_adv', 'mod_participle'],
+  'CUSTOM': ['custom']
 };
 
 const GRAMMAR_CATEGORIES = [
@@ -182,6 +183,9 @@ export default function MenuScreen({
       { id: 'OBJECT', title: '目的語マスター', desc: '動作の対象を見極めろ！', bg: "bg-[#fbbf24]", text: "text-[#78350f]" },
       { id: 'COMPLEMENT', title: '補語マスター', desc: 'SやOのイコール状態を暴け！', bg: "bg-[#7ee2b8]", text: "text-[#065f46]" },
       { id: 'MODIFIER', title: '修飾語マスター', desc: '文を長くする飾りを仕分けろ！', bg: "bg-[#8bbff5]", text: "text-[#1d4ed8]" },
+       ...(availableCategories.some(c => c.categoryId === 'custom' && c.problems?.length)
+         ? [{ id: 'CUSTOM', title: '先生のオリジナル課題', desc: 'この端末で作成した問題', bg: 'bg-[#5eead4]', text: 'text-[#134e4a]' }]
+         : []),
     ];
 
     return (
@@ -513,7 +517,15 @@ export default function MenuScreen({
                </p>
             )}
           </div>
-           <div className="bg-white/80 backdrop-blur-md p-2 rounded-2xl shadow-sm border border-slate-200 mb-10 flex justify-center mx-auto max-w-lg">
+           <div className="bg-white/80 backdrop-blur-md p-2 rounded-2xl shadow-sm border border-slate-200 mb-3 flex flex-wrap sm:flex-nowrap justify-center mx-auto max-w-3xl">
+            <button
+              onClick={() => setGameMode('flow')}
+              className={`flex-1 min-w-[150px] flex items-center justify-center gap-2 py-3 rounded-xl font-black text-sm md:text-base transition-all ${
+                gameMode === 'flow' ? 'bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-md' : 'text-slate-500 hover:bg-slate-100'
+              }`}
+            >
+              <Sparkles size={18} /> ⚡ 一筆フロー
+            </button>
             <button 
               onClick={() => setGameMode('normal')}
               className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-black text-sm md:text-base transition-all ${
@@ -531,10 +543,13 @@ export default function MenuScreen({
               <Bug size={18} /> バグ・スラッシュ
             </button>
           </div>
+          <p className="text-center text-sm font-bold text-slate-500 mb-8">{gameMode === 'flow' ? '⚡ 答えのカタマリを一筆でなぞり、指を離すとすぐ判定。正解をつなげてコンボを伸ばそう！' : gameMode === 'bug_slash' ? '🪲 余分な単語を見つけて破壊してから、構造をなぞろう。' : '🖐 単語をタップ・なぞって選択し、Answerで判定できます。'}</p>
           <div className="flex flex-col gap-6">
             {levels.map((lvl) => {
               const levelKey = lvl.num === 1 ? '-b-' : lvl.num === 2 ? '-i-' : '-a-';
-              const hasProblems = activeCategory.problems.some(p => p.id.includes(levelKey));
+              const hasProblems = activeCategory.categoryId === 'custom'
+                ? lvl.num === 1 && activeCategory.problems.length > 0
+                : activeCategory.problems.some(p => typeof p.id === 'string' && p.id.includes(levelKey));
 
               return (
                 <motion.div 

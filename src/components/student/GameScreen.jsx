@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { XCircle, CheckCircle2, Sword, AlertTriangle } from 'lucide-react'; 
+import { XCircle, CheckCircle2, Sword, AlertTriangle, Flame, Zap } from 'lucide-react'; 
 import PronunciationMission from './PronunciationMission'; 
 
 const playSlashSound = () => {
@@ -22,6 +22,7 @@ const playSlashSound = () => {
     
     osc.start();
     osc.stop(ctx.currentTime + 0.15);
+    osc.onended = () => { osc.disconnect(); gain.disconnect(); ctx.close().catch(() => {}); };
   } catch (e) {
     console.error("Audio playback failed", e);
   }
@@ -50,6 +51,7 @@ export default function GameScreen({
   filteredProblems,
   activeProblem,
   score,
+  combo,
   selectedIndices,
   feedbackState,
   lastBonus,
@@ -59,7 +61,7 @@ export default function GameScreen({
   handlePointerUp,
   submitAnswer,
   onExit,
-  onNextProblem
+  onRetryTrace
 }) {
   
   const [displayTokens, setDisplayTokens] = useState([]);
@@ -77,7 +79,7 @@ export default function GameScreen({
       const bugDictionary = ["to", "at", "in", "on", "is", "are", "a", "the", "that", "with", "about", "for"];
       const randomBug = bugDictionary[Math.floor(Math.random() * bugDictionary.length)];
       
-      const insertIdx = Math.floor(Math.random() * (activeProblem.tokens.length - 1)) + 1;
+      const insertIdx = Math.floor(Math.random() * Math.max(1, activeProblem.tokens.length - 1)) + 1;
       const newTokens = [...activeProblem.tokens];
       newTokens.splice(insertIdx, 0, randomBug);
 
@@ -122,13 +124,13 @@ export default function GameScreen({
 
   if (!activeProblem) return null;
 
-  const cleanHint = activeProblem.hint.replace(/【.*?】/, '').trim();
+  const cleanHint = (activeProblem.hint || '指定された文法のまとまりをなぞってください').replace(/【.*?】/, '').trim();
   const roleColors = getElementColor(activeProblem.targetRole);
-  const roleInitial = activeProblem.targetRole.charAt(0).toUpperCase();
+  const roleInitial = (activeProblem.targetRole || '?').charAt(0).toUpperCase();
   const sortedPlayers = Object.values(playersData || {}).sort((a, b) => b.score - a.score);
 
   return (
-    <div className="flex-1 flex flex-col relative z-10 w-full overflow-y-auto overflow-x-hidden" ref={mainContainerRef} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onTouchMove={handlePointerMove} onTouchEnd={handlePointerUp}>
+    <div className="flex-1 flex flex-col relative z-10 w-full overflow-y-auto overflow-x-hidden" ref={mainContainerRef} onPointerMove={handlePointerMove} onPointerUp={() => handlePointerUp(gameMode === 'flow')} onPointerCancel={() => handlePointerUp(false)}>
       
       {isMultiplayer && sortedPlayers.length > 0 && (
         <div className="absolute top-[80px] md:top-[90px] left-0 w-full z-40 flex flex-row flex-wrap justify-center gap-2 md:gap-4 px-2 pointer-events-none">
@@ -158,10 +160,14 @@ export default function GameScreen({
           </div>
         </div>
         <div className="flex items-end gap-4 text-right">
-          <div><div className="text-5xl md:text-7xl font-black text-cyan-600 tracking-tighter drop-shadow-sm">{score}</div></div>
+          <div className="flex flex-col items-end">
+            <div className="text-3xl md:text-5xl font-black text-cyan-600 tracking-tighter drop-shadow-sm">{score}</div>
+            <div className="flex items-center gap-1.5 text-sm font-black text-orange-500"><Flame size={17} /> {combo} COMBO</div>
+          </div>
         </div>
       </div>
 
+      <div className="w-full h-1.5 bg-slate-200"><div className="h-full bg-gradient-to-r from-cyan-400 to-emerald-400 transition-all duration-500" style={{width: `${(currentProblemIdx / Math.max(1, filteredProblems.length)) * 100}%`}} /></div>
       <div className={`flex-1 flex flex-col items-center justify-start p-2 md:p-4 w-full max-w-[1400px] mx-auto ${feedbackState === 'wrong' ? 'pb-80' : 'pb-4'} relative`}>
         
         <div className="w-full flex justify-start mb-2 md:mb-3 text-left z-10 pt-1 md:pt-2 px-2">
@@ -176,6 +182,7 @@ export default function GameScreen({
           </div>
         </div>
 
+        {gameMode === 'flow' && <div className="self-start mb-2 px-4 py-1.5 bg-amber-100 text-amber-800 rounded-full text-sm font-black flex items-center gap-2"><Zap size={16} /> 一筆でなぞる → 離した瞬間に判定！</div>}
         <motion.div 
           animate={shake ? { x: [-10, 10, -10, 10, 0] } : {}}
           transition={{ duration: 0.4 }}
@@ -213,7 +220,18 @@ export default function GameScreen({
                       <motion.span 
                         key={`token-${idx}`} 
                         data-token-idx={idx} // 🌟 ここが抜けていました！これがないとなぞり判定が動きません。
-                        onPointerDown={(e) => handleTokenClick(e, idx)} 
+                        onPointerDown={(e) => handleTokenClick(e, idx)}
+                         role="button"
+                         tabIndex={gameMode === 'bug_slash' && !isBugSlashed ? -1 : 0}
+                         aria-label={`${token} を選択`}
+                         aria-pressed={isSelected}
+                         onKeyDown={(e) => {
+                           if (e.key === 'Enter' || e.key === ' ') {
+                             e.preventDefault();
+                             handleTokenClick(e, idx);
+                             handlePointerUp(false);
+                           }
+                         }} 
                         exit={isBugWord ? { 
                           scale: [1, 2.5],  
                           opacity: 0, 
@@ -250,7 +268,7 @@ export default function GameScreen({
                 disabled={selectedIndices.length === 0} 
                 className={`flex items-center gap-2 md:gap-3 font-black text-xl md:text-2xl px-12 md:px-16 py-4 md:py-5 rounded-3xl shadow-lg border-b-4 border-slate-200 transition-all ${selectedIndices.length === 0 ? "bg-slate-100 text-slate-300 cursor-not-allowed" : "bg-white text-cyan-600 hover:scale-105 active:scale-95 active:border-b-0"}`}
               >
-                <CheckCircle2 size={28} /> Answer!
+                <CheckCircle2 size={28} /> {gameMode === 'flow' ? '判定する' : 'Answer!'}
               </motion.button>
             ) : feedbackState === 'correct' ? (
               <motion.div key="correct-display" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-emerald-500 font-black text-4xl md:text-6xl tracking-widest drop-shadow-md">
@@ -262,7 +280,7 @@ export default function GameScreen({
                   <p className="text-emerald-600 font-black text-xs md:text-sm mb-1 opacity-80">正しい構造はこちら</p>
                   <div className="text-center leading-[2rem] md:leading-[2.5rem] w-full">
                    {activeProblem.tokens.map((token, idx) => {
-                     const isTarget = activeProblem.targetIndices.includes(idx);
+                     const isTarget = (activeProblem.targetIndices || (activeProblem.targetIndex !== undefined ? [activeProblem.targetIndex] : [])).includes(idx);
                      return (
                        <span key={`ans-${idx}`} className={`inline-block text-base md:text-xl font-black px-1 mx-0.5 ${isTarget ? 'bg-emerald-200 text-emerald-900 border-b-2 border-emerald-400' : 'text-slate-400'}`}>
                          {token}
@@ -300,7 +318,7 @@ export default function GameScreen({
                   <p className="text-emerald-600 font-black text-sm mb-2 opacity-80">正しい構造はこちら</p>
                   <div className="text-center leading-[2.5rem] w-full">
                    {activeProblem.tokens.map((token, idx) => {
-                     const isTarget = activeProblem.targetIndices.includes(idx);
+                     const isTarget = (activeProblem.targetIndices || (activeProblem.targetIndex !== undefined ? [activeProblem.targetIndex] : [])).includes(idx);
                      return (
                        <span key={`ans-${idx}`} className={`inline-block text-xl md:text-3xl font-black px-1 mx-0.5 ${isTarget ? 'bg-emerald-200 text-emerald-900 border-b-2 border-emerald-400' : 'text-slate-400'}`}>
                          {token}
@@ -312,7 +330,7 @@ export default function GameScreen({
                     <p className="text-slate-500 font-bold mt-4 text-sm md:text-base italic">{activeProblem.translation}</p>
                   )}
                 </div>
-                <PronunciationMission targetSentence={activeProblem.tokens.join(' ')} onComplete={(acc) => onNextProblem(acc)} />
+                <PronunciationMission key={activeProblem.id || currentProblemIdx} targetSentence={activeProblem.tokens.join(' ')} onComplete={onRetryTrace} onFallback={onRetryTrace} />
               </div>
             </motion.div>
           </motion.div>
