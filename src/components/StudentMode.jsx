@@ -4,6 +4,7 @@ import { useTrace } from '../hooks/useTrace';
 import { useMultiplayer } from '../hooks/useMultiplayer';
 
 import TitleScreen from './student/TitleScreen';
+import OpeningSplash from './student/OpeningSplash';
 import LobbyScreen from './student/LobbyScreen';
 import MenuScreen from './student/MenuScreen';
 import ResultScreen from './student/ResultScreen';
@@ -32,7 +33,16 @@ export default function StudentMode({ categories }) {
   const [battleSetup, setBattleSetup] = useState(null);
   const [pendingBattle, setPendingBattle] = useState(null);
 
-  const [hasSeenSplash, setHasSeenSplash] = useState(true);
+  const [showOpening, setShowOpening] = useState(true);
+
+  useEffect(() => {
+    try { if (sessionStorage.getItem('tracegram_opening_seen') === 'yes') setShowOpening(false); } catch {}
+  }, []);
+
+  const dismissOpening = () => {
+    try { sessionStorage.setItem('tracegram_opening_seen', 'yes'); } catch {}
+    setShowOpening(false);
+  };
   const [gameMode, setGameMode] = useState('flow');
 
   // 🌟 長文データを管理するState
@@ -111,12 +121,12 @@ export default function StudentMode({ categories }) {
     setGameState('main_select');
   };
 
+  if (showOpening) return <OpeningSplash onEnter={dismissOpening} />;
+
   if (appScreen === 'title') {
     return (
       <TitleScreen 
-        hasSeenSplash={hasSeenSplash}
-        onSplashComplete={() => setHasSeenSplash(true)}
-        onSinglePlayer={() => setAppScreen('main')}
+         onSinglePlayer={() => setAppScreen('main')}
         onCreateRoom={() => createRoom()}
         joinPin={joinPin}
         setJoinPin={setJoinPin}
@@ -163,6 +173,7 @@ export default function StudentMode({ categories }) {
       <MenuScreen
         gameMode={gameMode}
         setGameMode={setGameMode}
+        onReplayOpening={() => setShowOpening(true)}
         setActiveSummary={setActiveSummary} 
         gameState={gameState}
         roomId={roomId}
