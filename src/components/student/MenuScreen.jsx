@@ -1,610 +1,350 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, BookOpen, Layers, BarChart3, AlertTriangle, CheckCircle2, TrendingUp, Award, HelpCircle, Bug, Crosshair, FileText, Sparkles, ChevronRight, Leaf, Scroll, Cpu, Users, Globe, Brain, Landmark, Palette, PenTool, GraduationCap, Scale, HeartPulse, Rocket, Heart, HeartHandshake } from 'lucide-react';
+"use client";
+import React, { useMemo, useEffect, useState } from 'react';
+import { BookOpen, BookMarked, Target, Users, Search, ChevronRight, ArrowLeft, Play, Zap, Sparkles, Clock3, GraduationCap, Layers3, Trophy, RotateCcw, Info, CheckCircle2, ListFilter, Keyboard } from 'lucide-react';
+import { CATALOG_GROUPS, getProblemLevel } from '../../data/mockData';
+import { READING_ARTICLES } from '../../data/readingCatalog';
 
-// 🌟 長文データのインポート
-import { fast_fashion_L1 } from '../../data/summary/fast_fashion/level1_a2.js';
-import { fast_fashion_L2 } from '../../data/summary/fast_fashion/level2_b1.js';
-import { fast_fashion_L3 } from '../../data/summary/fast_fashion/level3_b2.js';
-import { fast_fashion_L4 } from '../../data/summary/fast_fashion/level4_c1.js';
-import { nature_L1 } from '../../data/summary/nature/level_a2.js';
-import { nature_L2 } from '../../data/summary/nature/level2_b1.js';
-import { nature_L3 } from '../../data/summary/nature/level3_b2.js';
-import { nature_L4 } from '../../data/summary/nature/level4_c1.js'
-
-const SUB_MAPPING = {
-  'BASIC': ['basic_find_verb', 'basic_remove_m', 'basic_5patterns'],
-  'SUBJECT': ['subj_prep', 'subj_verbal', 'subj_clause', 'subj_it', 'subj_inversion'],
-  'VERB': ['verb_transitive', 'verb_tense', 'verb_passive', 'verb_phrasal'],
-  'OBJECT': ['obj_svoo', 'obj_verbal', 'obj_clause', 'obj_it'],
-  'COMPLEMENT': ['comp_svc', 'comp_svoc', 'comp_causative', 'comp_clause'],
-  'MODIFIER': ['mod_adj', 'mod_adv', 'mod_participle'],
-  'CUSTOM': ['custom']
+const STORAGE_LAST = 'tracegram_last_course';
+const STORAGE_MISTAKES = 'tracegram_mistakes';
+const card = 'rounded-[24px] border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-cyan-300 hover:shadow-lg active:scale-[0.99]';
+const groupStyles = {
+  BASIC: 'bg-rose-50 text-rose-700',
+  SUBJECT: 'bg-violet-50 text-violet-700',
+  VERB: 'bg-amber-50 text-amber-800',
+  OBJECT: 'bg-blue-50 text-blue-700',
+  COMPLEMENT: 'bg-emerald-50 text-emerald-700',
+  MODIFIER: 'bg-cyan-50 text-cyan-800',
+  CUSTOM: 'bg-teal-50 text-teal-700',
 };
+const safeRead = (key, fallback) => {
+  try { const value = JSON.parse(localStorage.getItem(key) || 'null'); return value ?? fallback; }
+  catch { return fallback; }
+};
+const normalize = (text) => String(text || '').normalize('NFKC').toLowerCase();
+const difficulty = (level) => level === 1 ? '初級' : level === 2 ? '中級' : '上級';
 
-const GRAMMAR_CATEGORIES = [
-  { id: "infinitive", title: "不定詞", desc: "to＋動詞の原形が作るカタマリ", bg: "bg-[#8bbff5]", text: "text-[#1d4ed8]" },
-  { id: "gerund", title: "動名詞", desc: "動詞ingが作る名詞のカタマリ", bg: "bg-[#7ee2b8]", text: "text-[#065f46]" },
-  { id: "present_participle", title: "現在分詞", desc: "動詞ingで「〜している」様子", bg: "bg-[#5eead4]", text: "text-[#134e4a]" },
-  { id: "past_participle", title: "過去分詞", desc: "「〜された」状態や様子", bg: "bg-[#fbbf24]", text: "text-[#78350f]" },
-  { id: "relative_pronoun", title: "関係代名詞", desc: "名詞を後ろから長く説明する", bg: "bg-[#d8b4f8]", text: "text-[#581c87]" },
-  { id: "noun_clause", title: "名詞節", desc: "thatや疑問詞の名詞カタマリ", bg: "bg-[#fbb6d6]", text: "text-[#9d174d]" },
-  { id: "causative_verb", title: "使役動詞", desc: "make / let / have の使い方", bg: "bg-[#fca5a5]", text: "text-[#7f1d1d]" },
-  { id: "formal_it", title: "形式主語・目的語", desc: "Itを仮のSやOに置く構文", bg: "bg-[#a5b4fc]", text: "text-[#312e81]" }
-];
-
-const GENRE_LIST = [
-  { id: "nature", label: "L1", title: "自然", icon: <Leaf size={24} />, fromColor: "from-emerald-400 to-teal-500", border: "border-emerald-200", bgLight: "bg-emerald-50" },
-  { id: "history", label: "L2", title: "歴史", icon: <Scroll size={24} />, fromColor: "from-amber-500 to-orange-600", border: "border-amber-200", bgLight: "bg-amber-50" },
-  { id: "science", label: "L3", title: "科学技術", icon: <Cpu size={24} />, fromColor: "from-cyan-400 to-blue-500", border: "border-cyan-200", bgLight: "bg-cyan-50" },
-  { id: "relations", label: "L4", title: "人間関係", icon: <Users size={24} />, fromColor: "from-blue-500 to-indigo-600", border: "border-blue-200", bgLight: "bg-blue-50" },
-  { id: "international", label: "L5", title: "国際社会", icon: <Globe size={24} />, fromColor: "from-purple-500 to-indigo-700", border: "border-purple-200", bgLight: "bg-purple-50" },
-  { id: "philosophy", label: "L6", title: "心理・哲学", icon: <Brain size={24} />, fromColor: "from-rose-400 to-pink-600", border: "border-rose-200", bgLight: "bg-rose-50" },
-  { id: "economics", label: "L7", title: "経済・ビジネス", icon: <Landmark size={24} />, fromColor: "from-amber-400 to-yellow-600", border: "border-yellow-200", bgLight: "bg-yellow-50" },
-  { id: "culture", label: "L8", title: "芸術・文化", icon: <Palette size={24} />, fromColor: "from-orange-400 to-amber-500", border: "border-orange-200", bgLight: "bg-orange-50" },
-  { id: "literature", label: "L9", title: "文学・言語", icon: <PenTool size={24} />, fromColor: "from-sky-400 to-blue-500", border: "border-sky-200", bgLight: "bg-sky-50" },
-  { id: "education", label: "L10", title: "教育・学習", icon: <GraduationCap size={24} />, fromColor: "from-indigo-400 to-slate-600", border: "border-indigo-200", bgLight: "bg-indigo-50" },
-  { id: "politics", label: "L11", title: "法律・政治", icon: <Scale size={24} />, fromColor: "from-stone-500 to-neutral-700", border: "border-stone-200", bgLight: "bg-stone-50" },
-  { id: "medicine", label: "L12", title: "医療・健康", icon: <HeartPulse size={24} />, fromColor: "from-teal-400 to-cyan-500", border: "border-teal-200", bgLight: "bg-teal-50" },
-  { id: "space", label: "L13", title: "宇宙・未来", icon: <Rocket size={24} />, fromColor: "from-violet-500 to-purple-600", border: "border-violet-200", bgLight: "bg-violet-50" },
-  { id: "marriage", label: "L14", title: "婚姻・交友", icon: <Heart size={24} />, fromColor: "from-pink-400 to-fuchsia-500", border: "border-pink-200", bgLight: "bg-pink-50" },
-  // 🌟 修正：一番最後のL15の icon を <HeartHandshake /> に変更しました
-  { id: "ethics", label: "L15", title: "倫理・道徳", icon: <HeartHandshake size={24} />, fromColor: "from-purple-600 to-rose-700", border: "border-purple-300", bgLight: "bg-purple-50" }
-];
-
-const ARTICLES_MASTER = [
-  {
-    id: "fast_fashion",
-    title: "ファストファッションの光と影",
-    englishTitle: "The Hidden Impact of Fast Fashion",
-    desc: "安くてオシャレな服の裏側に隠された、地球環境への代償と労働問題に迫る。",
-    genres: ["nature", "economics", "ethics"], 
-    levels: [
-      { num: 1, name: "Level 1 (A2 - 初級)", data: fast_fashion_L1 },
-      { num: 2, name: "Level 2 (B1 - 中級)", data: fast_fashion_L2 },
-      { num: 3, name: "Level 3 (B2 - 上級)", data: fast_fashion_L3 },
-      { num: 4, name: "Level 4 (C1 - 最上級)", data: fast_fashion_L4 }
-    ]
-  },
-  // ▼ 新しく追加する記事データ
-  {
-    id: "ocean_plastic",
-    title: "海洋プラスチックの脅威",
-    englishTitle: "The Threat of Marine Plastic Pollution",
-    desc: "私たちの海を汚染し、食物連鎖を通じて生態系を脅かすプラスチック問題の真実に迫る。",
-    // この記事を表示させたいジャンルを指定（複数可）
-    genres: ["nature", "science", "international"], 
-    levels: [
-      { num: 1, name: "Level 1 (A2 - 初級)", data: nature_L1 },
-      { num: 2, name: "Level 2 (B1 - 中級)", data: nature_L2 },
-      { num: 3, name: "Level 3 (B2 - 上級)", data: nature_L3 },
-      { num: 4, name: "Level 4 (C1 - 最上級)", data: nature_L4 }
-    ]
-  }
-];
+function Feature({ icon: Icon, title, caption, theme, onClick, detail }) {
+  const colors = {
+    grammar: 'bg-cyan-50 text-cyan-700',
+    reading: 'bg-indigo-50 text-indigo-700',
+    review: 'bg-amber-50 text-amber-800',
+    battle: 'bg-rose-50 text-rose-700',
+  };
+  return (
+    <button type="button" onClick={onClick} className={`${card} p-4 md:p-5 text-left flex items-start gap-3 min-h-[128px] w-full`}>
+      <span className={`p-3 rounded-2xl flex-shrink-0 ${colors[theme]}`}><Icon size={25} strokeWidth={2.2}/></span>
+      <span className="flex-1 min-w-0">
+        <span className="block text-lg md:text-xl font-black text-slate-800 mb-1">{title}</span>
+        <span className="block text-xs md:text-sm font-medium text-slate-500 leading-relaxed">{caption}</span>
+        {detail && <span className="block mt-2 text-xs font-bold text-slate-600">{detail}</span>}
+      </span>
+      <ChevronRight size={17} className="text-slate-400 mt-3 shrink-0"/>
+    </button>
+  );
+}
 
 export default function MenuScreen({
-  gameMode, setGameMode, 
-  setActiveSummary, 
-  gameState, availableCategories, activeMain, activeCategory, isMultiplayer, isHost,
-  setAppScreen, selectMainCategory, selectSubCategory, startGame,
-  backToMain, backToSub, handleExitToTitle, setBattleSetup,
-  menuViewMode, setMenuViewMode,
-  summaryStep, setSummaryStep,
-  selectedGenreId, setSelectedGenreId,
-  selectedArticle, setSelectedArticle
+  gameMode, setGameMode, setActiveSummary,
+  gameState, availableCategories, activeCategory, isMultiplayer, isHost,
+  setAppScreen, selectSubCategory, startGame, backToMain, setBattleSetup,
+  menuViewMode, setMenuViewMode, selectedArticle, setSelectedArticle,
 }) {
-  
-  const [logs, setLogs] = useState([]);
-  const [tempCount, setTempCount] = useState(10);
+  const view = ['home', 'grammar', 'reading', 'review'].includes(menuViewMode) ? menuViewMode : 'home';
+  const [search, setSearch] = useState('');
+  const [group, setGroup] = useState('ALL');
+  const [count, setCount] = useState(10);
+  const [last, setLast] = useState(null);
+  const [mistakes, setMistakes] = useState({});
 
   useEffect(() => {
-    const savedLogs = localStorage.getItem('tracegram_learning_logs');
-    if (savedLogs) {
-      try { setLogs(JSON.parse(savedLogs)); } catch (e) { console.error(e); }
+    const stored = safeRead(STORAGE_LAST, null);
+    if (stored && typeof stored.categoryId === 'string') setLast(stored);
+    const items = safeRead(STORAGE_MISTAKES, {});
+    setMistakes(items && typeof items === 'object' && !Array.isArray(items) ? items : {});
+  }, [gameState]);
+
+  const allCategories = useMemo(() => availableCategories.filter(c =>
+    c && Array.isArray(c.problems) && c.problems.length > 0), [availableCategories]);
+  const totalQuestions = allCategories.reduce((sum, c) => sum + c.problems.length, 0);
+  const groups = CATALOG_GROUPS.filter(g => allCategories.some(c => (c.groupId || 'CUSTOM') === g.id));
+  const byId = useMemo(() => new Map(allCategories.map(c => [c.categoryId, c])), [allCategories]);
+  const byProblemId = useMemo(() => {
+    const result = new Map();
+    allCategories.forEach(c => c.problems.forEach(p => { if (p.id) result.set(p.id, p); }));
+    return result;
+  }, [allCategories]);
+  const missedProblems = Object.keys(mistakes).map(id => byProblemId.get(id)).filter(Boolean);
+  const recentCategory = last && byId.get(last.categoryId);
+  const filteredCourses = allCategories.filter(c => {
+    if (group !== 'ALL' && (c.groupId || 'CUSTOM') !== group) return false;
+    if (!search.trim()) return true;
+    const tags = c.problems.flatMap(p => p.grammarPoints || []).join(' ');
+    return normalize([c.title, c.description, c.categoryId, tags].join(' ')).includes(normalize(search.trim()));
+  });
+  const filteredArticles = READING_ARTICLES.filter(a =>
+    normalize([a.title, a.englishTitle, a.description, ...a.topics].join(' ')).includes(normalize(search.trim())));
+
+  const go = (next) => {
+    setSearch('');
+    setMenuViewMode(next);
+    setSelectedArticle(null);
+    if (gameState !== 'main_select') backToMain();
+  };
+  const chooseCourse = (c) => {
+    setMenuViewMode('grammar');
+    selectSubCategory(c);
+  };
+  const launch = (level, selectedCount, chosen = activeCategory) => {
+    if (!chosen) return;
+    if (isMultiplayer && isHost) {
+      setBattleSetup({ mainId: chosen.groupId || 'CUSTOM', subCategory: chosen, level, questionCount: selectedCount });
+      setAppScreen('lobby');
+      return;
     }
-  }, []);
-
-  const analyzeWeaknesses = () => {
-    if (logs.length === 0) return { stats: [], weaknesses: [], totalQuestions: 0, totalCorrect: 0 };
-    const categoryMap = {};
-    let totalQuestions = 0;
-    let totalCorrect = 0;
-
-    logs.forEach(log => {
-      if (!categoryMap[log.categoryTitle]) {
-        categoryMap[log.categoryTitle] = { title: log.categoryTitle, correct: 0, total: 0 };
-      }
-      categoryMap[log.categoryTitle].correct += log.correctCount || 0;
-      categoryMap[log.categoryTitle].total += log.totalCount || 0;
-      totalQuestions += log.totalCount || 0;
-      totalCorrect += log.correctCount || 0;
-    });
-
-    const stats = Object.values(categoryMap).map(cat => ({
-      ...cat,
-      accuracy: Math.round((cat.correct / cat.total) * 100)
-    }));
-    const weaknesses = [...stats].filter(cat => cat.total > 0).sort((a, b) => a.accuracy - b.accuracy).slice(0, 3);
-    return { stats, weaknesses, totalQuestions, totalCorrect };
+    try {
+      if (chosen.categoryId !== 'review') localStorage.setItem(STORAGE_LAST, JSON.stringify({
+        categoryId: chosen.categoryId, level, count: selectedCount, mode: gameMode, at: Date.now(),
+      }));
+    } catch {}
+    startGame(level, selectedCount, chosen);
+  };
+  const openReview = () => {
+    if (!missedProblems.length) return;
+    const category = {
+      categoryId: 'review', title: '苦手克服トレース', groupId: 'BASIC',
+      description: '前に間違えた文だけを出題します。',
+      problems: missedProblems,
+    };
+    setGameMode('flow');
+    launch('all', Math.min(20, missedProblems.length), category);
   };
 
-  const { stats, weaknesses, totalQuestions, totalCorrect } = analyzeWeaknesses();
-  const overallAccuracy = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
-
-  const hasAnyProblems = (mainId) => {
-    return availableCategories.some(cat => 
-      SUB_MAPPING[mainId].includes(cat.categoryId) && cat.problems && cat.problems.length > 0
-    );
-  };
-
-  const BackButton = ({ onClick, text }) => (
-    <motion.button
-      whileHover={{ x: -5, scale: 1.02 }}
-      whileTap={{ scale: 0.95 }}
-      onClick={onClick}
-      className="flex items-center gap-2 bg-white shadow-sm border-2 border-slate-200 text-slate-500 hover:text-cyan-600 hover:border-cyan-300 px-5 py-2 rounded-full font-black text-xs md:text-sm transition-all z-20"
-    >
-      <ArrowLeft size={16} />
-      {text}
-    </motion.button>
+  const backButton = (onClick, label = '教材一覧に戻る') => (
+    <button type="button" onClick={onClick} className="inline-flex items-center gap-2 text-slate-600 font-bold text-sm bg-white border border-slate-200 rounded-full px-4 py-2 hover:bg-slate-100">
+      <ArrowLeft size={17} /> {label}
+    </button>
   );
 
-  const handleGrammarSelect = (grammarId, grammarTitle, grammarDesc) => {
-    let allFilteredProblems = [];
-    availableCategories.forEach(cat => {
-      if (cat.problems) {
-        const matchingProblems = cat.problems.filter(p => p.grammarPoints && p.grammarPoints.includes(grammarId));
-        allFilteredProblems = [...allFilteredProblems, ...matchingProblems];
-      }
-    });
-    const pseudoCategory = {
-      categoryId: `grammar_${grammarId}`,
-      title: `【文法特訓】${grammarTitle}`,
-      description: grammarDesc,
-      problems: allFilteredProblems
-    };
-    selectSubCategory(pseudoCategory);
-  };
-
-  const handleSummaryBack = () => {
-    if (summaryStep === 'levels') {
-      setSummaryStep('articles');
-    } else if (summaryStep === 'articles') {
-      setSummaryStep('genres');
-    }
-  };
-
-  if (gameState === 'main_select') {
-    const MAIN_CATEGORIES = [
-      { id: 'BASIC', title: '基礎マスター', desc: '英語の仕組みをイチから学ぶ', bg: "bg-[#fca5a5]", text: "text-[#7f1d1d]" },
-      { id: 'SUBJECT', title: '主語マスター', desc: '文の主役を見つけ出せ！', bg: "bg-[#d8b4f8]", text: "text-[#581c87]" },
-      { id: 'VERB', title: '動詞マスター', desc: '文の心臓部を捉えろ！', bg: "bg-[#fbb6d6]", text: "text-[#9d174d]" },
-      { id: 'OBJECT', title: '目的語マスター', desc: '動作の対象を見極めろ！', bg: "bg-[#fbbf24]", text: "text-[#78350f]" },
-      { id: 'COMPLEMENT', title: '補語マスター', desc: 'SやOのイコール状態を暴け！', bg: "bg-[#7ee2b8]", text: "text-[#065f46]" },
-      { id: 'MODIFIER', title: '修飾語マスター', desc: '文を長くする飾りを仕分けろ！', bg: "bg-[#8bbff5]", text: "text-[#1d4ed8]" },
-       ...(availableCategories.some(c => c.categoryId === 'custom' && c.problems?.length)
-         ? [{ id: 'CUSTOM', title: '先生のオリジナル課題', desc: 'この端末で作成した問題', bg: 'bg-[#5eead4]', text: 'text-[#134e4a]' }]
-         : []),
-    ];
-
+  // 選択した教材のレベルとプレイ方法を1ページで選ぶ。
+  if (gameState === 'level_select' && activeCategory) {
+    const review = activeCategory.categoryId === 'review';
+    const levels = review ? ['all'] : [1, 2, 3];
+    const number = (lv) => lv === 'all' ? activeCategory.problems.length :
+      activeCategory.problems.filter(p => getProblemLevel(p) === lv).length;
     return (
-      <div className="flex-1 flex flex-col items-center p-4 md:p-10 overflow-y-auto z-10 relative w-full bg-slate-50/50">
-        
-        <div className="absolute top-6 left-6 z-20 flex items-center gap-3">
-          {menuViewMode === 'summary' && summaryStep !== 'genres' ? (
-            <BackButton onClick={handleSummaryBack} text="一つ前の画面に戻る" />
-          ) : (
-            <BackButton onClick={handleExitToTitle} text="タイトルへ戻る" />
-          )}
-        </div>
-        
-        <div className="max-w-6xl w-full mt-16 md:mt-12 flex flex-col items-center">
-          
-          <div className="flex bg-slate-200/60 p-1.5 rounded-full mb-8 shadow-inner max-w-full overflow-x-auto hide-scrollbar border border-slate-300/40">
-            <button 
-              onClick={() => setMenuViewMode('element')}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-full font-black text-sm md:text-base transition-all whitespace-nowrap ${menuViewMode === 'element' ? 'bg-white text-cyan-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-            >
-              <Layers size={18} /> 文の要素（SVO）
-            </button>
-            <button 
-              onClick={() => setMenuViewMode('grammar')}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-full font-black text-sm md:text-base transition-all whitespace-nowrap ${menuViewMode === 'grammar' ? 'bg-white text-purple-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-            >
-              <BookOpen size={18} /> 文法項目別
-            </button>
-            <button 
-              onClick={() => setMenuViewMode('summary')}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-full font-black text-sm md:text-base transition-all whitespace-nowrap ${menuViewMode === 'summary' ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-            >
-              <FileText size={18} /> 📖 長文・要約トレース
-            </button>
+      <div className="flex-1 w-full bg-[#f5f8fc] overflow-y-auto px-4 md:px-8 py-7">
+        <div className="max-w-4xl mx-auto space-y-5">
+          {backButton(() => { backToMain(); setMenuViewMode(review ? 'review' : 'grammar'); })}
+          <div className="rounded-[30px] bg-slate-900 text-white p-6 md:p-9">
+            <div className="text-cyan-300 font-black text-xs tracking-widest mb-2">TRACEGRAM / COURSE</div>
+            <h1 className="text-2xl md:text-4xl font-black leading-tight">{activeCategory.title}</h1>
+            <p className="text-slate-300 text-sm md:text-base mt-3">{activeCategory.description}</p>
+            <div className="mt-4 text-sm font-bold text-cyan-200">{activeCategory.problems.length} 問収録</div>
           </div>
 
-          <AnimatePresence mode="wait">
-            
-            {menuViewMode === 'element' ? (
-              <motion.div key="element" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="w-full flex flex-col gap-8">
-                
-                {logs.length > 0 && (
-                  <div className="w-full bg-white rounded-3xl p-5 border border-slate-200 shadow-sm grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
-                    <div className="lg:border-r border-slate-100 lg:pr-6">
-                      <div className="flex items-center gap-2 text-slate-500 text-xs font-black mb-1"><BarChart3 size={16} className="text-cyan-500" /> 構造理解レコード概要</div>
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-3xl font-black tracking-tight text-slate-800">{overallAccuracy}%</span>
-                        <span className="text-xs font-bold text-slate-400">トータル正解率 ({totalQuestions}語分析)</span>
-                      </div>
-                    </div>
-                    <div className="col-span-2 bg-rose-50/60 border border-rose-100 rounded-2xl p-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                      <div className="flex items-start gap-2.5">
-                        <AlertTriangle size={18} className="text-rose-500 flex-shrink-0 mt-0.5 animate-pulse" />
-                        <div>
-                          <h4 className="text-rose-800 font-black text-sm">現在の強化指定カテゴリ</h4>
-                          <div className="flex flex-wrap gap-1.5 mt-1.5">
-                            {weaknesses.map((w, i) => (
-                              <span key={i} className="text-[11px] bg-white border border-rose-200 rounded-lg px-2 py-0.5 font-black text-rose-700 shadow-2xs">
-                                {w.title} ({w.accuracy}%)
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                      <p className="text-[11px] text-slate-400 font-medium md:max-w-[200px] leading-snug">
-                        苦手な構文を重点的になぞることで、英語脳の回路が最速で強化されます。
-                      </p>
-                    </div>
-                  </div>
-                )}
+          <section className="bg-white p-5 md:p-7 rounded-3xl border border-slate-200 space-y-3">
+            <h2 className="text-lg font-black text-slate-800">プレイモード</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+              {[
+                { id: 'flow', label: '⚡ 一筆フロー', detail: '離すとすぐに正誤判定' },
+                { id: 'normal', label: '✋ 通常トレース', detail: '選んでから答え合わせ' },
+                { id: 'bug_slash', label: '🪲 バグ・スラッシュ', detail: '余分な語を破壊してから解析' },
+              ].map(mode => (
+                <button key={mode.id} type="button" onClick={() => setGameMode(mode.id)}
+                  aria-pressed={gameMode === mode.id}
+                  className={`rounded-2xl p-4 text-left border-2 transition-colors ${gameMode === mode.id ? 'border-cyan-500 bg-cyan-50' : 'border-slate-200 bg-white hover:bg-slate-50'}`}>
+                  <span className="font-black block text-slate-800">{mode.label}</span>
+                  <span className="text-xs text-slate-500">{mode.detail}</span>
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-slate-500 font-medium">※ 離れた単語を選ぶ問題は、通常トレースで一語ずつ選択できます。</p>
+          </section>
 
-                <div>
-                  <h2 className="text-xl md:text-2xl font-black text-slate-700 mb-6 text-center">特訓したい「文の要素」を選択してください</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {MAIN_CATEGORIES.map((cat) => {
-                      const isAvailable = hasAnyProblems(cat.id);
-                      return (
-                        <motion.div key={cat.id} whileHover={isAvailable ? { scale: 1.02, y: -2 } : {}} onClick={() => isAvailable && selectMainCategory(cat.id)} className={`relative p-1 rounded-[28px] shadow-sm transition-all ${isAvailable ? 'cursor-pointer ' + cat.bg : 'cursor-not-allowed bg-slate-200 opacity-50'}`}>
-                          {/* 🌟 透明なFragmentで包んでVS Codeの赤線を消去 */}
-                          <>
-                            <div className="border-2 border-white border-dashed rounded-[24px] py-6 px-4 h-full flex flex-col items-center justify-between bg-white/10 min-h-[140px]">
-                              <h3 className="font-black text-white text-center drop-shadow-md text-3xl">{cat.id}</h3>
-                              <span className={`inline-block text-xs md:text-sm font-black bg-white/70 backdrop-blur-sm px-4 py-2 rounded-xl mt-4 ${isAvailable ? cat.text : 'text-slate-500'} shadow-2xs w-full text-center truncate`}>
-                                {cat.title}
-                              </span>
-                            </div>
-                          </>
-                        </motion.div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </motion.div>
-            ) : menuViewMode === 'grammar' ? (
-              <motion.div key="grammar" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }} className="w-full">
-                <h2 className="text-xl md:text-2xl font-black text-slate-700 mb-6 text-center">特訓したい「文法項目」を選択してください</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {GRAMMAR_CATEGORIES.map((gram) => (
-                    <motion.div key={gram.id} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => handleGrammarSelect(gram.id, gram.title, gram.desc)} className={`relative p-1 rounded-[24px] shadow-sm transition-all cursor-pointer ${gram.bg}`}>
-                      {/* 🌟 透明なFragmentで包んでVS Codeの赤線を消去 */}
-                      <>
-                        <div className="border-2 border-white border-dashed rounded-[20px] py-5 px-3 h-full flex flex-col items-center justify-between bg-white/10 min-h-[120px]">
-                          <h3 className="font-black text-white text-lg md:text-xl text-center drop-shadow-md">{gram.title}</h3>
-                          <span className={`inline-block text-[11px] font-black bg-white/70 backdrop-blur-sm px-2 py-1.5 rounded-lg ${gram.text} w-full text-center mt-3 truncate`}>
-                            {gram.desc}
-                          </span>
-                        </div>
-                      </>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            ) : menuViewMode === 'summary' ? (
-              <motion.div key="summary" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="w-full">
-                
-                {summaryStep === 'genres' && (
-                  <div>
-                    <div className="text-center mb-8">
-                      <h2 className="text-xl md:text-2xl font-black text-slate-700">長文読解ジャンル選択</h2>
-                      <p className="text-slate-400 font-bold text-xs mt-1">興味のあるアカデミック・トピックを選んで英語の長文に挑戦しよう！</p>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                      {GENRE_LIST.map((g) => {
-                        const availableCount = ARTICLES_MASTER.filter(a => a.genres.includes(g.id)).length;
-                        
-                        return (
-                          <motion.button
-                            key={g.id}
-                            whileHover={{ y: -4, scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            onClick={() => {
-                              setSelectedGenreId(g.id);
-                              setSummaryStep('articles');
-                            }}
-                            className={`bg-white rounded-2xl p-4 text-left border-2 ${g.border} shadow-sm flex flex-col justify-between items-start cursor-pointer transition-all h-[130px] group relative overflow-hidden`}
-                          >
-                            {/* 🌟 透明なFragmentで包んでVS Codeの赤線を消去 */}
-                            <>
-                              <div className="flex justify-between items-center w-full">
-                                <span className="text-[10px] font-black tracking-widest text-slate-400 uppercase bg-slate-100 px-2 py-0.5 rounded-md">
-                                  {g.label}
-                                </span>
-                                {availableCount > 0 && (
-                                  <span className="text-[10px] bg-emerald-100 text-emerald-700 font-black px-1.5 py-0.5 rounded-md">
-                                    {availableCount} 記事
-                                  </span>
-                                )}
-                              </div>
-                              
-                              <div className="mt-auto w-full">
-                                <div className={`p-2 rounded-xl bg-gradient-to-br ${g.fromColor} text-white mb-2 w-max shadow-sm group-hover:scale-110 transition-transform`}>
-                                  {g.icon}
-                                </div>
-                                <h3 className="text-sm font-black text-slate-700 truncate w-full group-hover:text-indigo-600 transition-colors">
-                                  {g.title}
-                                </h3>
-                              </div>
-                            </>
-                          </motion.button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
-                {summaryStep === 'articles' && (
-                  <div className="w-full max-w-3xl mx-auto">
-                    {(() => {
-                      const genreMeta = GENRE_LIST.find(g => g.id === selectedGenreId);
-                      const matchedArticles = ARTICLES_MASTER.filter(a => a.genres.includes(selectedGenreId));
-
-                      return (
-                        <div>
-                          <div className="flex items-center gap-3 mb-6 bg-white border border-slate-200 p-4 rounded-2xl shadow-2xs">
-                            <div className={`p-2 rounded-xl bg-gradient-to-br ${genreMeta?.fromColor} text-white`}>
-                              {genreMeta?.icon}
-                            </div>
-                            <div>
-                              <h3 className="text-lg font-black text-slate-700">ジャンル: {genreMeta?.title} の記事一覧</h3>
-                              <p className="text-xs text-slate-400 font-bold">読解・構造・要約・語彙を鍛えるための最適な長文</p>
-                            </div>
-                          </div>
-
-                          {matchedArticles.length === 0 ? (
-                            <div className="bg-white rounded-3xl p-10 border-2 border-dashed border-slate-200 text-center text-slate-400">
-                              <HelpCircle size={44} className="mx-auto mb-2 opacity-50" />
-                              <p className="font-black">記事がまだありません</p>
-                              <p className="text-xs mt-1">このジャンルの長文は今後のアップデートで追加されます！</p>
-                            </div>
-                          ) : (
-                            <div className="flex flex-col gap-4">
-                              {matchedArticles.map((art) => (
-                                <motion.div
-                                  key={art.id}
-                                  whileHover={{ scale: 1.01, x: 2 }}
-                                  onClick={() => {
-                                    setSelectedArticle(art);
-                                    setSummaryStep('levels');
-                                  }}
-                                  className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:border-indigo-300 cursor-pointer flex justify-between items-center group transition-all"
-                                >
-                                  {/* 🌟 透明なFragmentで包んでVS Codeの赤線を消去 */}
-                                  <>
-                                    <div className="min-w-0 pr-4">
-                                      <span className="text-[11px] font-black bg-emerald-50 text-emerald-600 border border-emerald-200 px-2.5 py-0.5 rounded-md">
-                                        Premium Article
-                                      </span>
-                                      <h4 className="text-lg font-black text-slate-800 mt-2 mb-1 group-hover:text-indigo-600 transition-colors">
-                                        {art.title}
-                                      </h4>
-                                      <p className="text-xs text-slate-400 font-medium italic mb-2">{art.englishTitle}</p>
-                                      <p className="text-xs text-slate-500 font-bold line-clamp-2">{art.desc}</p>
-                                    </div>
-                                    <ChevronRight size={20} className="text-slate-400 group-hover:text-indigo-500 transform group-hover:translate-x-1 transition-all flex-shrink-0" />
-                                  </>
-                                </motion.div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })()}
-                  </div>
-                )}
-
-                {summaryStep === 'levels' && selectedArticle && (
-                  <div className="w-full max-w-2xl mx-auto">
-                    <div className="text-center mb-6">
-                      <span className="text-[11px] font-black tracking-widest text-slate-400 uppercase bg-slate-200 px-3 py-1 rounded-full">難易度レベル選択</span>
-                      <h3 className="text-xl md:text-2xl font-black text-slate-800 mt-2">{selectedArticle.title}</h3>
-                      <p className="text-slate-400 font-bold text-xs mt-1">現在の実力に合ったレベルを選択して4構造特訓を開始しよう！</p>
-                    </div>
-
-                    <div className="flex flex-col gap-4">
-                      {selectedArticle.levels.map((lvl) => {
-                        const lvlMeta = 
-                          lvl.num === 1 ? { bg: "bg-emerald-50/60 hover:bg-emerald-50 border-emerald-200", text: "text-emerald-700", label: "A2 Basic" } :
-                          lvl.num === 2 ? { bg: "bg-cyan-50/60 hover:bg-cyan-50 border-cyan-200", text: "text-cyan-700", label: "B1 Intermediate" } :
-                          lvl.num === 3 ? { bg: "bg-indigo-50/60 hover:bg-indigo-50 border-indigo-200", text: "text-indigo-700", label: "B2 Upper-Intermediate" } :
-                          { bg: "bg-purple-50/60 hover:bg-purple-50 border-purple-200", text: "text-purple-700", label: "C1 Advanced" };
-
-                        return (
-                          <motion.button
-                            key={lvl.num}
-                            whileHover={{ y: -2, scale: 1.01 }}
-                            whileTap={{ scale: 0.99 }}
-                            onClick={() => {
-                              setActiveSummary(lvl.data);
-                              setAppScreen('summary');
-                            }}
-                            className={`w-full p-5 rounded-2xl border-2 text-left shadow-2xs cursor-pointer transition-all flex items-center justify-between ${lvlMeta.bg}`}
-                          >
-                            {/* 🌟 透明なFragmentで包んでVS Codeの赤線を消去 */}
-                            <>
-                              <div>
-                                <span className={`text-[10px] font-black px-2 py-0.5 rounded bg-white border ${lvlMeta.text}`}>
-                                  {lvlMeta.label}
-                                </span>
-                                <h4 className="text-base font-black text-slate-700 mt-2">
-                                  {lvl.name}
-                                </h4>
-                                <p className="text-xs text-slate-400 font-bold mt-0.5">
-                                  単語数: {lvl.data.wordCount || 150} words / {lvl.data.paragraphs?.length || 4} パラグラフ構成
-                                </p>
-                              </div>
-                              <div className="flex items-center gap-1 text-xs font-black text-indigo-500 bg-white shadow-3xs px-4 py-2 rounded-full border border-slate-100">
-                                4モード特訓を開く <Sparkles size={14} className="animate-pulse" />
-                              </div>
-                            </>
-                          </motion.button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
-              </motion.div>
-            ) : null}
-          </AnimatePresence>
-        </div>
-      </div>
-    );
-  }
-
-  if (gameState === 'sub_select') {
-    const subCategories = availableCategories.filter(cat => SUB_MAPPING[activeMain].includes(cat.categoryId) && cat.problems?.length > 0);
-    return (
-      <div className="flex-1 flex flex-col items-center p-6 md:p-12 overflow-y-auto z-10 relative w-full">
-        <div className="max-w-4xl w-full">
-          <div className="mb-8">
-            <BackButton onClick={backToMain} text="メイン選択へ戻る" />
-          </div>
-          <div className="flex flex-col gap-6">
-            {subCategories.map((sub) => (
-              <motion.div key={sub.categoryId} whileHover={{ scale: 1.02 }} onClick={() => selectSubCategory(sub)} className="p-6 bg-white rounded-[24px] cursor-pointer shadow-md flex justify-between items-center border-2 border-slate-100 hover:border-cyan-300 transition-colors">
-                {/* 🌟 ユーザーの画像で波線が出ていた原因箇所！透明なFragmentで包みました */}
-                <>
-                  <div>
-                    <h3 className="text-2xl font-black text-slate-700 mb-1">{sub.title}</h3>
-                    <p className="text-sm font-bold text-slate-500">{sub.description}</p>
-                  </div>
-                  <span className="bg-cyan-500 text-white px-6 py-3 rounded-full font-black text-sm shadow-sm hover:bg-cyan-400">選ぶ</span>
-                </>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (gameState === 'level_select') {
-    const levels = [{ num: 1, name: "Level 1 (初級)", bg: "bg-[#7ee2b8]", color: "text-[#065f46]"}, { num: 2, name: "Level 2 (中級)", bg: "bg-[#fbbf24]", color: "text-[#78350f]"}, { num: 3, name: "Level 3 (上級)", bg: "bg-[#fbb6d6]", color: "text-[#9d174d]"}];
-    const isGrammarMode = activeCategory.title.includes('【文法特訓】');
-
-    return (
-      <div className="flex-1 flex flex-col items-center p-6 md:p-12 overflow-y-auto z-10 relative w-full">
-        <div className="max-w-4xl w-full">
-          <div className="mb-8">
-            <BackButton onClick={isGrammarMode ? backToMain : backToSub} text={isGrammarMode ? "文法選択へ戻る" : "カテゴリ選択へ戻る"} />
-          </div>
-          
-          <div className="mb-10 text-center">
-            <h2 className="text-4xl font-black text-slate-700 mb-3 drop-shadow-sm">{activeCategory.title}</h2>
-            {isGrammarMode && (
-               <p className="text-lg font-bold text-purple-100 inline-block px-4 py-1 rounded-full border border-purple-200">
-                 全カテゴリから抽出された特別メニューです
-               </p>
-            )}
-          </div>
-           <div className="bg-white/80 backdrop-blur-md p-2 rounded-2xl shadow-sm border border-slate-200 mb-3 flex flex-wrap sm:flex-nowrap justify-center mx-auto max-w-3xl">
-            <button
-              onClick={() => setGameMode('flow')}
-              className={`flex-1 min-w-[150px] flex items-center justify-center gap-2 py-3 rounded-xl font-black text-sm md:text-base transition-all ${
-                gameMode === 'flow' ? 'bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-md' : 'text-slate-500 hover:bg-slate-100'
-              }`}
-            >
-              <Sparkles size={18} /> ⚡ 一筆フロー
-            </button>
-            <button 
-              onClick={() => setGameMode('normal')}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-black text-sm md:text-base transition-all ${
-                gameMode === 'normal' ? 'bg-cyan-500 text-white shadow-md' : 'text-slate-500 hover:bg-slate-100'
-              }`}
-            >
-              <Crosshair size={18} /> 通常トレース
-            </button>
-            <button 
-              onClick={() => setGameMode('bug_slash')}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-black text-sm md:text-base transition-all ${
-                gameMode === 'bug_slash' ? 'bg-rose-500 text-white shadow-md' : 'text-slate-500 hover:bg-slate-100'
-              }`}
-            >
-              <Bug size={18} /> バグ・スラッシュ
-            </button>
-          </div>
-          <p className="text-center text-sm font-bold text-slate-500 mb-8">{gameMode === 'flow' ? '⚡ 答えのカタマリを一筆でなぞり、指を離すとすぐ判定。正解をつなげてコンボを伸ばそう！' : gameMode === 'bug_slash' ? '🪲 余分な単語を見つけて破壊してから、構造をなぞろう。' : '🖐 単語をタップ・なぞって選択し、Answerで判定できます。'}</p>
-          <div className="flex flex-col gap-6">
-            {levels.map((lvl) => {
-              const levelKey = lvl.num === 1 ? '-b-' : lvl.num === 2 ? '-i-' : '-a-';
-              const hasProblems = activeCategory.categoryId === 'custom'
-                ? lvl.num === 1 && activeCategory.problems.length > 0
-                : activeCategory.problems.some(p => typeof p.id === 'string' && p.id.includes(levelKey));
-
+          <section className="space-y-3">
+            <div className="flex justify-between items-center flex-wrap gap-2">
+              <h2 className="text-lg font-black text-slate-800">難易度を選んですぐ開始</h2>
+              <label className="flex gap-2 items-center text-sm font-bold text-slate-600">
+                出題数
+                <select value={count} onChange={(e)=>setCount(e.target.value === 'all' ? 'all' : Number(e.target.value))}
+                  className="bg-white border border-slate-200 rounded-xl px-3 py-2">
+                  <option value={5}>5問</option><option value={10}>10問</option><option value={20}>20問</option><option value={50}>50問</option><option value="all">すべて</option>
+                </select>
+              </label>
+            </div>
+            {levels.map(lv => {
+              const available = number(lv);
+              const label = lv === 'all' ? '間違えた問題を復習' : `Level ${lv} / ${difficulty(lv)}`;
               return (
-                <motion.div 
-                  key={lvl.num} 
-                  whileHover={hasProblems ? { scale: 1.02 } : {}} 
-                  className={`p-6 md:p-8 rounded-[32px] shadow-md border-4 border-white flex justify-between items-center transition-all ${hasProblems ? lvl.bg : 'bg-slate-200 opacity-60'}`}
-                >
-                  {/* 🌟 透明なFragmentで包んでVS Codeの赤線を消去 */}
-                  <>
-                    <div>
-                      <h3 className={`text-3xl font-black ${hasProblems ? lvl.color : 'text-slate-500'} drop-shadow-sm`}>{lvl.name}</h3>
-                    </div>
-                    
-                    {hasProblems ? (
-                      <div className="flex flex-col sm:flex-row items-center gap-3">
-                        <select 
-                          value={tempCount}
-                          onChange={(e) => setTempCount(parseInt(e.target.value))}
-                          className="bg-white/90 border-2 border-slate-200 rounded-full px-4 py-3 font-black text-slate-600 focus:outline-none focus:border-cyan-400"
-                          onClick={(e) => e.stopPropagation()} 
-                        >
-                          <option value={10}>10問</option>
-                          <option value={20}>20問</option>
-                          <option value={50}>50問</option>
-                        </select>
-
-                        <button onClick={(e) => {
-                            e.stopPropagation();
-                            if (isMultiplayer && isHost) { 
-                              setBattleSetup({ mainId: activeMain, subCategory: activeCategory, level: lvl.num }); 
-                              setAppScreen('lobby'); 
-                            } 
-                            else { 
-                              startGame(lvl.num, tempCount); 
-                            }
-                          }} 
-                          className="bg-white/95 text-slate-800 px-6 py-3 md:px-8 md:py-4 rounded-full font-black text-lg md:text-xl hover:scale-105 active:scale-95 transition-transform shadow-lg border border-slate-100 flex items-center gap-2"
-                        >
-                          {isMultiplayer && isHost ? "👑 待機ルームを開く" : "START 🚀"}
-                        </button>
-                      </div>
-                    ) : (
-                      <span className="bg-slate-300 text-slate-500 px-6 py-3 rounded-full font-black text-lg">
-                        該当問題なし
-                      </span>
-                    )}
-                  </>
-                </motion.div>
+                <div key={lv} className="rounded-2xl bg-white border border-slate-200 p-4 flex gap-3 justify-between items-center">
+                  <div>
+                    <div className="font-black text-lg text-slate-800">{label}</div>
+                    <p className="text-sm text-slate-500">{available} 問からランダム出題</p>
+                  </div>
+                  <button type="button" disabled={!available} onClick={() => launch(lv, count)}
+                    className="bg-cyan-600 hover:bg-cyan-500 disabled:bg-slate-200 disabled:text-slate-400 text-white rounded-xl px-4 md:px-6 py-3 font-black inline-flex gap-2 items-center whitespace-nowrap">
+                    <Play size={17} fill="currentColor"/> 開始
+                  </button>
+                </div>
               );
             })}
-          </div>
+          </section>
         </div>
       </div>
     );
   }
 
-  return null;
+  const home = view === 'home' || view === 'element' || view === 'sub_select';
+  return (
+    <div className="flex-1 w-full bg-[#f5f8fc] overflow-y-auto px-4 md:px-8 py-6 md:py-8">
+      <div className="max-w-6xl mx-auto space-y-6">
+        <header className="flex items-start justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 text-cyan-700 font-black text-xs tracking-widest mb-1"><Zap size={15}/> TRACEGRAM</div>
+            <h1 className="text-2xl md:text-4xl font-black tracking-tight text-slate-900">英語を、なぞって理解する。</h1>
+            <p className="mt-2 text-slate-500 text-sm md:text-base">学びたい教材を選ぶだけ。あとからプレイ方法を変えられます。</p>
+          </div>
+          {!home && backButton(() => go('home'), 'ホーム')}
+        </header>
+
+        {home && (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Feature icon={Layers3} title="文法トレース" caption="主語・動詞・目的語・関係詞などを直感的に分析" theme="grammar" detail={`${allCategories.length}分野・${totalQuestions.toLocaleString()}問`} onClick={()=>go('grammar')}/>
+              <Feature icon={BookOpen} title="長文トレース" caption="英文を読みながら構造・読解・要約を学ぶ" theme="reading" detail={`${READING_ARTICLES.length}記事 / 4段階の難易度`} onClick={()=>go('reading')}/>
+              <Feature icon={Target} title="苦手克服" caption="前に間違えた英文だけを集中的にトレース" theme="review" detail={`${missedProblems.length}問の復習候補`} onClick={()=>go('review')}/>
+              <Feature icon={Users} title="みんなで対戦" caption="友達と同じ文法問題に挑戦。最大4人まで" theme="battle" onClick={()=>setAppScreen('title')}/>
+            </div>
+            {recentCategory && (
+              <section className="rounded-2xl bg-slate-900 text-white px-5 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div className="flex gap-3 items-center">
+                  <span className="bg-white/15 p-2.5 rounded-xl"><Clock3 size={20}/></span>
+                  <div>
+                    <div className="text-xs text-cyan-200 font-bold">前回の教材から再開</div>
+                    <div className="font-black">{recentCategory.title} · Lv.{last.level}</div>
+                  </div>
+                </div>
+                <button type="button" onClick={() => { setGameMode(last.mode || 'flow'); launch(last.level, last.count || 10, recentCategory); }}
+                  className="bg-white text-slate-900 px-5 py-3 rounded-xl font-black flex items-center gap-2 hover:bg-cyan-100">
+                  <Play size={16} fill="currentColor"/> もう一度学習
+                </button>
+              </section>
+            )}
+          </>
+        )}
+
+        {(home || view === 'grammar' || view === 'reading') && (
+          <div className="relative">
+            <Search size={20} className="absolute top-1/2 -translate-y-1/2 left-4 text-slate-400"/>
+            <input type="search" value={search} onChange={e=>setSearch(e.target.value)}
+              aria-label="教材を検索" placeholder="文法・教材を検索（例：関係詞、受動態、海洋プラスチック）"
+              className="w-full rounded-2xl border border-slate-200 bg-white pl-12 pr-4 py-4 shadow-sm text-slate-800 font-medium outline-none focus:ring-2 focus:ring-cyan-400"/>
+          </div>
+        )}
+
+        {(view === 'grammar' || (home && search.trim())) && (
+          <section className="space-y-4">
+            <div className="flex gap-2 justify-between items-center">
+              <h2 className="text-xl font-black text-slate-800">文法教材を探す</h2>
+              <span className="text-sm text-slate-500 font-bold">{filteredCourses.length} 分野</span>
+            </div>
+            <div className="flex gap-2 flex-wrap" aria-label="文法カテゴリ">
+              <button type="button" onClick={()=>setGroup('ALL')} aria-pressed={group==='ALL'}
+                className={`px-3.5 py-2 rounded-full border text-sm font-bold ${group==='ALL' ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-600 border-slate-200'}`}>すべて</button>
+              {groups.map(g=>(
+                <button key={g.id} type="button" onClick={()=>setGroup(g.id)} aria-pressed={group===g.id}
+                  className={`px-3.5 py-2 rounded-full border text-sm font-bold ${group===g.id ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-600 border-slate-200'}`}>{g.title}</button>
+              ))}
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {filteredCourses.map(c => (
+                <button key={c.categoryId} type="button" onClick={() => chooseCourse(c)} className={`${card} p-4 text-left flex gap-3 items-center`}>
+                  <span className={`p-3 rounded-xl font-black shrink-0 ${groupStyles[c.groupId]||groupStyles.CUSTOM}`}>{(CATALOG_GROUPS.find(g=>g.id===c.groupId)?.title || '教材').slice(0,4)}</span>
+                  <span className="flex-1 min-w-0">
+                    <span className="font-black text-slate-800 block text-base">{c.title}</span>
+                    <span className="text-xs text-slate-500 line-clamp-2">{c.description}</span>
+                    <span className="text-xs text-cyan-700 font-bold">{c.problems.length} 問 · Lv.1–3</span>
+                  </span>
+                  <ChevronRight size={19} className="text-slate-400 shrink-0"/>
+                </button>
+              ))}
+            </div>
+            {!filteredCourses.length && <p className="rounded-xl bg-white border p-6 text-slate-500">該当する教材はありません。検索語を変えてください。</p>}
+          </section>
+        )}
+
+        {(view === 'reading' || (home && search.trim())) && (
+          <section className="space-y-4">
+            <div className="flex gap-2 justify-between items-center">
+              <h2 className="text-xl font-black text-slate-800">長文教材</h2>
+              <span className="text-sm text-slate-500 font-bold">{filteredArticles.length} 記事</span>
+            </div>
+            {!selectedArticle ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {filteredArticles.map(a=>(
+                  <button key={a.id} type="button" onClick={()=>{setSelectedArticle(a);setMenuViewMode('reading');}}
+                    className={`${card} p-5 text-left space-y-2`}>
+                    <span className="text-xs font-black text-indigo-600">READING · A2–C1</span>
+                    <h3 className="font-black text-lg text-slate-800">{a.title}</h3>
+                    <p className="text-sm text-slate-600">{a.englishTitle}</p>
+                    <p className="text-sm text-slate-500">{a.description}</p>
+                    <div className="flex gap-1.5 flex-wrap">{a.topics.map(t=><span key={t} className="text-xs rounded-full bg-indigo-50 text-indigo-700 px-3 py-1">{t}</span>)}</div>
+                    <span className="inline-flex items-center gap-1 text-indigo-700 font-bold text-sm">レベルを選ぶ <ChevronRight size={16}/></span>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="bg-white border border-slate-200 p-4 md:p-6 rounded-3xl space-y-4">
+                {backButton(()=>setSelectedArticle(null), '記事一覧')}
+                <h3 className="text-xl md:text-2xl font-black">{selectedArticle.title}</h3>
+                <p className="text-slate-500">{selectedArticle.englishTitle}</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {selectedArticle.levels.map(l=>(
+                    <button key={l.num} type="button" onClick={()=>{setActiveSummary(l.data); setAppScreen('summary');}}
+                      className="rounded-2xl border-2 border-indigo-100 hover:border-indigo-400 bg-indigo-50/40 p-4 flex items-center justify-between gap-2">
+                      <span className="text-left"><span className="font-black text-slate-800 block">{l.name}</span>
+                      <span className="text-slate-500 text-xs">{l.data.wordCount || 0} words · {l.data.paragraphs?.length || 0} paragraphs</span></span>
+                      <Play size={18} className="text-indigo-600 shrink-0"/>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+            {!filteredArticles.length && <p className="rounded-xl bg-white border p-6 text-slate-500">該当する記事はありません。</p>}
+          </section>
+        )}
+
+        {view === 'review' && (
+          <section className="bg-white rounded-3xl border border-slate-200 p-6 md:p-9 space-y-4">
+            <span className="inline-flex gap-2 items-center text-amber-700 text-sm font-black"><Target size={19}/> あなたの苦手克服</span>
+            <h2 className="font-black text-2xl text-slate-800">{missedProblems.length ? `${missedProblems.length}問を復習できます` : 'まだ復習する問題はありません'}</h2>
+            <p className="text-sm text-slate-500">学習中に間違えた問題を、この端末に記録します。復習で正解した問題は復習リストから外れます。</p>
+            {!!missedProblems.length && (
+              <button onClick={openReview} type="button"
+                className="inline-flex gap-2 items-center bg-amber-500 hover:bg-amber-400 text-slate-900 font-black rounded-2xl px-6 py-4">
+                <RotateCcw size={19}/> 苦手な問題を始める
+              </button>
+            )}
+          </section>
+        )}
+
+        {home && !search.trim() && (
+          <section className="bg-white rounded-2xl border border-slate-200 p-5 md:p-6">
+            <div className="flex gap-2 items-center mb-3"><GraduationCap className="text-cyan-700" size={20}/><h2 className="font-black text-slate-800 text-lg">迷ったら、ここから</h2></div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+              {allCategories.filter(c=>c.groupId==='BASIC').slice(0,3).map((c,i)=>(
+                <button key={c.categoryId} onClick={()=>chooseCourse(c)} type="button"
+                  className="text-left rounded-xl border border-slate-200 bg-slate-50 hover:bg-cyan-50 p-4 flex gap-3 items-center">
+                  <span className="text-cyan-700 font-black">{String(i+1).padStart(2,'0')}</span>
+                  <span className="font-bold text-slate-700 flex-1 text-sm">{c.title}</span>
+                  <ChevronRight size={16} className="text-slate-400"/>
+                </button>
+              ))}
+            </div>
+          </section>
+        )}
+        <p className="text-center text-xs text-slate-400 pb-4">教材と学習履歴は現在この端末内で管理しています。先生が作成した教材は別端末には自動共有されません。</p>
+      </div>
+    </div>
+  );
 }
