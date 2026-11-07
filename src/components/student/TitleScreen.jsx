@@ -8,7 +8,7 @@ export default function TitleScreen({
 }) {
   const connecting = connectionStatus === 'connecting';
   return (
-    <main className="tg-workspace flex-1 min-h-[100dvh] overflow-y-auto px-4 md:px-8 py-6 md:py-10">
+    <main className="tg-workspace tg-fluid-screen overflow-y-auto px-4 md:px-8 py-6 md:py-10">
       <div className="max-w-[900px] mx-auto">
         <button type="button" onClick={onSinglePlayer}
           className="inline-flex items-center gap-1.5 text-[#506f5d] text-sm font-semibold mb-5 py-2">
