@@ -51,6 +51,22 @@ assert.match(game, /tg-recovery-overlay/);
 assert.match(splash, /tg-opening-content/);
 assert.match(splash, /tg-opening-logo/);
 
+// Brand-matched opening must remain notebook-like, responsive, and animated.
+// Avoid reverting to the old green/copper colors that clash with the logo.
+assert.match(splash, /tracegramlogo\.png/, 'use the original brand logo');
+assert.match(splash, /tracegram-ink-gradient/, 'animated traced line carries the brand colors');
+assert.match(splash, /useReducedMotion/, 'opening motion respects reduced-motion settings');
+assert.match(splash, /tg-opening-paper/, 'notebook paper is present in the opening');
+assert.match(css, /\.tg-opening-paper\s*\{[^}]*repeating-linear-gradient/s,
+  'the welcome canvas retains notebook ruling');
+assert.match(css, /\.tg-opening-paper::after\s*\{[^}]*radial-gradient/s,
+  'notebook binder holes remain decorative and noninteractive');
+assert.match(css, /\.tg-logo-halo\s*\{[^}]*conic-gradient/s,
+  'logo glow uses cyan, blue and violet rather than green');
+assert.doesNotMatch(css, /#334d47\s+0%,\s*#1d302d/, 'old forest-green splash background is gone');
+assert.match(css, /\.tg-home-paper\s*\{/, 'landing page echoes the opening paper palette');
+
+
 // Reading recovery must be a wide, scrollable dialog on tablets with an
 // actual gauge, a dedicated transcript field, and icon-only example audio.
 const oral = read('src/components/student/PronunciationMission.jsx');
