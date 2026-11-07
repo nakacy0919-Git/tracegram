@@ -2,10 +2,12 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import {
   ArrowLeft, ArrowRight, BookOpen, PencilLine, Search, ChevronRight, Play,
-  RotateCcw, Users, NotebookPen, ListFilter, CircleHelp, Settings2
+  RotateCcw, Users, NotebookPen, ListFilter, CircleHelp, Settings2, Shuffle
 } from 'lucide-react';
 import { CATALOG_GROUPS, getProblemLevel } from '../../data/mockData';
 import { READING_ARTICLES } from '../../data/readingCatalog';
+import GrammarMixSetup from './GrammarMixSetup';
+import { MIX_COURSE_ID, makeMixCourse, createMixSession } from '../../lib/grammarMix.mjs';
 
 const KEY_LAST = 'tracegram_last_course';
 const KEY_SESSION = 'tracegram_active_session';
@@ -69,7 +71,7 @@ export default function MenuScreen({
   setAppScreen, selectSubCategory, startGame, resumeGame, backToMain, setBattleSetup,
   menuViewMode, setMenuViewMode, selectedArticle, setSelectedArticle
 }) {
-  const page = ['grammar','reading','review'].includes(menuViewMode) ? menuViewMode : 'home';
+  const page = ['grammar','reading','review','mix'].includes(menuViewMode) ? menuViewMode : 'home';
   const [query,setQuery] = useState('');
   const [group,setGroup] = useState('ALL');
   const [level,setLevel] = useState(1);
@@ -93,7 +95,9 @@ export default function MenuScreen({
     return m;
   },[categories]);
   const missed=Object.keys(mistakes).map(id=>problemMap.get(id)).filter(Boolean);
-  const recent=last && byId.get(last.categoryId);
+  const recent=last && (last.categoryId===MIX_COURSE_ID && last.mixConfig
+    ? makeMixCourse(categories,last.mixConfig)
+    : byId.get(last.categoryId));
   const resumeAvailable=!!(recent && session && session.categoryId===recent.categoryId && Array.isArray(session.problemIds) && session.problemIds.length);
   const topics=CATALOG_GROUPS.filter(g=>categories.some(c=>(c.groupId||'CUSTOM')===g.id));
 
@@ -129,6 +133,17 @@ export default function MenuScreen({
       }));
     } catch {}
     startGame(lvl,qty,course);
+  }
+  function launchMix(course) {
+    if (isMultiplayer || !course?.problems?.length) return;
+    setGameMode('flow');
+    try {
+      localStorage.setItem(KEY_LAST, JSON.stringify({
+        categoryId: MIX_COURSE_ID, level: 'all', count: course.problems.length,
+        mode: 'flow', mixConfig: course.mixConfig, at: Date.now()
+      }));
+    } catch {}
+    startGame('all', course.problems.length, course);
   }
   function launchReview() {
     if(!missed.length)return;
@@ -253,7 +268,11 @@ export default function MenuScreen({
         {recent && !isMultiplayer && <button type="button"
           onClick={()=>{
             setGameMode(['flow','normal','bug_slash'].includes(last.mode)?last.mode:'flow');
-            if(!resumeAvailable || !resumeGame(recent,session))launch(last.level,last.count||10,recent);
+            if (resumeAvailable && resumeGame(recent,session)) return;
+            if (last.categoryId===MIX_COURSE_ID && last.mixConfig) {
+              const next=createMixSession(categories,last.mixConfig);
+              if (next) launchMix(next);
+            } else launch(last.level,last.count||10,recent);
           }}
           className="tg-paper tg-course rounded-2xl w-full px-5 py-4 flex justify-between items-center gap-3 text-left">
           <span className="flex min-w-0 items-center gap-3">
@@ -270,6 +289,7 @@ export default function MenuScreen({
           <HomeTile number="02" icon={BookOpen} title="長文をなぞる" detail="読解・構造・要約・語彙" onClick={()=>navigate('reading')}/>
         </div>
         <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-2 text-sm">
+          <button type="button" onClick={()=>navigate('mix')} className="tg-pill flex items-center gap-2"><Shuffle size={17}/> Grammar Mix</button>
           <button type="button" onClick={()=>navigate('review')} className="tg-pill flex items-center gap-2">
             <RotateCcw size={17}/> まちがいノート <span className="text-xs opacity-65">{missed.length}</span>
           </button>
@@ -286,6 +306,10 @@ export default function MenuScreen({
         <div className="flex justify-between items-start gap-3">
           <NotebookHeading label="GRAMMAR NOTE" title="文法をなぞる" description="学びたい項目を選んでください。"/>
           <Back onClick={()=>navigate('home')}>ホーム</Back>
+        </div>
+        <div className="flex gap-2 items-center border-b border-[#e4e7d9] pb-3" role="tablist" aria-label="文法の出題形式">
+          <button type="button" role="tab" aria-selected="true" className="tg-pill is-active">単元別</button>
+          {!isMultiplayer && <button type="button" role="tab" aria-selected="false" onClick={()=>navigate('mix')} className="tg-pill inline-flex gap-1.5 items-center"><Shuffle size={16}/> Grammar Mix</button>}
         </div>
         <SearchBox value={query} onChange={setQuery} placeholder="教材を検索（例：受動態・関係詞）"/>
         <div className="flex gap-2 overflow-x-auto pb-1" aria-label="文法分類">
@@ -310,6 +334,8 @@ export default function MenuScreen({
         </div>
       </section>}
 
+      {page==='mix' && <GrammarMixSetup categories={categories} onLaunch={launchMix}
+        onBack={()=>navigate('grammar')} isMultiplayer={isMultiplayer} />}
       {page==='reading' && <section className="tg-paper rounded-[22px] p-4 sm:p-6 space-y-5">
         <div className="flex items-start justify-between gap-3">
           <NotebookHeading label="READING NOTE" title="長文をなぞる"
