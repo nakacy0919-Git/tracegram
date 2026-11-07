@@ -51,4 +51,19 @@ assert.match(game, /tg-recovery-overlay/);
 assert.match(splash, /tg-opening-content/);
 assert.match(splash, /tg-opening-logo/);
 
+// Reading recovery must be a wide, scrollable dialog on tablets with an
+// actual gauge, a dedicated transcript field, and icon-only example audio.
+const oral = read('src/components/student/PronunciationMission.jsx');
+assert.match(game, /max-w-\[980px\]/, 'recovery dialog uses the available width on iPad/PC');
+assert.match(game, /overflow-y-auto overscroll-contain/, 'recovery dialog scrolls on short landscape screens');
+assert.match(oral, /function AccuracyGauge\(/, 'accuracy uses a dedicated semi-circle SVG gauge');
+assert.match(oral, /strokeDasharray/, 'meter fill uses the actual accuracy value');
+assert.match(oral, /文字起こし・認識結果/, 'separate speech transcription pane exists');
+assert.match(oral, /md:grid-cols-\[minmax\(0,0\.95fr\)_minmax\(0,1\.05fr\)\]/,
+  'accuracy and transcription split into two columns on iPad');
+assert.match(oral, /aria-label="お手本音声を聞く"/, 'speaker icon-only button stays accessible');
+assert.doesNotMatch(oral, /ゆっくり再生|setSlow|rate = slow/, 'unwanted slow playback controls are gone');
+assert.match(oral, /onSkip/, 'the skip route still allows retrying the original tracing question');
+
+
 console.log('iPad layout checks passed: one viewport shell, rotation-aware panes, safe inner scrolling and compact landscape game.');

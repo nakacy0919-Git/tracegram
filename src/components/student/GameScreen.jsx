@@ -306,39 +306,54 @@ export default function GameScreen({
 
       <AnimatePresence>
         {feedbackState === 'wrong' && (
-          <motion.div 
+          <motion.div
             key="wrong-modal-overlay"
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
-            exit={{ opacity: 0 }} 
-            className="tg-recovery-overlay fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#27352f]/65 backdrop-blur-[3px]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="tg-recovery-overlay fixed inset-0 z-[100] flex items-center justify-center px-3 py-3 sm:px-5 sm:py-4 bg-[#24332c]/65 backdrop-blur-[3px]"
           >
-            <motion.div 
+            <motion.div
               key="wrong-modal-content"
-              initial={{ scale: 0.9, y: 30, opacity: 0 }} 
-              animate={{ scale: 1, y: 0, opacity: 1 }} 
-              exit={{ scale: 0.9, y: 30, opacity: 0 }} 
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="tg-recovery-modal tg-paper rounded-[22px] tg-note shadow-xl w-full max-w-2xl border border-[#d7d7c8] flex flex-col max-h-[90dvh]"
+              role="dialog" aria-modal="true" aria-labelledby="tg-recovery-title"
+              initial={{ scale: 0.96, y: 13, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.97, y: 10, opacity: 0 }}
+              transition={{ type: 'spring', damping: 28, stiffness: 320 }}
+              className="tg-recovery-modal tg-paper tg-note rounded-[22px] shadow-[0_18px_70px_rgba(17,37,25,.30)] w-full max-w-[980px] min-w-0 max-h-[calc(100dvh-28px)] overflow-hidden flex flex-col border border-[#d4e2d5]"
             >
-              <div className="p-4 md:p-6 overflow-y-auto flex flex-col gap-4">
-                <div className="w-full bg-[#edf2e6]/90 p-4 rounded-xl border border-[#d9e5d7] flex flex-col items-center">
-                  <p className="text-[#3e6558] font-bold text-sm mb-2">正しい構造はこちら</p>
-                  <div className="text-center leading-[2.5rem] w-full">
-                   {activeProblem.tokens.map((token, idx) => {
-                     const isTarget = (activeProblem.targetIndices || (activeProblem.targetIndex !== undefined ? [activeProblem.targetIndex] : [])).includes(idx);
-                     return (
-                       <span key={`ans-${idx}`} className={`inline-block text-lg md:text-2xl font-semibold px-1 mx-0.5 ${isTarget ? 'bg-[#d5e7d3] text-[#315a42] border-b-[3px] border-[#739878]' : 'text-stone-400'}`}>
-                         {token}
-                       </span>
-                     );
-                   })}
+              <div className="w-full min-w-0 min-h-0 overflow-y-auto overscroll-contain p-3 sm:p-5 md:px-7 md:py-5 flex flex-col gap-3 md:gap-4">
+                <div className="w-full rounded-[17px] bg-gradient-to-r from-[#eef6ee] via-[#f6faf4] to-[#eaf4ec] px-4 py-3 md:py-4 border border-[#d4e6d7] text-center">
+                  <h2 id="tg-recovery-title" className="text-[#58816c] font-bold text-xs md:text-sm tracking-wide mb-2">
+                    正しい構造はこちら
+                  </h2>
+                  <div className="w-full leading-[2rem] md:leading-[2.4rem]">
+                    {activeProblem.tokens.map((token, idx) => {
+                      const isTarget = (activeProblem.targetIndices ||
+                        (activeProblem.targetIndex !== undefined ? [activeProblem.targetIndex] : [])).includes(idx);
+                      return (
+                        <span key={`ans-${idx}`}
+                          className={`inline-block text-lg md:text-2xl font-semibold px-1 mx-0.5 ${isTarget ?
+                            'bg-[#d4e9d9] text-[#365b43] border-b-[3px] border-[#81b298]' :
+                            'text-[#748678]'}`}>
+                          {token}
+                        </span>
+                      );
+                    })}
                   </div>
                   {activeProblem.translation && (
-                    <p className="text-slate-500 font-bold mt-4 text-sm md:text-base italic">{activeProblem.translation}</p>
+                    <p className="text-[#647a76] font-medium mt-2 text-sm md:text-base">
+                      {activeProblem.translation}
+                    </p>
                   )}
                 </div>
-                <PronunciationMission key={activeProblem.id || currentProblemIdx} targetSentence={activeProblem.tokens.join(' ')} onComplete={onRetryTrace} onFallback={onRetryTrace} onSkip={onRetryTrace} />
+                <PronunciationMission
+                  key={activeProblem.id || currentProblemIdx}
+                  targetSentence={activeProblem.tokens.join(' ')}
+                  onComplete={onRetryTrace}
+                  onFallback={onRetryTrace}
+                  onSkip={onRetryTrace}
+                />
               </div>
             </motion.div>
           </motion.div>
