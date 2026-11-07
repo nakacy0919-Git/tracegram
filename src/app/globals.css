@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&family=Shippori+Mincho:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&family=Shippori+Mincho:wght@500;600;700&family=Caveat:wght@500;600;700&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -188,3 +188,89 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 }
 /* Hide local development overlays; unaffected in production. */
 div#__next_turbo_dev_overlay, #__next_turbopack_overlay { display: none !important; }
+
+
+/*
+ * TRACE HIGHLIGHTER
+ * Real marker ink sits underneath the text instead of individual rounded chips.
+ * Each selected word joins the adjacent selection to form one continuous stroke.
+ * The gradient, slightly uneven edges and gentle opacity mimic a physical pen.
+ */
+.tg-ink-token {
+  position: relative;
+  display: inline-block;
+  isolation: isolate;
+  margin-right: .17em;
+  padding-inline: .06em;
+  border-radius: 0;
+  vertical-align: baseline;
+  color: #334239;
+  transition: color .15s ease;
+}
+.tg-ink-token::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  left: -.025em;
+  right: -.025em;
+  top: 33%;
+  bottom: 6%;
+  border-radius: 9% 13% 15% 12% / 23% 33% 19% 25%;
+  transform: skewX(-5deg) rotate(-.6deg);
+  opacity: 0;
+}
+.tg-ink-token.tg-mark-selected::before {
+  opacity: 1;
+  background: linear-gradient(
+    178deg,
+    rgba(147, 201, 82, .03) 0%,
+    rgba(173, 212, 85, .45) 13%,
+    rgba(146, 199, 62, .52) 52%,
+    rgba(157, 202, 69, .37) 83%,
+    rgba(141, 190, 72, .04) 100%
+  );
+  box-shadow: inset 0 -2px 0 rgba(126, 175, 60, .09);
+  animation: tg-ink-reveal .26s cubic-bezier(.25,.65,.25,1) both;
+}
+.tg-ink-token.tg-mark-selected.tg-mark-middle::before,
+.tg-ink-token.tg-mark-selected.tg-mark-start::before {
+  right: -.21em;
+}
+.tg-ink-token.tg-mark-selected.tg-mark-middle::before,
+.tg-ink-token.tg-mark-selected.tg-mark-end::before {
+  left: -.09em;
+}
+.tg-ink-token.tg-mark-selected.tg-mark-middle::before {
+  border-radius: 1% 2% 2% 2% / 4% 8% 6% 9%;
+}
+.tg-ink-token.tg-mark-selected.tg-mark-wrong::before {
+  background: linear-gradient(180deg, rgba(231, 158, 134, .14), rgba(214, 112, 93, .46) 55%, rgba(218, 120, 98, .13));
+}
+.tg-ink-token.tg-mark-focus::before {
+  opacity: 1;
+  background: linear-gradient(178deg, transparent 0%, rgba(217,181,95,.24) 15%, rgba(220,179,80,.37) 85%, transparent);
+  border-bottom: 2px dashed rgba(168, 133, 69, .4);
+}
+.tg-ink-token.tg-mark-slash {
+  color: #874f43;
+  text-decoration: line-through;
+  text-decoration-thickness: 3px;
+  text-decoration-color: #ad7567;
+}
+@keyframes tg-ink-reveal {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+/* A celebratory hand-lettered teacher's mark on the notebook. */
+.tg-correct-pen {
+  font-family: 'Caveat', 'Segoe Print', 'Comic Sans MS', cursive;
+  font-weight: 700;
+  color: #397858;
+  letter-spacing: -.02em;
+  text-shadow: 0 1px 0 rgba(255,255,255,.32);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tg-ink-token.tg-mark-selected::before { animation: none; }
+}
