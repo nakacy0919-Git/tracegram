@@ -186,22 +186,18 @@ export default function GameScreen({
                     const isBugWord = gameMode === 'bug_slash' && !isBugSlashed && idx === bugIndex;
                     const isSlashing = idx === slashingIndex;
                     
-                    let isSelected = false;
-                    let isGlowing = false;
-                    let bgClass = "bg-transparent text-[#334239]";
-                    
-                    if (isBugSlashed) {
-                      isSelected = selectedIndices.includes(idx);
-                      isGlowing = activeProblem.modifiedIndices ? activeProblem.modifiedIndices.includes(idx) : activeProblem.modifiedIndex === idx;
-                    }
-
-                    if (isSlashing) {
-                      bgClass = "text-[#874f43] bg-[#f3d9cb] border-b-[3px] border-[#b57362]";
-                    } else if (isSelected) {
-                      bgClass = feedbackState === 'wrong' ? "bg-[#f0cec4] text-[#783e36] border-b-[3px] border-[#a46e60]" : "bg-[#dbe9d9] text-[#2a503b] border-b-[3px] border-[#5c8a6e]";
-                    } else if (isGlowing) {
-                      bgClass = "bg-[#eee6c8] text-[#735838] border-b-2 border-dashed border-[#c3a56d]";
-                    }
+                    const isSelected = isBugSlashed && selectedIndices.includes(idx);
+                    const isGlowing = isBugSlashed &&
+                      (activeProblem.modifiedIndices
+                        ? activeProblem.modifiedIndices.includes(idx)
+                        : activeProblem.modifiedIndex === idx);
+                    const previousSelected = isSelected && selectedIndices.includes(idx - 1);
+                    const nextSelected = isSelected && selectedIndices.includes(idx + 1);
+                    const markerShape = previousSelected && nextSelected ? 'tg-mark-middle'
+                      : nextSelected ? 'tg-mark-start' : previousSelected ? 'tg-mark-end' : '';
+                    const markerClass = isSlashing ? 'tg-mark-slash'
+                      : isSelected ? `tg-mark-selected ${markerShape} ${feedbackState === 'wrong' ? 'tg-mark-wrong' : ''}`
+                      : isGlowing ? 'tg-mark-focus' : '';
 
                     return (
                       <motion.span 
@@ -227,7 +223,7 @@ export default function GameScreen({
                           y: -40 
                         } : {}}
                         transition={{ duration: SLASH_ANIMATION_DURATION / 1000, ease: "easeOut" }}
-                        className={`inline-block text-xl md:text-3xl lg:text-4xl font-semibold px-1.5 md:px-2 mx-0.5 md:mx-1 rounded-md select-none transition-colors duration-150 ${bgClass}`}
+                        className={`tg-ink-token text-xl md:text-3xl lg:text-4xl font-semibold select-none transition-colors duration-150 ${markerClass}`}
                       >
                         {token}
                       </motion.span>
@@ -262,8 +258,39 @@ export default function GameScreen({
                 <CheckCircle2 size={20} /> 判定する
               </motion.button>
             ) : feedbackState === 'correct' ? (
-              <motion.div key="correct-display" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-[#3d7960] font-semibold tg-serif text-3xl md:text-4xl">
-                正解！
+              <motion.div
+                key={`correct-${currentProblemIdx}`}
+                role="status" aria-live="polite"
+                initial={{ opacity: 0, scale: 0.88, y: 12 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 1.06, y: -5 }}
+                transition={{ type: 'spring', stiffness: 260, damping: 22 }}
+                className="relative w-full max-w-[450px] h-[172px] flex items-center justify-center select-none pointer-events-none"
+              >
+                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 420 180" fill="none" aria-hidden="true">
+                  <motion.path
+                    d="M39 88 C22 48 104 19 190 20 C302 14 390 53 393 98 C399 147 321 161 210 160 C98 166 41 142 39 88"
+                    stroke="#4a9a68" strokeWidth="5.5" strokeLinecap="round" strokeLinejoin="round"
+                    initial={{ pathLength: 0, opacity: 0.6 }}
+                    animate={{ pathLength: 1, opacity: 1 }}
+                    transition={{ duration: 0.82, ease: 'easeOut', delay: 0.1 }}
+                  />
+                  <motion.path
+                    d="M60 145 Q198 165 351 143"
+                    stroke="#8eb99b" strokeWidth="2" strokeLinecap="round"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 0.65 }}
+                    transition={{ duration: 0.45, delay: 0.65 }}
+                  />
+                </svg>
+                <motion.span
+                  initial={{ opacity: 0, rotate: -9, scale: 0.7 }}
+                  animate={{ opacity: 1, rotate: -5, scale: [0.7, 1.1, 1] }}
+                  transition={{ duration: 0.6, ease: [0.2, 1, 0.3, 1], delay: 0.13 }}
+                  className="tg-correct-pen text-[clamp(3.4rem,11vw,5.7rem)] leading-none relative z-10 pb-2"
+                >
+                  Correct!
+                </motion.span>
               </motion.div>
             ) : null}
           </AnimatePresence>
