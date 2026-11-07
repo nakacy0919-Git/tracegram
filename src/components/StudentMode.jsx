@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 import { useTrace } from '../hooks/useTrace';
+import { playCorrectChime } from '../lib/traceAudio';
 import { useMultiplayer } from '../hooks/useMultiplayer';
 
 import TitleScreen from './student/TitleScreen';
@@ -57,34 +58,7 @@ export default function StudentMode({ categories, onTeacherOpen }) {
   const processedBattleRef = useRef(null);
 
   useEffect(() => {
-    if (feedbackState === 'correct') {
-      try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) return;
-        const ctx = new AudioContext();
-
-        const playNote = (freq, startTime, duration) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sine'; 
-          osc.frequency.setValueAtTime(freq, startTime);
-          gain.gain.setValueAtTime(0, startTime);
-          gain.gain.linearRampToValueAtTime(0.2, startTime + 0.05); 
-          gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration); 
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(startTime);
-          osc.stop(startTime + duration);
-        };
-
-        const now = ctx.currentTime;
-        playNote(880, now, 0.4); 
-        playNote(1108.73, now + 0.1, 0.6);
-        setTimeout(() => ctx.close().catch(() => {}), 850); 
-      } catch (e) {
-        console.error("Audio playback failed", e);
-      }
-    }
+    if (feedbackState === 'correct') playCorrectChime();
   }, [feedbackState]);
 
   useEffect(() => {
