@@ -17,7 +17,7 @@ export default function OpeningSplash({ onEnter }) {
       <motion.div initial={reduceMotion ? false : {opacity: 0, scale: 0.78, y: 24}}
         animate={reveal}
         transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-        className="relative w-full max-w-lg flex flex-col items-center">
+        className="tg-opening-content relative w-full max-w-lg flex flex-col items-center">
         <motion.div
           initial={reduceMotion ? false : { rotate: -9, scale: 0.9 }}
           animate={reduceMotion ? undefined : { rotate: 0, scale: [0.9, 1.04, 1] }}
@@ -25,7 +25,7 @@ export default function OpeningSplash({ onEnter }) {
           className="relative mb-2">
           <span aria-hidden="true" className="tg-logo-halo"/>
           <img src="/tracegramlogo.png" alt="Tracegram ロゴ"
-            className="relative z-10 w-40 h-40 sm:w-52 sm:h-52 object-contain drop-shadow-[0_18px_30px_rgba(0,0,0,0.32)]"/>
+            className="tg-opening-logo relative z-10 w-40 h-40 sm:w-52 sm:h-52 object-contain drop-shadow-[0_18px_30px_rgba(0,0,0,0.32)]"/>
         </motion.div>
         <motion.h1 initial={reduceMotion ? false : {opacity: 0, letterSpacing: '0.22em'}}
           animate={{opacity:1,letterSpacing:'0.025em'}}
