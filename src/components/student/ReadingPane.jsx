@@ -150,31 +150,22 @@ export default function ReadingPane({
                     const isPrevSelected = isActive && selectedIndices.includes(tIdx - 1);
                     const isNextSelected = isActive && selectedIndices.includes(tIdx + 1);
 
-                    let tokenBg = "bg-transparent";
-                    // 🌟 モヤを消すため、文字色もはっきりとした色に変更
-                    let tokenText = (isActive || isGlobal) ? "text-[#344236] font-semibold" : "text-stone-500 font-medium";
-                    let shapeClass = "rounded-lg"; 
-
-                    if (isSelected) {
-                      if (traceFeedback === 'wrong') { tokenBg = 'bg-[#f4d7cb] border-b-2 border-[#ad7567]'; tokenText = 'text-[#773e36] font-semibold'; }
-                      else if (traceFeedback === 'partial') { tokenBg = 'bg-[#efe3b4] border-b-2 border-[#baa05d]'; tokenText = 'text-[#604a27] font-semibold'; }
-                      else if (traceFeedback === 'correct') { tokenBg = 'bg-[#dcead6] border-b-2 border-[#6b9172]'; tokenText = 'text-[#345a42] font-semibold'; }
-                      else { tokenBg = 'bg-[#dcead6] border-b-2 border-[#6b9172]'; tokenText = 'text-[#345a42] font-semibold'; }
-
-                      if (isPrevSelected && isNextSelected) shapeClass = "rounded-none";
-                      else if (isPrevSelected && !isNextSelected) shapeClass = "rounded-r-lg rounded-l-none";
-                      else if (!isPrevSelected && isNextSelected) shapeClass = "rounded-l-lg rounded-r-none";
-                      else shapeClass = "rounded-lg"; 
-                    } else if (isActive && isTraceTask) {
-                      tokenBg = "hover:bg-[#eef2e7]";
-                    }
+                    const markerShape = isPrevSelected && isNextSelected ? 'tg-mark-middle'
+                      : isNextSelected ? 'tg-mark-start'
+                      : isPrevSelected ? 'tg-mark-end' : '';
+                    const markerClass = isSelected
+                      ? `tg-mark-selected ${markerShape} ${traceFeedback === 'wrong' ? 'tg-mark-wrong' : traceFeedback === 'partial' ? 'tg-mark-partial' : ''}`
+                      : '';
+                    const tokenText = (isActive || isGlobal)
+                      ? 'text-[#344236] font-semibold'
+                      : 'text-stone-500 font-medium';
 
                     return (
                       <span
                         key={tIdx}
                         data-token-idx={tIdx}
                         onPointerDown={(e) => { if (isActive && isTraceTask) handleTracePointerDown(e, tIdx); }}
-                        className={`inline-block px-1 py-1 mx-0 select-none transition-colors duration-150 ${isActive && isTraceTask ? 'cursor-pointer touch-none' : ''} ${shapeClass} ${tokenBg} ${tokenText}`}
+                        className={`tg-ink-token py-1 select-none transition-colors duration-150 ${isActive && isTraceTask ? 'cursor-pointer touch-none hover:text-[#467658]' : ''} ${markerClass} ${tokenText}`}
                       >
                         {token}
                       </span>
