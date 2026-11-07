@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&family=Shippori+Mincho:wght@500;600;700&family=Caveat:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&family=Shippori+Mincho:wght@500;600;700&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -267,12 +267,13 @@ div#__next_turbo_dev_overlay, #__next_turbopack_overlay { display: none !importa
 }
 
 /* A celebratory hand-lettered teacher's mark on the notebook. */
-.tg-correct-pen {
-  font-family: 'Caveat', 'Segoe Print', 'Comic Sans MS', cursive;
-  font-weight: 700;
+.tg-correct-label {
+  font-family: Arial, Helvetica, 'Noto Sans JP', sans-serif;
+  font-weight: 800;
+  font-style: normal;
   color: #397858;
-  letter-spacing: -.02em;
-  text-shadow: 0 1px 0 rgba(255,255,255,.32);
+  letter-spacing: -.035em;
+  text-shadow: 0 2px 0 rgba(255,255,255,.45);
 }
 @media (prefers-reduced-motion: reduce) {
   .tg-ink-token.tg-mark-selected::before { animation: none; }
