@@ -311,7 +311,7 @@ export default function GameScreen({
                     <p className="text-slate-500 font-bold mt-4 text-sm md:text-base italic">{activeProblem.translation}</p>
                   )}
                 </div>
-                <PronunciationMission key={activeProblem.id || currentProblemIdx} targetSentence={activeProblem.tokens.join(' ')} onComplete={onRetryTrace} onFallback={onRetryTrace} />
+                <PronunciationMission key={activeProblem.id || currentProblemIdx} targetSentence={activeProblem.tokens.join(' ')} onComplete={onRetryTrace} onFallback={onRetryTrace} onSkip={onRetryTrace} />
               </div>
             </motion.div>
           </motion.div>
