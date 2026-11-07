@@ -223,7 +223,7 @@ export function useTrace(categories) {
       setCombo(prev => prev + 1);
       setCorrectCount(prev => prev + 1);
       // 正解の光と音を楽しめる長さを確保。画面移動時はタイマーを取り消す。
-      advanceTimerRef.current = setTimeout(() => nextProblem(), 900);
+      advanceTimerRef.current = setTimeout(() => nextProblem(), 1700);
     } else {
       failedProblemIdsRef.current.add(activeProblem.id);
       setWrongAttempts(prev => prev + 1);

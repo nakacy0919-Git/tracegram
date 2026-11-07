@@ -107,43 +107,43 @@ export default function TeacherMode({ addCustomProblem }) {
   };
 
   return (
-    <div className="flex-1 p-6 overflow-y-auto touch-none" onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onTouchMove={handlePointerMove} onTouchEnd={handlePointerUp}>
+    <div className="tg-workspace flex-1 p-4 md:p-8 overflow-y-auto" onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onTouchMove={handlePointerMove} onTouchEnd={handlePointerUp}>
       <div className="max-w-4xl mx-auto mt-6">
-        <h2 className="text-3xl font-bold text-cyan-400 mb-8 text-center tracking-wider">問題作成（先生モード）</h2>
+        <h2 className="tg-serif text-2xl md:text-3xl font-bold text-[#31503a] mb-8 text-center">問題作成（先生モード）</h2>
 
-        <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 mb-6 shadow-lg">
-          <h3 className="text-xl font-bold text-white mb-4">1. 英文を入力</h3>
+        <div className="tg-paper rounded-2xl p-5 md:p-6 mb-5">
+          <h3 className="text-xl font-bold text-[#324b38] mb-4">1. 英文を入力</h3>
           <div className="flex flex-col md:flex-row gap-4">
-            <input type="text" value={inputText} onChange={(e) => setInputText(e.target.value)} placeholder="例: The cute cat sleeps on the sofa." className="flex-1 bg-slate-800 border border-slate-600 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-cyan-500" />
-            <button onClick={handleSplit} disabled={!inputText.trim()} className="bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 text-white font-bold py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2">
+            <input type="text" value={inputText} onChange={(e) => setInputText(e.target.value)} placeholder="例: The cute cat sleeps on the sofa." className="flex-1 bg-[#fffef8] border border-[#d1d7c9] text-[#324332] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#739782]" />
+            <button onClick={handleSplit} disabled={!inputText.trim()} className="tg-primary font-semibold py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2">
               <SplitSquareHorizontal size={20} /> 単語に分割
             </button>
           </div>
         </div>
 
         {tokens.length > 0 && (
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 shadow-lg animate-in fade-in duration-500">
-            <h3 className="text-xl font-bold text-white mb-4">2. 正解と修飾先の設定</h3>
+          <div className="tg-paper rounded-2xl p-5 md:p-6 animate-in fade-in duration-500">
+            <h3 className="text-xl font-bold text-[#324b38] mb-4">2. 正解と修飾先の設定</h3>
             
             <div className="flex gap-4 mb-4">
-              <button onClick={() => setSettingMode("trace")} className={`flex-1 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border ${settingMode === "trace" ? "bg-emerald-600 border-emerald-400 text-white" : "bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700"}`}>
+              <button onClick={() => setSettingMode("trace")} className={`flex-1 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border ${settingMode === "trace" ? "bg-[#dae9d8] border-[#6f9578] text-[#345a43]" : "bg-[#fffef8] border-[#dedfd4] text-stone-600 hover:bg-[#eef2e9]"}`}>
                 <Pointer size={20} /> 正解の塊をなぞる
               </button>
-              <button onClick={() => setSettingMode("glow")} className={`flex-1 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border ${settingMode === "glow" ? "bg-purple-600 border-purple-400 text-white shadow-[0_0_15px_rgba(168,85,247,0.5)]" : "bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700"}`}>
+              <button onClick={() => setSettingMode("glow")} className={`flex-1 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border ${settingMode === "glow" ? "bg-[#eee5cd] border-[#bcac86] text-[#6e5834]" : "bg-[#fffef8] border-[#dedfd4] text-stone-600 hover:bg-[#eef2e9]"}`}>
                 <Sparkles size={20} /> 光らせる単語を選ぶ（複数可）
               </button>
             </div>
             
-            <div className="flex flex-wrap gap-x-2 gap-y-4 p-6 bg-slate-950/50 rounded-xl border border-slate-800 mb-8">
+            <div className="tg-note touch-none flex flex-wrap gap-x-2 gap-y-3 p-4 md:p-6 bg-[#f7f5eb] rounded-xl border border-[#d7ddce] mb-8">
               {tokens.map((token, idx) => {
                 const isSelected = selectedIndices.includes(idx);
                 const isGlowing = modifiedIndices.includes(idx); // ★ 複数選択に対応
                 
-                let btnClass = "bg-slate-800 border-slate-700 text-slate-200 hover:bg-slate-700";
+                let btnClass = "bg-[#fffef8] border-[#e1e0d3] text-[#3b493e] hover:bg-[#eaf0e6]";
                 if (isGlowing) {
-                  btnClass = "bg-purple-900 border-purple-400 text-purple-200 shadow-[0_0_15px_rgba(168,85,247,0.6)] animate-pulse";
+                  btnClass = "bg-[#ece3c7] border-[#b9a06e] text-[#654a30]";
                 } else if (isSelected) {
-                  btnClass = "bg-emerald-600 border-emerald-400 text-white shadow-lg shadow-emerald-500/30";
+                  btnClass = "bg-[#d9e7d5] border-[#6f9677] text-[#2c523a]";
                 }
 
                 return (
@@ -154,32 +154,32 @@ export default function TeacherMode({ addCustomProblem }) {
               })}
             </div>
 
-            <h3 className="text-xl font-bold text-white mb-4">3. 課題の詳細設定</h3>
+            <h3 className="text-xl font-bold text-[#324b38] mb-4">3. 課題の詳細設定</h3>
             <div className="grid md:grid-cols-2 gap-6 mb-8">
               <div>
-                <label className="block text-slate-400 text-sm font-bold mb-2">ターゲット構造</label>
-                <select value={targetRole} onChange={handleRoleChange} className="w-full bg-slate-800 border border-slate-600 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-cyan-500">
+                <label className="block text-stone-600 text-sm font-semibold mb-2">ターゲット構造</label>
+                <select value={targetRole} onChange={handleRoleChange} className="w-full bg-[#fffef8] border border-[#d1d7c9] text-[#324332] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#739782]">
                   {Object.keys(TARGET_OPTIONS).map(role => (
                     <option key={role} value={role}>{role}</option>
                   ))}
                 </select>
               </div>
               <div>
-                <label className="block text-slate-400 text-sm font-bold mb-2">生徒へのヒント文</label>
-                <input type="text" value={hint} onChange={(e) => setHint(e.target.value)} className="w-full bg-slate-800 border border-slate-600 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-cyan-500" />
+                <label className="block text-stone-600 text-sm font-semibold mb-2">生徒へのヒント文</label>
+                <input type="text" value={hint} onChange={(e) => setHint(e.target.value)} className="w-full bg-[#fffef8] border border-[#d1d7c9] text-[#324332] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#739782]" />
               </div>
               <div className="md:col-span-2"> {/* ★ 日本語訳入力欄を追加（横幅いっぱい） */}
-                <label className="block text-slate-400 text-sm font-bold mb-2">日本語訳（任意）</label>
-                <input type="text" value={translation} onChange={(e) => setTranslation(e.target.value)} placeholder="例：外国語を習得するには多くの忍耐が必要だ。" className="w-full bg-slate-800 border border-slate-600 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-cyan-500" />
+                <label className="block text-stone-600 text-sm font-semibold mb-2">日本語訳（任意）</label>
+                <input type="text" value={translation} onChange={(e) => setTranslation(e.target.value)} placeholder="例：外国語を習得するには多くの忍耐が必要だ。" className="w-full bg-[#fffef8] border border-[#d1d7c9] text-[#324332] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#739782]" />
               </div>
             </div>
 
-            <div className="flex flex-col items-center border-t border-slate-800 pt-8">
-              <button onClick={handleSave} className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 px-10 rounded-full transition-colors flex items-center justify-center gap-3 shadow-lg shadow-emerald-600/30 text-lg">
+            <div className="flex flex-col items-center border-t border-[#dadfd1] pt-7">
+              <button onClick={handleSave} className="tg-primary font-semibold py-4 px-10 rounded-xl transition-colors flex items-center justify-center gap-3 text-lg">
                 <Save size={24} /> 課題を登録する
               </button>
               {savedMessage && (
-                <div className="mt-4 flex items-center gap-2 text-emerald-400 font-bold animate-pulse">
+                <div className="mt-4 flex items-center gap-2 text-[#416f50] font-semibold">
                   <CheckCircle2 size={20} /> {savedMessage}
                 </div>
               )}

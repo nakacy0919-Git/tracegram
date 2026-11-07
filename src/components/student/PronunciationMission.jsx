@@ -22,7 +22,7 @@ export const calculateReadingMatch = (expected, spoken) => {
   return Math.max(0, Math.round(100 * (1 - prev[b.length] / Math.max(a.length, b.length))));
 };
 
-export default function PronunciationMission({ targetSentence, onComplete, onFallback }) {
+export default function PronunciationMission({ targetSentence, onComplete, onFallback, onSkip }) {
   const [isRecording, setIsRecording] = useState(false);
   const [supported, setSupported] = useState(true);
   const [transcript, setTranscript] = useState('');
@@ -113,37 +113,46 @@ export default function PronunciationMission({ targetSentence, onComplete, onFal
     window.speechSynthesis.speak(utterance);
   };
 
+  // Skipping the oral practice returns to the same tracing exercise; it never awards points.
+  const skipOralPractice = () => {
+    recordingRef.current = false;
+    try { recognitionRef.current?.abort(); } catch {}
+    try { window.speechSynthesis?.cancel(); } catch {}
+    setIsRecording(false);
+    if (typeof onSkip === 'function') onSkip();
+  };
+
   const passed = accuracy !== null && accuracy >= 80;
   return (
-    <div className="bg-slate-800 text-white p-4 md:p-6 rounded-3xl shadow-lg flex flex-col items-center w-full gap-3">
-      <h3 className="text-xl font-black text-rose-300 flex items-center gap-2">
+    <div className="tg-paper tg-note text-[#2b4032] p-4 md:p-6 rounded-2xl flex flex-col items-center w-full gap-3">
+      <h3 className="text-lg md:text-xl font-semibold text-[#416b52] flex items-center gap-2">
         <Mic size={22} /> リーディング・リカバリー
       </h3>
-      <p className="text-sm font-bold text-slate-300 text-center">
+      <p className="text-sm font-medium text-stone-600 text-center">
         間違えた構造を確認し、英文を音読してから同じ問題に再挑戦！
       </p>
-      <p className="text-base md:text-lg font-bold text-center leading-relaxed bg-slate-900/70 p-3 rounded-xl w-full select-text">
+      <p className="text-base md:text-lg font-semibold text-center leading-relaxed bg-[#f1f4e8] p-3 rounded-xl w-full select-text">
         {targetSentence}
       </p>
       <div className="flex items-center justify-center flex-wrap gap-2">
         <button type="button" onClick={playExample}
-          className="flex items-center gap-2 rounded-xl bg-indigo-500 hover:bg-indigo-400 px-4 py-3 font-bold">
+          className="tg-outline flex items-center gap-2 rounded-xl px-4 py-3 font-semibold">
           <Volume2 size={20}/> お手本を聞く
         </button>
-        <label className="flex items-center gap-2 text-sm font-bold cursor-pointer p-2">
+        <label className="flex items-center gap-2 text-sm font-semibold cursor-pointer p-2 text-stone-600">
           <input type="checkbox" checked={slow} onChange={(e) => setSlow(e.target.checked)} />
           ゆっくり再生
         </label>
       </div>
       {!supported && (
-        <div className="text-amber-200 font-bold text-center flex items-start gap-2">
+        <div className="text-[#8d5d3b] font-semibold text-center flex items-start gap-2">
           <AlertCircle size={20} className="shrink-0"/> このブラウザでは音声認識が使えません。
         </div>
       )}
-      {error && <p role="alert" className="text-amber-200 text-sm text-center font-bold">{error}</p>}
+      {error && <p role="alert" className="text-[#8d5d3b] text-sm text-center font-semibold">{error}</p>}
       {supported && accuracy === null && (
         <button type="button" onClick={toggleRecording}
-          className={`flex items-center justify-center gap-3 rounded-full px-8 py-4 text-lg font-black shadow-lg w-full md:w-auto ${isRecording ? 'bg-rose-500 animate-pulse' : 'bg-emerald-500 hover:bg-emerald-400'}`}>
+          className={`flex items-center justify-center gap-3 rounded-full px-8 py-4 text-lg font-black shadow-lg w-full md:w-auto ${isRecording ? 'bg-[#b26d5b] text-white' : 'tg-primary'}`}>
           {isRecording ? <Square size={20} /> : <Mic size={20} />}
           {isRecording ? '録音を止めて判定' : '音読して判定'}
         </button>
@@ -151,26 +160,34 @@ export default function PronunciationMission({ targetSentence, onComplete, onFal
       {accuracy !== null && (
         <div className="flex flex-col items-center gap-3 w-full">
           <div className="text-center">
-            <span className={`text-5xl font-black ${passed ? 'text-emerald-400' : 'text-amber-400'}`}>{accuracy}%</span>
-            <p className="text-xs font-bold text-slate-300">音声認識による単語一致度（目標80%以上）</p>
+            <span className={`text-5xl font-black ${passed ? 'text-[#40735b]' : 'text-[#ad7c4d]'}`}>{accuracy}%</span>
+            <p className="text-xs font-semibold text-stone-500">音声認識による単語一致度（目標80%以上）</p>
           </div>
           {passed ? (
             <button type="button" onClick={() => onComplete(accuracy)}
-              className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 rounded-full py-4 px-8 font-black text-lg w-full md:w-auto">
+              className="tg-primary flex items-center justify-center gap-2 rounded-xl py-4 px-8 font-semibold text-lg w-full md:w-auto">
               <CheckCircle2 size={22}/> クリア！もう一度なぞる <ArrowRight size={20}/>
             </button>
           ) : (
             <button type="button" onClick={() => { setAccuracy(null); setTranscript(''); transcriptRef.current = ''; setError(''); }}
-              className="flex items-center justify-center gap-2 bg-slate-600 hover:bg-slate-500 rounded-full py-3 px-7 font-bold w-full md:w-auto">
+              className="tg-outline flex items-center justify-center gap-2 rounded-xl py-3 px-7 font-semibold w-full md:w-auto">
               <RefreshCw size={20}/> もう一度音読
             </button>
           )}
         </div>
       )}
-      {!!transcript && <p className="text-sm text-slate-300 text-center w-full select-text">認識結果: {transcript}</p>}
-      {(!supported || /マイクを利用できません/.test(error)) && (
+      {typeof onSkip === 'function' && (
+        <button type="button" onClick={skipOralPractice}
+          className="mt-1 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-[#c9d4c6] bg-[#fffef9] text-[#466752] text-sm font-semibold hover:bg-[#ebf2e9] transition-colors"
+          aria-label="音読をスキップし、同じ英文のトレースに戻る">
+          Skip <ArrowRight size={16} />
+          <span className="text-xs font-normal">音読をとばして再挑戦</span>
+        </button>
+      )}
+      {!!transcript && <p className="text-sm text-stone-600 text-center w-full select-text">認識結果: {transcript}</p>}
+      {typeof onSkip !== 'function' && typeof onFallback === 'function' && (!supported || /マイクを利用できません/.test(error)) && (
         <button type="button" onClick={onFallback}
-          className="underline text-slate-300 text-sm font-bold mt-2">
+          className="underline text-[#536f5c] text-sm font-semibold mt-2">
           音声認識を使わず、同じ問題をもう一度なぞる
         </button>
       )}
