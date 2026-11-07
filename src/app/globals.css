@@ -239,10 +239,10 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
   font-weight: 600;
 }
 .tg-opening-start {
-  background: linear-gradient(105deg, #42cbd9 0%, #629de8 51%, #9f7ae4 100%);
-  color: #fff;
+  background: linear-gradient(105deg, #83e0e8 0%, #91c4f7 51%, #b4a2f0 100%);
+  color: #1f3158;
   border: 1px solid rgba(106, 152, 232, .65);
-  box-shadow: 0 5px 0 rgba(51, 88, 148, .42), 0 12px 25px rgba(54, 89, 152, .16);
+  box-shadow: 0 5px 0 rgba(51, 88, 148, .32), 0 12px 25px rgba(54, 89, 152, .16);
   transition: filter .18s, transform .16s, box-shadow .16s;
 }
 .tg-opening-start:hover { filter: brightness(1.055); }
