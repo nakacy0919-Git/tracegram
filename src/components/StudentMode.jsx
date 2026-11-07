@@ -15,7 +15,7 @@ import SummaryScreen from './student/SummaryScreen';
 export default function StudentMode({ categories, onTeacherOpen }) {
   const {
     gameState, availableCategories, activeMain, activeCategory, activeProblem, currentProblemIdx,
-    score, combo, correctCount, firstTryCount, wrongAttempts, selectedIndices, feedbackState, mainContainerRef, lastBonus,
+    score, combo, correctCount, firstTryCount, wrongAttempts, categoryStats, selectedIndices, feedbackState, mainContainerRef, lastBonus,
     selectedLevel, filteredProblems, setGameState,
     selectMainCategory, selectSubCategory, startGame, resumeGame, 
     backToMain, backToSub, backToLevelSelect,
@@ -192,9 +192,13 @@ export default function StudentMode({ categories, onTeacherOpen }) {
         correctCount={correctCount}
         firstTryCount={firstTryCount}
         wrongAttempts={wrongAttempts}
+        categoryStats={categoryStats}
         totalCount={filteredProblems?.length || 0}
         onBackToLobby={() => setAppScreen('lobby')}
-        onBackToLevelSelect={backToLevelSelect}
+        onBackToLevelSelect={() => {
+          if (activeCategory?.categoryId === 'grammar_mix') { backToMain(); setMenuViewMode('mix'); }
+          else backToLevelSelect();
+        }}
         onBackToHome={() => { backToMain(); setMenuViewMode('home'); setAppScreen('main'); }}
       />
     );
@@ -222,7 +226,11 @@ export default function StudentMode({ categories, onTeacherOpen }) {
       handlePointerMove={handlePointerMove}
       handlePointerUp={handlePointerUp}
       submitAnswer={submitAnswer}
-      onExit={() => { if(isMultiplayer) setAppScreen('lobby'); else backToLevelSelect(); }}
+      onExit={() => {
+        if (isMultiplayer) setAppScreen('lobby');
+        else if (activeCategory?.categoryId === 'grammar_mix') { backToMain(); setMenuViewMode('mix'); }
+        else backToLevelSelect();
+      }}
       onRetryTrace={resetForRetry}
     />
   );
