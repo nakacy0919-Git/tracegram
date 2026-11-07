@@ -226,7 +226,7 @@ export default function MenuScreen({
           title="ロゴのオープニングを見る" aria-label="Tracegram オープニングを再生する"
           className="inline-flex gap-2.5 items-center rounded-xl hover:opacity-75 transition-opacity shrink-0">
           <img src="/tracegramlogo.png" alt="" className="h-11 w-11 object-contain"/>
-          <span className="tg-serif font-bold text-xl md:text-2xl tracking-tight text-[#2d4034]">Tracegram</span>
+          <span className="tg-brand-name tg-serif font-bold text-xl md:text-2xl tracking-tight">Tracegram</span>
         </button>
         <div className="hidden md:flex items-center gap-4 text-sm">
           <button type="button" onClick={()=>navigate('home')} className={page==='home'?'font-bold text-[#315747]':'text-stone-500 hover:text-[#315747]'}>ホーム</button>
@@ -237,7 +237,7 @@ export default function MenuScreen({
       </header>
 
       {page==='home' && <>
-        <section className="tg-paper tg-margin tg-holes relative rounded-[22px] px-6 pl-12 sm:px-9 sm:pl-20 py-7 md:py-10 overflow-hidden">
+        <section className="tg-paper tg-home-paper tg-margin tg-holes relative rounded-[22px] px-6 pl-12 sm:px-9 sm:pl-20 py-7 md:py-10 overflow-hidden">
           <div className="max-w-[610px] relative z-10">
             <span className="tg-tag">YOUR ENGLISH NOTEBOOK</span>
             <h1 className="tg-serif font-bold text-[clamp(1.8rem,4.1vw,3.1rem)] leading-[1.45] text-[#293b30] mt-3">
