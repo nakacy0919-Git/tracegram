@@ -38,7 +38,7 @@ export default function ResultScreen({
     incorrect: stat.incorrect || 0,
     rate: Math.round(100 * (stat.firstCorrect || 0) / stat.attempted),
   })).sort((a,b) => a.rate - b.rate || b.incorrect - a.incorrect || a.title.localeCompare(b.title,'ja')).slice(0,6) : [];
-  return <main className="tg-workspace flex-1 min-h-[100dvh] overflow-y-auto px-4 py-8 md:py-12">
+  return <main className="tg-workspace tg-fluid-screen overflow-y-auto px-4 py-8 md:py-12">
     <div className="max-w-[740px] mx-auto space-y-5">
       <div className="tg-paper tg-margin tg-holes rounded-[22px] p-5 pl-12 md:p-10 md:pl-16">
         <span className="tg-tag">TRACEGRAM · YOUR NOTE</span>

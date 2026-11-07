@@ -5,7 +5,7 @@ import { ArrowLeft, Users, UserPlus, Play } from 'lucide-react';
 export default function LobbyScreen({roomId,playersData,myPeerId,isHost,onExit,onStartBattle}) {
   const players=Object.values(playersData||{}).sort((a,b)=>String(a.name).localeCompare(String(b.name)));
   const ready=players.length>=2;
-  return <main className="tg-workspace flex-1 min-h-[100dvh] p-4 md:p-9 overflow-y-auto">
+  return <main className="tg-workspace tg-fluid-screen p-4 md:p-9 overflow-y-auto">
     <div className="max-w-[780px] mx-auto">
       <button type="button" onClick={onExit}
         className="inline-flex gap-2 items-center text-[#516e5e] text-sm font-semibold mb-5 py-2">

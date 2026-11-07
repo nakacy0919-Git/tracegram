@@ -123,7 +123,7 @@ export default function GameScreen({
   const flowAutoJudge = gameMode === 'flow' && !requiresMultiStroke;
 
   return (
-    <div className="tg-workspace flex-1 flex flex-col relative z-10 w-full min-h-[100dvh] overflow-y-auto overflow-x-hidden" ref={mainContainerRef} onPointerMove={handlePointerMove} onPointerUp={() => handlePointerUp(flowAutoJudge)} onPointerCancel={() => handlePointerUp(false)}>
+    <div className="tg-workspace tg-fluid-screen tg-game-workspace flex flex-col relative z-10 overflow-y-auto" ref={mainContainerRef} onPointerMove={handlePointerMove} onPointerUp={() => handlePointerUp(flowAutoJudge)} onPointerCancel={() => handlePointerUp(false)}>
       
       {isMultiplayer && sortedPlayers.length > 0 && (
         <div className="absolute top-[80px] md:top-[90px] left-0 w-full z-40 flex flex-row flex-wrap justify-center gap-2 md:gap-4 px-2 pointer-events-none">
@@ -156,9 +156,9 @@ export default function GameScreen({
       </div>
 
       <div className="w-full h-1 bg-[#e5e4d9]"><div className="h-full bg-[#739a80] transition-all duration-500" style={{width: `${(currentProblemIdx / Math.max(1, filteredProblems.length)) * 100}%`}} /></div>
-      <div className="flex-1 flex flex-col items-center justify-start py-5 px-3 md:px-7 w-full max-w-[1100px] mx-auto relative">
+      <div className="tg-game-content flex-1 flex flex-col items-center justify-start py-5 px-3 md:px-7 w-full max-w-[1100px] mx-auto relative">
         
-        <div className="w-full mb-4 flex items-start gap-3 px-2">
+        <div className="tg-game-hint w-full mb-4 flex items-start gap-3 px-2">
           <span className="w-9 h-9 shrink-0 rounded-full border border-[#a5b9a7] bg-[#e9f0e7] text-[#365e48] flex items-center justify-center font-bold text-lg">{roleInitial}</span>
           <div className="min-w-0">
             <p className="text-[#2b3d32] text-base md:text-xl font-bold leading-snug">
@@ -175,11 +175,11 @@ export default function GameScreen({
         <motion.div 
           animate={shake ? { x: [-10, 10, -10, 10, 0] } : {}}
           transition={{ duration: 0.4 }}
-          className={`tg-paper tg-note tg-margin tg-holes w-full relative rounded-[22px] py-8 px-4 pl-12 md:p-10 md:pl-16 mb-3 flex flex-col justify-center min-h-[190px] overflow-hidden touch-none transition-colors ${gameMode === 'bug_slash' && !isBugSlashed ? 'ring-2 ring-[#c4a387]' : ''}`}
+          className={`tg-game-note tg-paper tg-note tg-margin tg-holes w-full relative rounded-[22px] py-8 px-4 pl-12 md:p-10 md:pl-16 mb-3 flex flex-col justify-center min-h-[190px] overflow-hidden touch-none transition-colors ${gameMode === 'bug_slash' && !isBugSlashed ? 'ring-2 ring-[#c4a387]' : ''}`}
         >
           <AnimatePresence mode="wait">
             <motion.div key={`sentence-${currentProblemIdx}-${isBugSlashed}`} initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -5, opacity: 0 }} transition={{ duration: 0.2 }} className="w-full">
-              <div className="text-left leading-[2.6rem] md:leading-[3.6rem] w-full relative">
+              <div className="tg-game-sentence text-left leading-[2.6rem] md:leading-[3.6rem] w-full relative">
                 
                 <AnimatePresence>
                   {displayTokens.map((token, idx) => {
@@ -245,7 +245,7 @@ export default function GameScreen({
           </AnimatePresence>
         </motion.div>
 
-        <div className="w-full flex flex-col items-center min-h-[100px] z-20">
+        <div className="tg-game-feedback w-full flex flex-col items-center min-h-[100px] z-20">
           <AnimatePresence mode="wait">
             {feedbackState === 'idle' && isBugSlashed && (gameMode !== 'flow' || requiresMultiStroke) ? (
               <motion.button 
@@ -265,7 +265,7 @@ export default function GameScreen({
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 1.06, y: -5 }}
                 transition={{ type: 'spring', stiffness: 260, damping: 22 }}
-                className="relative w-full max-w-[450px] h-[172px] flex items-center justify-center select-none pointer-events-none"
+                className="tg-game-correct relative w-full max-w-[450px] h-[172px] flex items-center justify-center select-none pointer-events-none"
               >
                 <svg className="absolute inset-0 w-full h-full" viewBox="0 0 420 180" fill="none" aria-hidden="true">
                   <motion.path
@@ -311,7 +311,7 @@ export default function GameScreen({
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
             exit={{ opacity: 0 }} 
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#27352f]/65 backdrop-blur-[3px]"
+            className="tg-recovery-overlay fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#27352f]/65 backdrop-blur-[3px]"
           >
             <motion.div 
               key="wrong-modal-content"
@@ -319,7 +319,7 @@ export default function GameScreen({
               animate={{ scale: 1, y: 0, opacity: 1 }} 
               exit={{ scale: 0.9, y: 30, opacity: 0 }} 
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="tg-paper rounded-[22px] tg-note shadow-xl w-full max-w-2xl border border-[#d7d7c8] flex flex-col max-h-[90dvh]"
+              className="tg-recovery-modal tg-paper rounded-[22px] tg-note shadow-xl w-full max-w-2xl border border-[#d7d7c8] flex flex-col max-h-[90dvh]"
             >
               <div className="p-4 md:p-6 overflow-y-auto flex flex-col gap-4">
                 <div className="w-full bg-[#edf2e6]/90 p-4 rounded-xl border border-[#d9e5d7] flex flex-col items-center">
