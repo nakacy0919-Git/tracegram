@@ -185,7 +185,7 @@ export default function PronunciationMission({ targetSentence, onComplete, onFal
         </button>
       )}
       {!!transcript && <p className="text-sm text-stone-600 text-center w-full select-text">認識結果: {transcript}</p>}
-      {(!supported || /マイクを利用できません/.test(error)) && (
+      {typeof onSkip !== 'function' && typeof onFallback === 'function' && (!supported || /マイクを利用できません/.test(error)) && (
         <button type="button" onClick={onFallback}
           className="underline text-[#536f5c] text-sm font-semibold mt-2">
           音声認識を使わず、同じ問題をもう一度なぞる
