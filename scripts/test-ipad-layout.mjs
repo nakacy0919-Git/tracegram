@@ -47,6 +47,13 @@ assert.doesNotMatch(summary, /h-\[42dvh\]|min-h-\[52dvh\]|lg:w-\[var\(--left-pan
 assert.match(reading, /overflow-y-auto/, 'passage scrolls independently');
 assert.match(game, /tg-game-workspace/);
 assert.match(game, /tg-game-content/);
+assert.match(game, /tg-success-medallion/, 'success uses a circular glossy medal instead of drawn marker');
+assert.match(game, /tg-success-text/, 'Correct text is centered in the success medal');
+assert.doesNotMatch(game, /M39 88 C22 48 104 19/, 'old hand-drawn oval is removed');
+assert(css.includes('.tg-success-medallion {') && css.includes('aspect-ratio: 1 / 1'), 'success medal stays circular at every screen size');
+assert(css.includes('.tg-success-text {') && css.includes('background: linear-gradient(180deg'), 'Correct lettering uses a refined green gradient');
+assert(css.includes('.tg-success-medallion::before {'), 'reflective glossy highlight is present');
+
 assert.match(game, /tg-recovery-overlay/);
 assert.match(splash, /tg-opening-content/);
 assert.match(splash, /tg-opening-logo/);
