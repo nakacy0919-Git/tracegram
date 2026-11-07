@@ -85,7 +85,10 @@ export default function SummaryScreen({ onExit, summaryData }) {
   };
 
   const onSplitMouseMove = (e) => handleSplitMove(e.clientX);
-  const onSplitTouchMove = (e) => handleSplitMove(e.touches[0].clientX);
+  const onSplitTouchMove = (e) => {
+    if (e.cancelable) e.preventDefault();
+    if (e.touches.length) handleSplitMove(e.touches[0].clientX);
+  };
   const stopSplitDragging = () => setIsDraggingSplit(false);
 
   useEffect(() => {
@@ -221,7 +224,7 @@ export default function SummaryScreen({ onExit, summaryData }) {
   }
 
   return (
-    <div className={`tg-workspace flex-1 flex flex-col h-full w-full relative ${isDraggingSplit ? 'select-none' : ''}`}>
+    <div className={`tg-workspace tg-reading-screen relative ${isDraggingSplit ? 'select-none' : ''}`}>
       
       <div className="bg-[#faf8f2] border-b border-[#dce0d5] px-3 md:px-7 py-2.5 flex items-center gap-3 shrink-0">
         <button type="button" onClick={() => setCurrentMode(null)}
@@ -243,10 +246,10 @@ export default function SummaryScreen({ onExit, summaryData }) {
         ))}
       </div>
 
-      <div ref={containerRef} style={{ '--left-pane-width': `${leftWidth}%`, '--right-pane-width': `${100 - leftWidth}%` }}
-        className={`flex-1 flex w-full h-full min-h-0 overflow-y-auto lg:overflow-hidden relative ${isSwapped ? 'flex-col-reverse lg:flex-row-reverse' : 'flex-col lg:flex-row'}`}>
+      <div ref={containerRef} style={{ '--left-pane-width': `${leftWidth}%` }}
+        className={`tg-reading-split relative ${isSwapped ? 'is-swapped' : ''}`}>
         
-        <div className="w-full lg:w-[var(--left-pane-width)] h-[42dvh] lg:h-full flex-shrink-0">
+        <div className="tg-reading-pane">
           <ReadingPane 
             summaryData={summaryData}
             currentPhase={currentPhase}
@@ -268,14 +271,14 @@ export default function SummaryScreen({ onExit, summaryData }) {
           />
         </div>
 
-        <div onMouseDown={() => setIsDraggingSplit(true)} onTouchStart={() => setIsDraggingSplit(true)} className="hidden lg:flex w-3 flex-col items-center justify-center bg-[#e0e1d4] hover:bg-[#ccd9cc] cursor-col-resize group z-10">
+        <div onMouseDown={() => setIsDraggingSplit(true)} onTouchStart={() => setIsDraggingSplit(true)} className="tg-reading-divider flex-col items-center justify-center bg-[#e0e1d4] hover:bg-[#ccd9cc] cursor-col-resize group z-10">
           <div className="h-16 w-1.5 bg-slate-400 group-hover:bg-indigo-500 rounded-full flex items-center justify-center transition-colors">
             <GripVertical size={12} className="text-white opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
         </div>
 
-        <div className="w-full lg:w-[var(--right-pane-width)] min-h-[52dvh] lg:min-h-0 lg:h-full flex-shrink-0">
-          <div className="h-full overflow-y-auto bg-[#f6f3ea] p-3 md:p-5 flex flex-col">
+        <div className="tg-task-pane">
+          <div className="tg-reading-task-inner bg-[#f6f3ea] p-3 md:p-5">
             <MissionPane 
               currentMode={currentMode}
               currentPhase={currentPhase}
