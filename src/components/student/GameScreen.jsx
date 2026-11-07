@@ -145,7 +145,7 @@ export default function GameScreen({
         <div className="flex items-center gap-4">
           <button type="button" onClick={onExit} aria-label="教材選択へ戻る" className="tg-outline rounded-full p-2.5 shrink-0"><ArrowLeft size={20}/></button>
           <div>
-            <div className="text-xs md:text-sm font-semibold text-[#5e7565] truncate max-w-[45vw] md:max-w-[60vw]">{activeCategory.title} · Lv.{selectedLevel}</div>
+            <div className="text-xs md:text-sm font-semibold text-[#5e7565] truncate max-w-[45vw] md:max-w-[60vw]">{activeCategory.title} · {activeCategory.categoryId === 'grammar_mix' ? 'MIX' : selectedLevel === 'all' ? '復習' : `Lv.${selectedLevel}`}</div>
             <div className="text-sm font-bold text-[#293b30]">Q {currentProblemIdx + 1} <span className="font-normal text-stone-500">/ {filteredProblems.length}</span></div>
           </div>
         </div>
