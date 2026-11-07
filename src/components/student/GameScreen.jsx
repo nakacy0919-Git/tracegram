@@ -260,37 +260,30 @@ export default function GameScreen({
             ) : feedbackState === 'correct' ? (
               <motion.div
                 key={`correct-${currentProblemIdx}`}
-                role="status" aria-live="polite"
-                initial={{ opacity: 0, scale: 0.88, y: 12 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 1.06, y: -5 }}
-                transition={{ type: 'spring', stiffness: 260, damping: 22 }}
-                className="tg-game-correct relative w-full max-w-[450px] h-[172px] flex items-center justify-center select-none pointer-events-none"
+                role="status"
+                aria-live="polite"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.18 }}
+                className="tg-success-veil fixed inset-0 z-[80] flex items-center justify-center pointer-events-none select-none"
               >
-                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 420 180" fill="none" aria-hidden="true">
-                  <motion.path
-                    d="M39 88 C22 48 104 19 190 20 C302 14 390 53 393 98 C399 147 321 161 210 160 C98 166 41 142 39 88"
-                    stroke="#4a9a68" strokeWidth="5.5" strokeLinecap="round" strokeLinejoin="round"
-                    initial={{ pathLength: 0, opacity: 0.6 }}
-                    animate={{ pathLength: 1, opacity: 1 }}
-                    transition={{ duration: 0.82, ease: 'easeOut', delay: 0.1 }}
-                  />
-                  <motion.path
-                    d="M60 145 Q198 165 351 143"
-                    stroke="#8eb99b" strokeWidth="2" strokeLinecap="round"
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{ pathLength: 1, opacity: 0.65 }}
-                    transition={{ duration: 0.45, delay: 0.65 }}
-                  />
-                </svg>
-                <motion.span
-                  initial={{ opacity: 0, scale: 0.85, y: 7 }}
-                  animate={{ opacity: 1, scale: [0.85, 1.05, 1], y: 0 }}
-                  transition={{ duration: 0.5, ease: [0.2, 1, 0.3, 1], delay: 0.13 }}
-                  className="tg-correct-label text-[clamp(3.1rem,10vw,5.2rem)] leading-none relative z-10 pb-2"
+                <motion.div
+                  initial={{ scale: 0.76, opacity: 0, y: 16 }}
+                  animate={{ scale: 1, opacity: 1, y: 0 }}
+                  exit={{ scale: 1.05, opacity: 0 }}
+                  transition={{ type: 'spring', stiffness: 260, damping: 24, mass: 0.85 }}
+                  className="tg-success-medallion relative flex items-center justify-center"
                 >
-                  Correct!
-                </motion.span>
+                  <motion.span
+                    initial={{ opacity: 0, scale: 0.92 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4, delay: 0.13 }}
+                    className="tg-success-text relative z-10 leading-none"
+                  >
+                    Correct!
+                  </motion.span>
+                </motion.div>
               </motion.div>
             ) : null}
           </AnimatePresence>
