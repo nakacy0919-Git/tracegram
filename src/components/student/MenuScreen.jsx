@@ -152,7 +152,7 @@ export default function MenuScreen({
       description:'以前に間違えた英文をもう一度なぞります。',problems:missed
     });
   }
-  const wrap='tg-workspace flex-1 min-h-[100dvh] overflow-y-auto px-4 pb-12 pt-4 md:px-7 md:pb-16';
+  const wrap='tg-workspace tg-fluid-screen overflow-y-auto px-4 pb-12 pt-4 md:px-7 md:pb-16';
 
   // One compact start action: difficulty first, optional play mode in disclosure.
   if(gameState==='level_select' && activeCategory) {
