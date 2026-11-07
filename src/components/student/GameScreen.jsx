@@ -284,10 +284,10 @@ export default function GameScreen({
                   />
                 </svg>
                 <motion.span
-                  initial={{ opacity: 0, rotate: -9, scale: 0.7 }}
-                  animate={{ opacity: 1, rotate: -5, scale: [0.7, 1.1, 1] }}
-                  transition={{ duration: 0.6, ease: [0.2, 1, 0.3, 1], delay: 0.13 }}
-                  className="tg-correct-pen text-[clamp(3.4rem,11vw,5.7rem)] leading-none relative z-10 pb-2"
+                  initial={{ opacity: 0, scale: 0.85, y: 7 }}
+                  animate={{ opacity: 1, scale: [0.85, 1.05, 1], y: 0 }}
+                  transition={{ duration: 0.5, ease: [0.2, 1, 0.3, 1], delay: 0.13 }}
+                  className="tg-correct-label text-[clamp(3.1rem,10vw,5.2rem)] leading-none relative z-10 pb-2"
                 >
                   Correct!
                 </motion.span>
