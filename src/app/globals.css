@@ -244,6 +244,9 @@ div#__next_turbo_dev_overlay, #__next_turbopack_overlay { display: none !importa
 .tg-ink-token.tg-mark-selected.tg-mark-middle::before {
   border-radius: 1% 2% 2% 2% / 4% 8% 6% 9%;
 }
+.tg-ink-token.tg-mark-selected.tg-mark-partial::before {
+  background: linear-gradient(178deg, rgba(234, 196, 108, .06), rgba(224, 175, 76, .43) 58%, rgba(224, 175, 76, .12));
+}
 .tg-ink-token.tg-mark-selected.tg-mark-wrong::before {
   background: linear-gradient(180deg, rgba(231, 158, 134, .14), rgba(214, 112, 93, .46) 55%, rgba(218, 120, 98, .13));
 }
