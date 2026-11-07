@@ -337,6 +337,7 @@ div#__next_turbo_dev_overlay, #__next_turbopack_overlay { display: none !importa
   width: 100%;
   overflow: hidden;
 }
+.tg-reading-split.is-swapped { flex-direction: column-reverse; }
 .tg-reading-pane {
   flex: 0 0 43%;
   min-height: 0;
