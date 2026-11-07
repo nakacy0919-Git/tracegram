@@ -91,6 +91,18 @@ export default function SummaryScreen({ onExit, summaryData }) {
   };
   const stopSplitDragging = () => setIsDraggingSplit(false);
 
+  // Rotating an iPad can cancel the pointer without firing touchend/mouseup.
+  // Clear the drag state so the passage remains selectable and scrollable.
+  useEffect(() => {
+    const cancelDrag = () => setIsDraggingSplit(false);
+    window.addEventListener('orientationchange', cancelDrag);
+    window.addEventListener('blur', cancelDrag);
+    return () => {
+      window.removeEventListener('orientationchange', cancelDrag);
+      window.removeEventListener('blur', cancelDrag);
+    };
+  }, []);
+
   useEffect(() => {
     if (isDraggingSplit) {
       window.addEventListener('mousemove', onSplitMouseMove);
