@@ -1,19 +1,21 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 import { useTrace } from '../hooks/useTrace';
+import { playCorrectChime } from '../lib/traceAudio';
 import { useMultiplayer } from '../hooks/useMultiplayer';
 
 import TitleScreen from './student/TitleScreen';
+import OpeningSplash from './student/OpeningSplash';
 import LobbyScreen from './student/LobbyScreen';
 import MenuScreen from './student/MenuScreen';
 import ResultScreen from './student/ResultScreen';
 import GameScreen from './student/GameScreen';
 import SummaryScreen from './student/SummaryScreen';
 
-export default function StudentMode({ categories }) {
+export default function StudentMode({ categories, onTeacherOpen }) {
   const {
     gameState, availableCategories, activeMain, activeCategory, activeProblem, currentProblemIdx,
-    score, combo, correctCount, firstTryCount, wrongAttempts, selectedIndices, feedbackState, mainContainerRef, lastBonus,
+    score, combo, correctCount, firstTryCount, wrongAttempts, categoryStats, selectedIndices, feedbackState, mainContainerRef, lastBonus,
     selectedLevel, filteredProblems, setGameState,
     selectMainCategory, selectSubCategory, startGame, resumeGame, 
     backToMain, backToSub, backToLevelSelect,
@@ -32,7 +34,16 @@ export default function StudentMode({ categories }) {
   const [battleSetup, setBattleSetup] = useState(null);
   const [pendingBattle, setPendingBattle] = useState(null);
 
-  const [hasSeenSplash, setHasSeenSplash] = useState(true);
+  const [showOpening, setShowOpening] = useState(true);
+
+  useEffect(() => {
+    try { if (sessionStorage.getItem('tracegram_opening_seen') === 'yes') setShowOpening(false); } catch {}
+  }, []);
+
+  const dismissOpening = () => {
+    try { sessionStorage.setItem('tracegram_opening_seen', 'yes'); } catch {}
+    setShowOpening(false);
+  };
   const [gameMode, setGameMode] = useState('flow');
 
   // 🌟 長文データを管理するState
@@ -47,34 +58,7 @@ export default function StudentMode({ categories }) {
   const processedBattleRef = useRef(null);
 
   useEffect(() => {
-    if (feedbackState === 'correct') {
-      try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) return;
-        const ctx = new AudioContext();
-
-        const playNote = (freq, startTime, duration) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sine'; 
-          osc.frequency.setValueAtTime(freq, startTime);
-          gain.gain.setValueAtTime(0, startTime);
-          gain.gain.linearRampToValueAtTime(0.2, startTime + 0.05); 
-          gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration); 
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(startTime);
-          osc.stop(startTime + duration);
-        };
-
-        const now = ctx.currentTime;
-        playNote(880, now, 0.4); 
-        playNote(1108.73, now + 0.1, 0.6);
-        setTimeout(() => ctx.close().catch(() => {}), 850); 
-      } catch (e) {
-        console.error("Audio playback failed", e);
-      }
-    }
+    if (feedbackState === 'correct') playCorrectChime();
   }, [feedbackState]);
 
   useEffect(() => {
@@ -111,12 +95,12 @@ export default function StudentMode({ categories }) {
     setGameState('main_select');
   };
 
+  if (showOpening) return <OpeningSplash onEnter={dismissOpening} />;
+
   if (appScreen === 'title') {
     return (
       <TitleScreen 
-        hasSeenSplash={hasSeenSplash}
-        onSplashComplete={() => setHasSeenSplash(true)}
-        onSinglePlayer={() => setAppScreen('main')}
+         onSinglePlayer={() => setAppScreen('main')}
         onCreateRoom={() => createRoom()}
         joinPin={joinPin}
         setJoinPin={setJoinPin}
@@ -163,6 +147,8 @@ export default function StudentMode({ categories }) {
       <MenuScreen
         gameMode={gameMode}
         setGameMode={setGameMode}
+        onReplayOpening={() => setShowOpening(true)}
+        onTeacherOpen={onTeacherOpen}
         setActiveSummary={setActiveSummary} 
         gameState={gameState}
         roomId={roomId}
@@ -206,9 +192,13 @@ export default function StudentMode({ categories }) {
         correctCount={correctCount}
         firstTryCount={firstTryCount}
         wrongAttempts={wrongAttempts}
+        categoryStats={categoryStats}
         totalCount={filteredProblems?.length || 0}
         onBackToLobby={() => setAppScreen('lobby')}
-        onBackToLevelSelect={backToLevelSelect}
+        onBackToLevelSelect={() => {
+          if (activeCategory?.categoryId === 'grammar_mix') { backToMain(); setMenuViewMode('mix'); }
+          else backToLevelSelect();
+        }}
         onBackToHome={() => { backToMain(); setMenuViewMode('home'); setAppScreen('main'); }}
       />
     );
@@ -236,7 +226,11 @@ export default function StudentMode({ categories }) {
       handlePointerMove={handlePointerMove}
       handlePointerUp={handlePointerUp}
       submitAnswer={submitAnswer}
-      onExit={() => { if(isMultiplayer) setAppScreen('lobby'); else backToLevelSelect(); }}
+      onExit={() => {
+        if (isMultiplayer) setAppScreen('lobby');
+        else if (activeCategory?.categoryId === 'grammar_mix') { backToMain(); setMenuViewMode('mix'); }
+        else backToLevelSelect();
+      }}
       onRetryTrace={resetForRetry}
     />
   );

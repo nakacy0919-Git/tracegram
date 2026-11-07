@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { BookOpen, ArrowLeftRight } from 'lucide-react';
+import { BookOpen, ArrowLeftRight, Settings2 } from 'lucide-react';
 
 export default function ReadingPane({
   summaryData,
@@ -70,33 +70,41 @@ export default function ReadingPane({
   if (!summaryData) return null;
 
   return (
-    <div className="h-full flex flex-col bg-white relative">
-      {/* 👑 ヘッダー部分 */}
-      <div className="flex justify-between items-center px-4 py-3 border-b border-slate-200 bg-white/90 backdrop-blur-sm z-20 flex-shrink-0">
-        <div className="flex items-center gap-2 text-indigo-600 font-black">
-          <BookOpen size={20} /> Reading Passage
+    <div className="h-full flex flex-col bg-[#fcfaf4] relative">
+      <div className="flex items-center justify-between px-3 md:px-5 py-2.5 border-b border-[#dcded2] bg-[#fffdf7] z-20 shrink-0">
+        <div className="flex items-center gap-2 text-[#456b55] font-semibold text-sm">
+          <BookOpen size={17}/> 本文
         </div>
-        <div className="flex items-center gap-3">
-          <button onClick={() => setIsSwapped(!isSwapped)} className="flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-indigo-500 transition-colors bg-slate-100 px-2 py-1 rounded-lg">
-            <ArrowLeftRight size={14} /> 入替
-          </button>
-          <div className="flex bg-slate-100 p-0.5 rounded-lg">
-            <button onClick={() => setFontClass('font-sans')} className={`px-2 py-1 text-xs font-bold rounded-md ${fontClass === 'font-sans' ? 'bg-white shadow-sm' : 'text-slate-500'}`}>ゴシック</button>
-            <button onClick={() => setFontClass('font-serif')} className={`px-2 py-1 text-xs font-bold rounded-md ${fontClass === 'font-serif' ? 'bg-white shadow-sm' : 'text-slate-500'}`}>明朝</button>
+        <details className="relative group">
+          <summary className="list-none cursor-pointer inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 border border-[#dedfd4] text-xs font-semibold text-stone-600 hover:bg-[#f2f4ed]">
+            <Settings2 size={15}/> 表示設定
+          </summary>
+          <div className="absolute top-full right-0 mt-2 w-[235px] p-4 tg-paper rounded-xl z-40 shadow-lg space-y-3">
+            <span className="text-xs font-semibold text-stone-500 block">文字サイズ</span>
+            <div className="flex gap-1.5">
+              {[
+                {label:'小',value:'text-lg'},{label:'中',value:'text-xl'},{label:'大',value:'text-2xl'}
+              ].map(size=><button key={size.value} type="button" aria-pressed={textSizeClass===size.value}
+                onClick={()=>setTextSizeClass(size.value)} className="tg-pill !rounded-lg !py-1.5 flex-1">{size.label}</button>)}
+            </div>
+            <span className="text-xs font-semibold text-stone-500 block">書体</span>
+            <div className="flex gap-1.5">
+              <button type="button" aria-pressed={fontClass==='font-sans'} onClick={()=>setFontClass('font-sans')} className="tg-pill !rounded-lg flex-1 !py-1.5">ゴシック</button>
+              <button type="button" aria-pressed={fontClass==='font-serif'} onClick={()=>setFontClass('font-serif')} className="tg-pill !rounded-lg flex-1 !py-1.5">明朝</button>
+            </div>
+            <button type="button" onClick={()=>setIsSwapped(!isSwapped)}
+              className="tg-outline w-full rounded-lg text-xs font-semibold py-2 flex items-center justify-center gap-2">
+              <ArrowLeftRight size={15}/> 左右を入れ替える
+            </button>
           </div>
-          <div className="flex bg-slate-100 p-0.5 rounded-lg">
-            <button onClick={() => setTextSizeClass('text-lg')} className={`px-2 py-1 text-xs font-bold rounded-md ${textSizeClass === 'text-lg' ? 'bg-white shadow-sm' : 'text-slate-500'}`}>小</button>
-            <button onClick={() => setTextSizeClass('text-xl')} className={`px-2 py-1 text-xs font-bold rounded-md ${textSizeClass === 'text-xl' ? 'bg-white shadow-sm' : 'text-slate-500'}`}>中</button>
-            <button onClick={() => setTextSizeClass('text-2xl')} className={`px-2 py-1 text-xs font-bold rounded-md ${textSizeClass === 'text-2xl' ? 'bg-white shadow-sm' : 'text-slate-500'}`}>大</button>
-          </div>
-        </div>
+        </details>
       </div>
 
       {/* 📖 本文スクロールエリア */}
       <div 
         id="left-scroll-pane" // 🌟 スクロール同期用のID
         ref={scrollContainerRef}
-        className="flex-1 overflow-y-auto p-4 md:p-8 pb-32 relative" 
+        className="tg-note flex-1 overflow-y-auto p-3 md:p-6 pb-10 relative" 
         onScroll={handleScrollSync} // 🌟 右パネルを自動追従させる
         onPointerMove={handleTracePointerMove}
         onPointerUp={handleTracePointerUp}
@@ -115,14 +123,14 @@ export default function ReadingPane({
             const isVoiceTarget = isVoiceMode && (readAloudTarget === 'all' || readAloudTarget === idx);
 
             // 🌟 「白の透明フィルターがかかって読みにくい」問題を完全解消！
-            let containerClass = 'bg-slate-50/50 border border-slate-200 opacity-40';
+            let containerClass = 'bg-[#fcfaf4]/70 border border-[#d9ddcf] text-stone-600';
             if (isActive) {
-              containerClass = 'bg-white border-2 border-indigo-300 shadow-lg scale-[1.02] z-10';
+              containerClass = 'bg-[#fffef9] border-2 border-[#a8c5ad] shadow-sm z-10';
             } else if (isGlobal) {
               if (isVoiceTarget) {
-                containerClass = 'bg-white border-2 border-teal-400 shadow-lg scale-[1.01] z-10 opacity-100'; // 音読ターゲットはくっきり
+                containerClass = 'bg-[#fffef9] border-2 border-[#a8c5ad] z-10'; // 音読ターゲットはくっきり
               } else {
-                containerClass = 'bg-white border border-slate-200 opacity-100'; // 全体問題時も白モヤを消して読みやすく
+                containerClass = 'bg-[#fffef9] border border-[#dadfd5]'; // 全体問題時も白モヤを消して読みやすく
               }
             }
             
@@ -130,10 +138,10 @@ export default function ReadingPane({
               <div 
                 key={p.p_id || idx} 
                 ref={(el) => (paragraphRefs.current[idx] = el)} 
-                className={`relative p-6 rounded-2xl transition-all duration-500 ${containerClass}`}
+                className={`relative p-4 md:p-6 rounded-xl transition-colors duration-200 ${containerClass}`}
               >
-                <div className={`text-xs font-black mb-4 flex items-center gap-2 ${isActive ? 'text-indigo-500' : 'text-slate-400'}`}>
-                  PARAGRAPH {idx + 1} (第{idx + 1}段落) {isActive && <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />}
+                <div className={`text-xs font-semibold tracking-wider mb-4 flex items-center gap-2 ${isActive ? 'text-[#507a5e]' : 'text-stone-400'}`}>
+                  PARAGRAPH {idx + 1} (第{idx + 1}段落) {isActive && <span className="w-2 h-2 rounded-full bg-[#668e72]" />}
                 </div>
                 
                 <div className={`leading-[2.5em] tracking-wide ${fontClass} ${textSizeClass}`}>
@@ -142,31 +150,22 @@ export default function ReadingPane({
                     const isPrevSelected = isActive && selectedIndices.includes(tIdx - 1);
                     const isNextSelected = isActive && selectedIndices.includes(tIdx + 1);
 
-                    let tokenBg = "bg-transparent";
-                    // 🌟 モヤを消すため、文字色もはっきりとした色に変更
-                    let tokenText = (isActive || isGlobal) ? "text-slate-800 font-bold" : "text-slate-500 font-medium";
-                    let shapeClass = "rounded-lg"; 
-
-                    if (isSelected) {
-                      if (traceFeedback === 'wrong') { tokenBg = 'bg-rose-300'; tokenText = 'text-rose-950 font-bold shadow-sm'; }
-                      else if (traceFeedback === 'partial') { tokenBg = 'bg-amber-300'; tokenText = 'text-amber-950 font-bold shadow-sm'; }
-                      else if (traceFeedback === 'correct') { tokenBg = 'bg-emerald-300'; tokenText = 'text-emerald-950 font-bold shadow-sm'; }
-                      else { tokenBg = 'bg-cyan-300'; tokenText = 'text-cyan-950 font-bold shadow-sm'; }
-
-                      if (isPrevSelected && isNextSelected) shapeClass = "rounded-none";
-                      else if (isPrevSelected && !isNextSelected) shapeClass = "rounded-r-lg rounded-l-none";
-                      else if (!isPrevSelected && isNextSelected) shapeClass = "rounded-l-lg rounded-r-none";
-                      else shapeClass = "rounded-lg"; 
-                    } else if (isActive && isTraceTask) {
-                      tokenBg = "hover:bg-slate-200/50";
-                    }
+                    const markerShape = isPrevSelected && isNextSelected ? 'tg-mark-middle'
+                      : isNextSelected ? 'tg-mark-start'
+                      : isPrevSelected ? 'tg-mark-end' : '';
+                    const markerClass = isSelected
+                      ? `tg-mark-selected ${markerShape} ${traceFeedback === 'wrong' ? 'tg-mark-wrong' : traceFeedback === 'partial' ? 'tg-mark-partial' : ''}`
+                      : '';
+                    const tokenText = (isActive || isGlobal)
+                      ? 'text-[#344236] font-semibold'
+                      : 'text-stone-500 font-medium';
 
                     return (
                       <span
                         key={tIdx}
                         data-token-idx={tIdx}
                         onPointerDown={(e) => { if (isActive && isTraceTask) handleTracePointerDown(e, tIdx); }}
-                        className={`inline-block px-1 py-1 mx-0 select-none transition-colors duration-150 ${isActive && isTraceTask ? 'cursor-pointer' : ''} ${shapeClass} ${tokenBg} ${tokenText}`}
+                        className={`tg-ink-token py-1 select-none transition-colors duration-150 ${isActive && isTraceTask ? 'cursor-pointer touch-none hover:text-[#467658]' : ''} ${markerClass} ${tokenText}`}
                       >
                         {token}
                       </span>

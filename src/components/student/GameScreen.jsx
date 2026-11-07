@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { XCircle, CheckCircle2, Sword, AlertTriangle, Flame, Zap } from 'lucide-react'; 
+import { ArrowLeft, CheckCircle2, AlertTriangle } from 'lucide-react'; 
 import PronunciationMission from './PronunciationMission'; 
 
 const playSlashSound = () => {
@@ -26,17 +26,6 @@ const playSlashSound = () => {
   } catch (e) {
     console.error("Audio playback failed", e);
   }
-};
-
-const getElementColor = (role) => {
-  if (!role) return { bg: "bg-cyan-200", text: "text-cyan-900", shadow: "shadow-[0_0_15px_rgba(165,243,252,0.8)]" };
-  const r = role.toUpperCase();
-  if (r.startsWith('S') || r.includes('主語')) return { bg: "bg-slate-300", text: "text-slate-800", shadow: "shadow-[0_0_15px_rgba(203,213,225,0.8)]" };
-  if (r.startsWith('V') || r.includes('動詞')) return { bg: "bg-orange-200", text: "text-orange-900", shadow: "shadow-[0_0_15px_rgba(253,186,116,0.8)]" };
-  if (r.startsWith('O') || r.includes('目的語')) return { bg: "bg-green-200", text: "text-green-900", shadow: "shadow-[0_0_15px_rgba(187,247,208,0.8)]" };
-  if (r.startsWith('C') || r.includes('補語')) return { bg: "bg-cyan-200", text: "text-cyan-900", shadow: "shadow-[0_0_15px_rgba(165,243,252,0.8)]" };
-  if (r.startsWith('M') || r.includes('修飾') || r.includes('副詞') || r.includes('形容詞') || r.includes('分詞')) return { bg: "bg-purple-200", text: "text-purple-900", shadow: "shadow-[0_0_15px_rgba(233,213,255,0.8)]" };
-  return { bg: "bg-cyan-200", text: "text-cyan-900", shadow: "shadow-[0_0_15px_rgba(165,243,252,0.8)]" };
 };
 
 export default function GameScreen({
@@ -69,11 +58,13 @@ export default function GameScreen({
   const [isBugSlashed, setIsBugSlashed] = useState(true); 
   const [slashingIndex, setSlashingIndex] = useState(null); 
   const [shake, setShake] = useState(false);
+  const [showTranslation, setShowTranslation] = useState(false);
 
   const SLASH_ANIMATION_DURATION = 300;
 
   useEffect(() => {
     if (!activeProblem) return;
+    setShowTranslation(false);
 
     if (gameMode === 'bug_slash') {
       const bugDictionary = ["to", "at", "in", "on", "is", "are", "a", "the", "that", "with", "about", "for"];
@@ -125,7 +116,6 @@ export default function GameScreen({
   if (!activeProblem) return null;
 
   const cleanHint = (activeProblem.hint || '指定された文法のまとまりをなぞってください').replace(/【.*?】/, '').trim();
-  const roleColors = getElementColor(activeProblem.targetRole);
   const roleInitial = (activeProblem.targetRole || '?').charAt(0).toUpperCase();
   const sortedPlayers = Object.values(playersData || {}).sort((a, b) => b.score - a.score);
   const targets = [...(activeProblem.targetIndices || (activeProblem.targetIndex !== undefined ? [activeProblem.targetIndex] : []))].sort((a,b)=>a-b);
@@ -133,7 +123,7 @@ export default function GameScreen({
   const flowAutoJudge = gameMode === 'flow' && !requiresMultiStroke;
 
   return (
-    <div className="flex-1 flex flex-col relative z-10 w-full overflow-y-auto overflow-x-hidden" ref={mainContainerRef} onPointerMove={handlePointerMove} onPointerUp={() => handlePointerUp(flowAutoJudge)} onPointerCancel={() => handlePointerUp(false)}>
+    <div className="tg-workspace flex-1 flex flex-col relative z-10 w-full min-h-[100dvh] overflow-y-auto overflow-x-hidden" ref={mainContainerRef} onPointerMove={handlePointerMove} onPointerUp={() => handlePointerUp(flowAutoJudge)} onPointerCancel={() => handlePointerUp(false)}>
       
       {isMultiplayer && sortedPlayers.length > 0 && (
         <div className="absolute top-[80px] md:top-[90px] left-0 w-full z-40 flex flex-row flex-wrap justify-center gap-2 md:gap-4 px-2 pointer-events-none">
@@ -151,73 +141,63 @@ export default function GameScreen({
         </div>
       )}
 
-      <div className={`flex justify-between items-end px-4 md:px-10 py-2 md:py-3 border-b ${gameMode === 'bug_slash' ? 'border-rose-200 bg-rose-50/80' : 'border-slate-200/50 bg-white/30'} backdrop-blur-sm w-full z-20 transition-colors`}>
+      <div className="flex justify-between items-center px-4 md:px-8 py-3 border-b border-[#d8d8ca] bg-[#f9f6ee]/95 backdrop-blur-sm w-full z-20 gap-4">
         <div className="flex items-center gap-4">
-          <button onClick={onExit} className="box p-2 text-rose-500"><XCircle size={22} /></button>
+          <button type="button" onClick={onExit} aria-label="教材選択へ戻る" className="tg-outline rounded-full p-2.5 shrink-0"><ArrowLeft size={20}/></button>
           <div>
-            <div className={`text-sm mb-1 font-black flex items-center gap-2 ${gameMode === 'bug_slash' ? 'text-rose-500' : 'text-slate-400'}`}>
-              {gameMode === 'bug_slash' && <Sword size={16} />}
-              {activeCategory.title} [Lv.{selectedLevel}]
-            </div>
-            <div className="text-xl md:text-2xl font-black text-slate-700">Q. {currentProblemIdx + 1} / {filteredProblems.length}</div>
+            <div className="text-xs md:text-sm font-semibold text-[#5e7565] truncate max-w-[45vw] md:max-w-[60vw]">{activeCategory.title} · {activeCategory.categoryId === 'grammar_mix' ? 'MIX' : selectedLevel === 'all' ? '復習' : `Lv.${selectedLevel}`}</div>
+            <div className="text-sm font-bold text-[#293b30]">Q {currentProblemIdx + 1} <span className="font-normal text-stone-500">/ {filteredProblems.length}</span></div>
           </div>
         </div>
-        <div className="flex items-end gap-4 text-right">
-          <div className="flex flex-col items-end">
-            <div className="text-3xl md:text-5xl font-black text-cyan-600 tracking-tighter drop-shadow-sm">{score}</div>
-            <div className="flex items-center gap-1.5 text-sm font-black text-orange-500"><Flame size={17} /> {combo} COMBO</div>
-          </div>
+        <div className="text-right flex-shrink-0">
+          <div className="text-lg md:text-2xl font-bold text-[#376251] tabular-nums">{score.toLocaleString()}</div>
+          <div className="text-[11px] font-semibold text-stone-500">{combo > 1 ? `${combo} combo` : 'SCORE'}</div>
         </div>
       </div>
 
-      <div className="w-full h-1.5 bg-slate-200"><div className="h-full bg-gradient-to-r from-cyan-400 to-emerald-400 transition-all duration-500" style={{width: `${(currentProblemIdx / Math.max(1, filteredProblems.length)) * 100}%`}} /></div>
-      <div className={`flex-1 flex flex-col items-center justify-start p-2 md:p-4 w-full max-w-[1400px] mx-auto ${feedbackState === 'wrong' ? 'pb-80' : 'pb-4'} relative`}>
+      <div className="w-full h-1 bg-[#e5e4d9]"><div className="h-full bg-[#739a80] transition-all duration-500" style={{width: `${(currentProblemIdx / Math.max(1, filteredProblems.length)) * 100}%`}} /></div>
+      <div className="flex-1 flex flex-col items-center justify-start py-5 px-3 md:px-7 w-full max-w-[1100px] mx-auto relative">
         
-        <div className="w-full flex justify-start mb-2 md:mb-3 text-left z-10 pt-1 md:pt-2 px-2">
-          <div className="flex items-center gap-3">
-            <div className={`w-10 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center text-2xl md:text-3xl font-black shadow-md border-4 border-white flex-shrink-0 ${roleColors.bg} ${roleColors.text}`}>{roleInitial}</div>
-            <p className={`text-lg md:text-2xl font-black ${roleColors.text} drop-shadow-sm leading-tight`}>
-              {gameMode === 'bug_slash' && !isBugSlashed 
-                ? <span className="text-rose-600 flex items-center gap-2"><AlertTriangle size={24} className="animate-pulse" /> 英文をスキャンし、不正なバグ単語を破壊せよ！</span> 
-                : cleanHint
-              }
+        <div className="w-full mb-4 flex items-start gap-3 px-2">
+          <span className="w-9 h-9 shrink-0 rounded-full border border-[#a5b9a7] bg-[#e9f0e7] text-[#365e48] flex items-center justify-center font-bold text-lg">{roleInitial}</span>
+          <div className="min-w-0">
+            <p className="text-[#2b3d32] text-base md:text-xl font-bold leading-snug">
+              {gameMode === 'bug_slash' && !isBugSlashed
+                ? <span className="inline-flex items-center gap-2"><AlertTriangle size={18}/> 余分な単語を見つけよう</span>
+                : cleanHint}
+            </p>
+            <p className="text-xs md:text-sm text-[#788679] mt-1">
+              {gameMode === 'flow' ? (requiresMultiStroke ? '必要な単語を選び、判定を押す' : '単語をなぞり、指を離すと判定') :
+                (gameMode === 'bug_slash' && !isBugSlashed ? '不要な単語をタップ' : 'なぞってから判定する')}
             </p>
           </div>
         </div>
-
-        {gameMode === 'flow' && <div className="self-start mb-2 px-4 py-1.5 bg-amber-100 text-amber-800 rounded-full text-sm font-black flex items-center gap-2"><Zap size={16} /> {requiresMultiStroke ? '離れた語句を選んで「判定する」を押そう' : '一筆でなぞる → 離した瞬間に判定！'}</div>}
         <motion.div 
           animate={shake ? { x: [-10, 10, -10, 10, 0] } : {}}
           transition={{ duration: 0.4 }}
-          className={`w-full relative rounded-3xl border shadow-inner p-4 md:p-6 mb-2 md:mb-3 flex flex-col justify-center min-h-[100px] overflow-hidden touch-none transition-colors ${
-            gameMode === 'bug_slash' && !isBugSlashed ? 'bg-rose-50 border-rose-200' : 'bg-white/60 border-slate-100'
-          }`}
+          className={`tg-paper tg-note tg-margin tg-holes w-full relative rounded-[22px] py-8 px-4 pl-12 md:p-10 md:pl-16 mb-3 flex flex-col justify-center min-h-[190px] overflow-hidden touch-none transition-colors ${gameMode === 'bug_slash' && !isBugSlashed ? 'ring-2 ring-[#c4a387]' : ''}`}
         >
           <AnimatePresence mode="wait">
-            <motion.div key={`sentence-${currentProblemIdx}-${isBugSlashed}`} initial={{ x: 800, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -800, opacity: 0 }} transition={{ type: "tween", duration: 0.2 }} className="w-full">
-              <div className="text-left leading-[2.5rem] md:leading-[4rem] w-full relative">
+            <motion.div key={`sentence-${currentProblemIdx}-${isBugSlashed}`} initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -5, opacity: 0 }} transition={{ duration: 0.2 }} className="w-full">
+              <div className="text-left leading-[2.6rem] md:leading-[3.6rem] w-full relative">
                 
                 <AnimatePresence>
                   {displayTokens.map((token, idx) => {
                     const isBugWord = gameMode === 'bug_slash' && !isBugSlashed && idx === bugIndex;
                     const isSlashing = idx === slashingIndex;
                     
-                    let isSelected = false;
-                    let isGlowing = false;
-                    let bgClass = "bg-transparent text-slate-700";
-                    
-                    if (isBugSlashed) {
-                      isSelected = selectedIndices.includes(idx);
-                      isGlowing = activeProblem.modifiedIndices ? activeProblem.modifiedIndices.includes(idx) : activeProblem.modifiedIndex === idx;
-                    }
-
-                    if (isSlashing) {
-                      bgClass = "text-rose-600 bg-rose-200 border-b-4 border-rose-500 shadow-[0_0_20px_rgba(244,63,94,0.6)] scale-110";
-                    } else if (isSelected) {
-                      bgClass = feedbackState === 'wrong' ? "bg-rose-300 text-rose-900 shadow-[0_0_15px_rgba(253,164,175,0.6)]" : `${roleColors.bg} ${roleColors.text} ${roleColors.shadow}`;
-                    } else if (isGlowing) {
-                      bgClass = "bg-amber-100 text-amber-700 shadow-[0_0_10px_rgba(254,243,199,0.5)] animate-pulse";
-                    }
+                    const isSelected = isBugSlashed && selectedIndices.includes(idx);
+                    const isGlowing = isBugSlashed &&
+                      (activeProblem.modifiedIndices
+                        ? activeProblem.modifiedIndices.includes(idx)
+                        : activeProblem.modifiedIndex === idx);
+                    const previousSelected = isSelected && selectedIndices.includes(idx - 1);
+                    const nextSelected = isSelected && selectedIndices.includes(idx + 1);
+                    const markerShape = previousSelected && nextSelected ? 'tg-mark-middle'
+                      : nextSelected ? 'tg-mark-start' : previousSelected ? 'tg-mark-end' : '';
+                    const markerClass = isSlashing ? 'tg-mark-slash'
+                      : isSelected ? `tg-mark-selected ${markerShape} ${feedbackState === 'wrong' ? 'tg-mark-wrong' : ''}`
+                      : isGlowing ? 'tg-mark-focus' : '';
 
                     return (
                       <motion.span 
@@ -243,7 +223,7 @@ export default function GameScreen({
                           y: -40 
                         } : {}}
                         transition={{ duration: SLASH_ANIMATION_DURATION / 1000, ease: "easeOut" }}
-                        className={`inline-block text-2xl md:text-4xl lg:text-5xl font-black px-1.5 md:px-2 mx-0.5 md:mx-1 rounded-lg select-none transition-all duration-150 ${bgClass}`}
+                        className={`tg-ink-token text-xl md:text-3xl lg:text-4xl font-semibold select-none transition-colors duration-150 ${markerClass}`}
                       >
                         {token}
                       </motion.span>
@@ -253,9 +233,13 @@ export default function GameScreen({
 
               </div>
               {activeProblem.translation && isBugSlashed && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full text-left mt-2 md:mt-4">
-                  <p className="text-sm md:text-base text-slate-500 font-bold bg-white/70 inline-block px-4 py-1.5 rounded-xl shadow-sm border border-slate-100 italic">{activeProblem.translation}</p>
-                </motion.div>
+                <div className="w-full text-left mt-5 pt-3 border-t border-[#e3e6d9]">
+                  <button type="button" onClick={() => setShowTranslation(prev=>!prev)}
+                    className="text-xs font-bold text-[#5b7664] hover:underline">
+                    {showTranslation ? '日本語訳を閉じる' : '日本語訳を見る'}
+                  </button>
+                  {showTranslation && <p className="text-sm md:text-base text-stone-600 mt-2 leading-relaxed">{activeProblem.translation}</p>}
+                </div>
               )}
             </motion.div>
           </AnimatePresence>
@@ -263,38 +247,59 @@ export default function GameScreen({
 
         <div className="w-full flex flex-col items-center min-h-[100px] z-20">
           <AnimatePresence mode="wait">
-            {feedbackState === 'idle' && isBugSlashed ? (
+            {feedbackState === 'idle' && isBugSlashed && (gameMode !== 'flow' || requiresMultiStroke) ? (
               <motion.button 
                 key="answer-btn" 
                 initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} 
                 onClick={submitAnswer} 
                 disabled={selectedIndices.length === 0} 
-                className={`flex items-center gap-2 md:gap-3 font-black text-xl md:text-2xl px-12 md:px-16 py-4 md:py-5 rounded-3xl shadow-lg border-b-4 border-slate-200 transition-all ${selectedIndices.length === 0 ? "bg-slate-100 text-slate-300 cursor-not-allowed" : "bg-white text-cyan-600 hover:scale-105 active:scale-95 active:border-b-0"}`}
+                className={`flex items-center gap-2 font-semibold text-base md:text-lg px-8 py-3.5 rounded-xl transition-all ${selectedIndices.length === 0 ? "tg-outline text-stone-400 cursor-not-allowed" : "tg-primary"}`}
               >
-                <CheckCircle2 size={28} /> {gameMode === 'flow' ? '判定する' : 'Answer!'}
+                <CheckCircle2 size={20} /> 判定する
               </motion.button>
             ) : feedbackState === 'correct' ? (
-              <motion.div key="correct-display" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-emerald-500 font-black text-4xl md:text-6xl tracking-widest drop-shadow-md">
-                EXCELLENT!
-              </motion.div>
-            ) : feedbackState === 'wrong' ? (
-              <motion.div key="wrong-display" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center w-full max-w-3xl gap-2 md:gap-3">
-                <div className="w-full bg-emerald-50/90 backdrop-blur-sm p-2 md:p-3 rounded-2xl border-2 border-emerald-200 shadow-sm flex flex-col items-center">
-                  <p className="text-emerald-600 font-black text-xs md:text-sm mb-1 opacity-80">正しい構造はこちら</p>
-                  <div className="text-center leading-[2rem] md:leading-[2.5rem] w-full">
-                   {activeProblem.tokens.map((token, idx) => {
-                     const isTarget = (activeProblem.targetIndices || (activeProblem.targetIndex !== undefined ? [activeProblem.targetIndex] : [])).includes(idx);
-                     return (
-                       <span key={`ans-${idx}`} className={`inline-block text-base md:text-xl font-black px-1 mx-0.5 ${isTarget ? 'bg-emerald-200 text-emerald-900 border-b-2 border-emerald-400' : 'text-slate-400'}`}>
-                         {token}
-                       </span>
-                     );
-                   })}
-                  </div>
-                </div>
+              <motion.div
+                key={`correct-${currentProblemIdx}`}
+                role="status" aria-live="polite"
+                initial={{ opacity: 0, scale: 0.88, y: 12 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 1.06, y: -5 }}
+                transition={{ type: 'spring', stiffness: 260, damping: 22 }}
+                className="relative w-full max-w-[450px] h-[172px] flex items-center justify-center select-none pointer-events-none"
+              >
+                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 420 180" fill="none" aria-hidden="true">
+                  <motion.path
+                    d="M39 88 C22 48 104 19 190 20 C302 14 390 53 393 98 C399 147 321 161 210 160 C98 166 41 142 39 88"
+                    stroke="#4a9a68" strokeWidth="5.5" strokeLinecap="round" strokeLinejoin="round"
+                    initial={{ pathLength: 0, opacity: 0.6 }}
+                    animate={{ pathLength: 1, opacity: 1 }}
+                    transition={{ duration: 0.82, ease: 'easeOut', delay: 0.1 }}
+                  />
+                  <motion.path
+                    d="M60 145 Q198 165 351 143"
+                    stroke="#8eb99b" strokeWidth="2" strokeLinecap="round"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 0.65 }}
+                    transition={{ duration: 0.45, delay: 0.65 }}
+                  />
+                </svg>
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.85, y: 7 }}
+                  animate={{ opacity: 1, scale: [0.85, 1.05, 1], y: 0 }}
+                  transition={{ duration: 0.5, ease: [0.2, 1, 0.3, 1], delay: 0.13 }}
+                  className="tg-correct-label text-[clamp(3.1rem,10vw,5.2rem)] leading-none relative z-10 pb-2"
+                >
+                  Correct!
+                </motion.span>
               </motion.div>
             ) : null}
           </AnimatePresence>
+          {gameMode === 'flow' && !requiresMultiStroke && feedbackState === 'idle' && isBugSlashed && (
+            <button type="button" onClick={submitAnswer} disabled={!selectedIndices.length}
+              className="sr-only focus:not-sr-only focus:mt-2 focus:rounded-xl focus:px-5 focus:py-3 focus:bg-[#3e6558] focus:text-white">
+              選択した単語を判定する
+            </button>
+          )}
         </div>
 
       </div>
@@ -306,7 +311,7 @@ export default function GameScreen({
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
             exit={{ opacity: 0 }} 
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#27352f]/65 backdrop-blur-[3px]"
           >
             <motion.div 
               key="wrong-modal-content"
@@ -314,16 +319,16 @@ export default function GameScreen({
               animate={{ scale: 1, y: 0, opacity: 1 }} 
               exit={{ scale: 0.9, y: 30, opacity: 0 }} 
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl border-4 border-rose-100 flex flex-col max-h-[90dvh]"
+              className="tg-paper rounded-[22px] tg-note shadow-xl w-full max-w-2xl border border-[#d7d7c8] flex flex-col max-h-[90dvh]"
             >
               <div className="p-4 md:p-6 overflow-y-auto flex flex-col gap-4">
-                <div className="w-full bg-emerald-50/90 p-4 rounded-2xl border-2 border-emerald-200 shadow-sm flex flex-col items-center">
-                  <p className="text-emerald-600 font-black text-sm mb-2 opacity-80">正しい構造はこちら</p>
+                <div className="w-full bg-[#edf2e6]/90 p-4 rounded-xl border border-[#d9e5d7] flex flex-col items-center">
+                  <p className="text-[#3e6558] font-bold text-sm mb-2">正しい構造はこちら</p>
                   <div className="text-center leading-[2.5rem] w-full">
                    {activeProblem.tokens.map((token, idx) => {
                      const isTarget = (activeProblem.targetIndices || (activeProblem.targetIndex !== undefined ? [activeProblem.targetIndex] : [])).includes(idx);
                      return (
-                       <span key={`ans-${idx}`} className={`inline-block text-xl md:text-3xl font-black px-1 mx-0.5 ${isTarget ? 'bg-emerald-200 text-emerald-900 border-b-2 border-emerald-400' : 'text-slate-400'}`}>
+                       <span key={`ans-${idx}`} className={`inline-block text-lg md:text-2xl font-semibold px-1 mx-0.5 ${isTarget ? 'bg-[#d5e7d3] text-[#315a42] border-b-[3px] border-[#739878]' : 'text-stone-400'}`}>
                          {token}
                        </span>
                      );
@@ -333,7 +338,7 @@ export default function GameScreen({
                     <p className="text-slate-500 font-bold mt-4 text-sm md:text-base italic">{activeProblem.translation}</p>
                   )}
                 </div>
-                <PronunciationMission key={activeProblem.id || currentProblemIdx} targetSentence={activeProblem.tokens.join(' ')} onComplete={onRetryTrace} onFallback={onRetryTrace} />
+                <PronunciationMission key={activeProblem.id || currentProblemIdx} targetSentence={activeProblem.tokens.join(' ')} onComplete={onRetryTrace} onFallback={onRetryTrace} onSkip={onRetryTrace} />
               </div>
             </motion.div>
           </motion.div>

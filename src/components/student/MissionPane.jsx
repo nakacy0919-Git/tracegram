@@ -46,9 +46,9 @@ export default function MissionPane({
 
   if (currentPhase === 'completed') {
     return (
-      <div className="bg-white rounded-3xl p-10 shadow-md border-2 border-emerald-100 flex flex-col items-center justify-center text-center mt-6 h-full relative">
+      <div className="tg-paper rounded-2xl p-8 flex flex-col items-center justify-center text-center mt-4 h-full relative">
         <Trophy size={64} className="text-yellow-400 mb-6 drop-shadow-md" />
-        <h2 className="text-3xl font-black text-slate-800 mb-4">MODE CLEARED!</h2>
+        <h2 className="tg-serif text-3xl font-bold text-[#33483b] mb-4">MODE CLEARED!</h2>
         <p className="text-slate-500 font-bold mb-8">このモードの全タスクを見事にクリアしました！</p>
         <button onClick={onExit} className="px-10 py-4 rounded-full bg-emerald-500 hover:bg-emerald-400 text-white font-black text-xl transition-all shadow-md">
           メニューへ戻る
@@ -67,7 +67,7 @@ export default function MissionPane({
             <h2 className="text-xl md:text-2xl font-black">{modeMeta[currentMode].title}</h2>
           </div>
         </div>
-        <div className="bg-white rounded-3xl p-10 shadow-md border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-center my-auto min-h-[350px]">
+        <div className="tg-paper rounded-2xl p-8 border-dashed flex flex-col items-center justify-center text-center my-auto min-h-[260px]">
           <div className={`p-4 rounded-full bg-slate-50 mb-4 ${modeMeta[currentMode].color}`}>
             {modeMeta[currentMode].icon}
           </div>
@@ -261,10 +261,7 @@ export default function MissionPane({
     const traceExplanationText = lang === 'ja' ? (currentTask.explanationJa || currentTask.explanation) : (currentTask.explanationEn || currentTask.explanation);
 
     return (
-      <div className="bg-white rounded-3xl p-5 md:p-8 shadow-md border-2 border-teal-100 flex flex-col relative h-full overflow-hidden min-h-0">
-        <span className="inline-block bg-teal-100 text-teal-700 font-black text-xs px-3 py-1 rounded-full mb-4 w-max flex-shrink-0">
-          Task: {currentTask.type.toUpperCase()}
-        </span>
+      <div className="tg-paper tg-note rounded-2xl p-4 md:p-6 flex flex-col relative h-full overflow-hidden min-h-0">
         <h3 className={`${tSize.instruction} font-black text-slate-800 mb-6 leading-relaxed text-left`}>
           {instructionText}
         </h3>
@@ -273,7 +270,7 @@ export default function MissionPane({
             <button 
               onClick={() => { setSelectedIndices([]); setTraceFeedback('idle'); }} 
               disabled={selectedIndices.length === 0} 
-              className="bg-slate-200 hover:bg-slate-300 text-slate-600 px-5 rounded-xl font-black transition-all flex items-center justify-center flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed h-12 md:h-14"
+              className="tg-outline px-5 rounded-xl font-semibold transition-all flex items-center justify-center flex-shrink-0 disabled:opacity-40 disabled:cursor-not-allowed h-12 md:h-14"
               title="選択をリセット"
             >
               <RefreshCcw size={18} />
@@ -281,12 +278,12 @@ export default function MissionPane({
             <button 
               onClick={judgeTrace} 
               disabled={selectedIndices.length === 0} 
-              className={`flex-1 rounded-xl font-black transition-all shadow-md flex justify-center items-center gap-2 h-12 md:h-14 whitespace-nowrap ${tSize.button} ${selectedIndices.length === 0 ? 'bg-slate-200 text-slate-400 cursor-not-allowed' : 'bg-cyan-500 hover:bg-cyan-400 text-white'}`}
+              className={`flex-1 rounded-xl font-black transition-all shadow-md flex justify-center items-center gap-2 h-12 md:h-14 whitespace-nowrap ${tSize.button} ${selectedIndices.length === 0 ? 'tg-outline text-stone-400 cursor-not-allowed' : 'tg-primary'}`}
             >
               判定する！
             </button>
           </div>
-          <button onClick={handleShowAnswer} className="text-slate-400 hover:text-slate-600 font-bold text-xs underline flex items-center justify-center gap-1 mx-auto transition-colors flex-shrink-0">
+          <button onClick={handleShowAnswer} className="text-stone-500 hover:text-[#426b57] font-semibold text-xs underline flex items-center justify-center gap-1 mx-auto transition-colors flex-shrink-0">
             <Eye size={14} /> 解答を見る
           </button>
         </div>
@@ -339,21 +336,25 @@ export default function MissionPane({
 
   return (
     <div className="max-w-2xl mx-auto w-full flex flex-col h-full relative min-h-0">
-      <div className="flex justify-between items-center mb-5 flex-shrink-0 gap-2">
+      <div className="flex justify-between items-center mb-3 flex-shrink-0 gap-2">
         <div className={`flex items-center gap-1.5 ${modeMeta[currentMode].color} min-w-0`}>
           <div className="flex-shrink-0">{modeMeta[currentMode].icon}</div>
-          <h2 className="text-lg md:text-xl font-black truncate">{modeMeta[currentMode].title}</h2>
+          <h2 className="text-sm md:text-base font-semibold truncate text-[#365b47]">{modeMeta[currentMode].title}</h2>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
           <div className="flex bg-slate-200/60 p-0.5 rounded-xl items-center gap-0.5">
             <button onClick={() => setLang('ja')} className={`flex items-center justify-center w-8 py-1 rounded-lg text-[11px] font-black transition-all ${lang === 'ja' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>JA</button>
             <button onClick={() => setLang('en')} className={`flex items-center justify-center w-8 py-1 rounded-lg text-[11px] font-black transition-all ${lang === 'en' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>EN</button>
           </div>
-          <div className="flex bg-slate-200/60 p-0.5 rounded-xl items-center gap-0.5">
-            <button onClick={() => setMissionTextSize('small')} className={`w-6 py-1 rounded-lg text-[11px] font-black transition-all ${missionTextSize === 'small' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>小</button>
-            <button onClick={() => setMissionTextSize('medium')} className={`w-6 py-1 rounded-lg text-[11px] font-black transition-all ${missionTextSize === 'medium' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>中</button>
-            <button onClick={() => setMissionTextSize('large')} className={`w-6 py-1 rounded-lg text-[11px] font-black transition-all ${missionTextSize === 'large' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>大</button>
-          </div>
+          <details className="relative group">
+            <summary className="cursor-pointer list-none rounded-lg px-2 py-1.5 border border-[#d9ddcf] text-xs text-stone-600 font-semibold">文字</summary>
+            <div className="absolute right-0 top-full mt-2 flex gap-1 bg-[#fcfaf4] rounded-xl border border-[#d9ddcf] p-2 shadow-lg z-50">
+              {[
+                {key:'small',label:'小'},{key:'medium',label:'中'},{key:'large',label:'大'}
+              ].map(t=><button key={t.key} type="button" onClick={()=>setMissionTextSize(t.key)}
+                aria-pressed={missionTextSize===t.key} className="tg-pill !px-2.5 !py-1.5">{t.label}</button>)}
+            </div>
+          </details>
         </div>
       </div>
 

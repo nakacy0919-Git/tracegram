@@ -22,6 +22,8 @@ export function useTrace(categories) {
   const [firstTryCount, setFirstTryCount] = useState(0);
   const [wrongAttempts, setWrongAttempts] = useState(0);
   const failedProblemIdsRef = useRef(new Set());
+  const firstAttemptedIdsRef = useRef(new Set());
+  const [categoryStats, setCategoryStats] = useState({});
 
   const [selectedIndices, setSelectedIndices] = useState([]);
   const [feedbackState, setFeedbackState] = useState('idle'); 
@@ -85,6 +87,8 @@ export function useTrace(categories) {
 
     clearAdvance();
     failedProblemIdsRef.current = new Set();
+    firstAttemptedIdsRef.current = new Set();
+    setCategoryStats({});
     selectedIndicesRef.current = [];
     feedbackRef.current = 'idle';
     draggingRef.current = false;
@@ -114,6 +118,8 @@ export function useTrace(categories) {
     selectedIndicesRef.current = [];
     feedbackRef.current = 'idle';
     failedProblemIdsRef.current = new Set((Array.isArray(saved.failedProblemIds) ? saved.failedProblemIds : []).filter(id => typeof id === 'string'));
+    firstAttemptedIdsRef.current = new Set((Array.isArray(saved.firstAttemptedIds) ? saved.firstAttemptedIds : []).filter(id => typeof id === 'string'));
+    setCategoryStats(saved.categoryStats && typeof saved.categoryStats === 'object' && !Array.isArray(saved.categoryStats) ? saved.categoryStats : {});
     draggingRef.current = false;
     setActiveCategory(course);
     setSelectedLevel(saved.level || 1);
@@ -145,10 +151,13 @@ export function useTrace(categories) {
         firstTryCount,
         wrongAttempts,
         failedProblemIds: [...failedProblemIdsRef.current],
+        firstAttemptedIds: [...firstAttemptedIdsRef.current],
+        categoryStats,
+        mixConfig: activeCategory.mixConfig || null,
         at: Date.now(),
       }));
     } catch {}
-  }, [gameState, activeCategory, selectedLevel, filteredProblems, currentProblemIdx, score, combo, correctCount, firstTryCount, wrongAttempts]);
+  }, [gameState, activeCategory, selectedLevel, filteredProblems, currentProblemIdx, score, combo, correctCount, firstTryCount, wrongAttempts, categoryStats]);
 
   const backToMain = () => {
     setActiveMain(null);
@@ -204,6 +213,25 @@ export function useTrace(categories) {
       (activeProblem.targetIndex !== undefined ? [activeProblem.targetIndex] : []);
     const perfect = sameSelectedIndices(chosen, targets);
 
+    // Record a category's *first* response, not just the eventual retry result.
+    // Mixed sessions use the originating grammar category for each question.
+    const sourceId = activeProblem.sourceCategoryId || activeCategory?.categoryId;
+    const isFirstAttempt = Boolean(activeProblem.id) && !firstAttemptedIdsRef.current.has(activeProblem.id);
+    if (isFirstAttempt) firstAttemptedIdsRef.current.add(activeProblem.id);
+    if (sourceId) {
+      setCategoryStats(previous => {
+        const prior = previous[sourceId] || { attempted: 0, firstCorrect: 0, incorrect: 0 };
+        return {
+          ...previous,
+          [sourceId]: {
+            attempted: prior.attempted + (isFirstAttempt ? 1 : 0),
+            firstCorrect: prior.firstCorrect + (isFirstAttempt && perfect ? 1 : 0),
+            incorrect: prior.incorrect + (perfect ? 0 : 1),
+          }
+        };
+      });
+    }
+
     if (perfect) {
       if (!failedProblemIdsRef.current.has(activeProblem.id)) {
         setFirstTryCount(prev => prev + 1);
@@ -223,7 +251,7 @@ export function useTrace(categories) {
       setCombo(prev => prev + 1);
       setCorrectCount(prev => prev + 1);
       // 正解の光と音を楽しめる長さを確保。画面移動時はタイマーを取り消す。
-      advanceTimerRef.current = setTimeout(() => nextProblem(), 900);
+      advanceTimerRef.current = setTimeout(() => nextProblem(), 1700);
     } else {
       failedProblemIdsRef.current.add(activeProblem.id);
       setWrongAttempts(prev => prev + 1);
@@ -299,7 +327,7 @@ export function useTrace(categories) {
 
   return {
     gameState, availableCategories: categories, activeMain, activeCategory, activeProblem,
-    currentProblemIdx, score, combo, correctCount, firstTryCount, wrongAttempts, selectedIndices, feedbackState,
+    currentProblemIdx, score, combo, correctCount, firstTryCount, wrongAttempts, categoryStats, selectedIndices, feedbackState,
     mainContainerRef, lastBonus, selectedLevel, filteredProblems,
     setGameState, selectMainCategory, selectSubCategory, startGame, resumeGame,
     backToMain, backToSub, backToLevelSelect,
