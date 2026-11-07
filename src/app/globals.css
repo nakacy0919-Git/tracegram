@@ -12,14 +12,21 @@
   --tg-border: #dedfd3;
 }
 * { -webkit-tap-highlight-color: transparent; }
-html { min-height: 100%; }
+html {
+  min-height: 100%;
+  width: 100%;
+  overflow-x: clip;
+}
 body {
   margin: 0;
   color: var(--tg-ink);
   background: var(--tg-cream);
   font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
   -webkit-font-smoothing: antialiased;
-  min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
+  width: 100%;
+  overflow-x: clip;
 }
 button, input, select { touch-action: manipulation; }
 button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible {
@@ -277,4 +284,185 @@ div#__next_turbo_dev_overlay, #__next_turbopack_overlay { display: none !importa
 }
 @media (prefers-reduced-motion: reduce) {
   .tg-ink-token.tg-mark-selected::before { animation: none; }
+}
+
+
+/* iPad PORTRAIT / LANDSCAPE LAYOUT
+   The previous page + child 100dvh minimums and 42dvh/52dvh pane
+   heights over-allocated space on rotation. Each full-screen lesson now
+   has ONE viewport-sized shell; all inner panes divide its remaining area.
+   The CSS viewport units update when the iPad browser toolbar changes. */
+.tg-app-shell {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  min-height: 100vh; /* older browsers */
+  min-height: 100svh;
+  min-height: 100dvh;
+  overflow-x: clip;
+}
+.tg-app-main {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+.tg-fluid-screen {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: clip;
+}
+.tg-reading-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* fallback */
+  height: 100svh;
+  height: 100dvh;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.tg-reading-split {
+  display: flex;
+  flex: 1 1 0%;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+}
+.tg-reading-pane {
+  flex: 0 0 43%;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  overflow: hidden;
+}
+.tg-task-pane {
+  flex: 1 1 0%;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  overflow: hidden;
+}
+.tg-reading-divider { display: none; }
+.tg-reading-task-inner {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.tg-reading-pane > div,
+.tg-reading-task-inner > div { min-width: 0; }
+.tg-game-workspace {
+  min-width: 0;
+  min-height: 0;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.tg-game-content {
+  min-width: 0;
+  justify-content: safe center;
+}
+.tg-game-note {
+  min-width: 0;
+  max-width: 100%;
+}
+.tg-game-sentence {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+.tg-recovery-overlay {
+  padding-top: max(12px, env(safe-area-inset-top, 0px));
+  padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
+}
+.tg-recovery-modal {
+  max-height: calc(100dvh - 32px);
+  min-height: 0;
+}
+.tg-opening {
+  /* Auto margins center short splash content but permit scrolling when
+     the tablet is rotated to a short landscape viewport. */
+  justify-content: flex-start;
+  height: 100vh;
+  height: 100dvh;
+  overscroll-behavior-y: contain;
+}
+.tg-opening-content {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+/* Use side-by-side passage + exercise only when there is enough horizontal
+   ROOM and the tablet is physically landscape. A portrait 1024px iPad Pro
+   must not accidentally enter desktop's lg breakpoint. */
+@media (min-width: 900px) and (orientation: landscape) {
+  .tg-reading-split { flex-direction: row; }
+  .tg-reading-split.is-swapped { flex-direction: row-reverse; }
+  .tg-reading-pane {
+    flex: 0 0 calc(var(--left-pane-width, 50%) - 6px);
+    width: calc(var(--left-pane-width, 50%) - 6px);
+    height: 100%;
+  }
+  .tg-task-pane {
+    flex: 1 1 0%;
+    width: auto;
+    height: 100%;
+  }
+  .tg-reading-divider {
+    display: flex;
+    flex: 0 0 12px;
+    width: 12px;
+    min-height: 0;
+    touch-action: none;
+  }
+}
+/* Reduce vertical chrome on iPads with the address/tab bars visible. */
+@media (orientation: landscape) and (max-height: 760px) {
+  .tg-game-content {
+    justify-content: flex-start;
+    padding-top: .75rem;
+    padding-bottom: .5rem;
+  }
+  .tg-game-hint { margin-bottom: .65rem; }
+  .tg-game-note {
+    min-height: 142px;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin-bottom: .4rem;
+  }
+  .tg-game-sentence { line-height: 1.55; }
+  .tg-game-sentence .tg-ink-token {
+    font-size: clamp(1.15rem, 2.6vw, 1.85rem);
+  }
+  .tg-game-feedback { min-height: 76px; }
+  .tg-game-correct { height: 125px; }
+  .tg-opening-logo { width: 120px; height: 120px; }
+  .tg-opening-title { font-size: clamp(2.3rem, 5vw, 3.8rem); }
+  .tg-opening-subtitle { margin-bottom: 1.25rem; }
+  .tg-opening-outline { inset: 4% 4%; }
+}
+@media (orientation: landscape) and (max-height: 560px) {
+  .tg-game-note { min-height: 115px; }
+  .tg-game-content { padding-top: .5rem; }
+  .tg-game-correct { height: 108px; }
+  .tg-opening-logo { width: 96px; height: 96px; }
+  .tg-opening-subtitle { margin-bottom: .7rem; }
+}
+@media (orientation: portrait) and (min-height: 900px) {
+  .tg-reading-pane { flex-basis: 46%; }
+}
+/* Touch focus stays independent from browser chrome resizing. */
+@media (prefers-reduced-motion: reduce) {
+  .tg-reading-split, .tg-reading-pane, .tg-task-pane { transition: none; }
 }
