@@ -115,21 +115,53 @@ export function selectBalancedMix(groups, requested, random = Math.random) {
   const total = prepared.reduce((sum, g) => sum + g.remaining.length, 0);
   const count = Math.max(0, Math.min(total, Math.floor(Number(requested) || 0)));
   const selected = [];
-  const used = new Set();
+  const usedIds = new Set();
+  const usedSentences = new Set();
+  const deferred = [];
+  const sentenceKey = q => (Array.isArray(q.tokens) ? q.tokens.join(' ') : '')
+    .normalize('NFKC').toLowerCase().replace(/\s+/g, ' ').trim();
+
+  // First fill using distinct sentences: students should not see the same
+  // English text twice just because different courses ask about different roles.
   while (selected.length < count && prepared.some(g => g.remaining.length)) {
     let found = false;
     for (const group of shuffled(prepared.filter(g => g.remaining.length), random)) {
       if (selected.length >= count) break;
-      let question;
-      do { question = group.remaining.pop(); }
-      while (question && used.has(question.id));
+      let question = null;
+      while (group.remaining.length) {
+        const candidate = group.remaining.pop();
+        if (usedIds.has(candidate.id)) continue;
+        const key = sentenceKey(candidate);
+        if (key && usedSentences.has(key)) {
+          deferred.push(candidate);
+          continue;
+        }
+        question = candidate;
+        break;
+      }
       if (question) {
         selected.push(question);
-        used.add(question.id);
+        usedIds.add(question.id);
+        const key = sentenceKey(question);
+        if (key) usedSentences.add(key);
         found = true;
       }
     }
     if (!found) break;
+  }
+  // Only if the source bank cannot supply enough *distinct sentences*,
+  // reuse a sentence for a different structural question, never an exercise ID.
+  if (selected.length < count) {
+    const fallback = shuffled([
+      ...deferred, ...prepared.flatMap(g => g.remaining),
+    ], random);
+    for (const question of fallback) {
+      if (selected.length >= count) break;
+      if (!usedIds.has(question.id)) {
+        selected.push(question);
+        usedIds.add(question.id);
+      }
+    }
   }
   return shuffled(selected, random);
 }
