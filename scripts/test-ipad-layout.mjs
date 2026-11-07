@@ -50,9 +50,9 @@ assert.match(game, /tg-game-content/);
 assert.match(game, /tg-success-medallion/, 'success uses a circular glossy medal instead of drawn marker');
 assert.match(game, /tg-success-text/, 'Correct text is centered in the success medal');
 assert.doesNotMatch(game, /M39 88 C22 48 104 19/, 'old hand-drawn oval is removed');
-assert.match(css, /\\.tg-success-medallion\\s*\\{[\\s\\S]*?aspect-ratio:\\s*1\\s*\\/\\s*1/, 'success medal stays perfectly circular at every screen size');
-assert.match(css, /\\.tg-success-text\\s*\\{[\\s\\S]*?linear-gradient/, 'Correct lettering uses a refined green gradient');
-assert.match(css, /\\.tg-success-medallion::before\\s*\\{/, 'reflective glossy highlight is present');
+assert(css.includes('.tg-success-medallion {') && css.includes('aspect-ratio: 1 / 1'), 'success medal stays circular at every screen size');
+assert(css.includes('.tg-success-text {') && css.includes('background: linear-gradient(180deg'), 'Correct lettering uses a refined green gradient');
+assert(css.includes('.tg-success-medallion::before {'), 'reflective glossy highlight is present');
 
 assert.match(game, /tg-recovery-overlay/);
 assert.match(splash, /tg-opening-content/);
