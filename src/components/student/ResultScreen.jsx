@@ -4,7 +4,7 @@ import { ArrowLeft, Home, NotebookPen, RotateCcw } from 'lucide-react';
 
 export default function ResultScreen({
   isMultiplayer, playersData, myPeerId, score, activeCategory,
-  selectedLevel, correctCount, firstTryCount = 0, wrongAttempts = 0,
+  selectedLevel, correctCount, firstTryCount = 0, wrongAttempts = 0, categoryStats = {},
   totalCount, onBackToLobby, onBackToLevelSelect, onBackToHome
 }) {
   const saved = useRef(false);
@@ -19,14 +19,25 @@ export default function ResultScreen({
         categoryTitle:activeCategory.title,categoryId:activeCategory.categoryId,
         level:selectedLevel,score,correctCount:correctCount||0,
         firstTryCount:firstTryCount||0,wrongAttempts:wrongAttempts||0,
-        totalCount:totalCount||0
+        totalCount:totalCount||0,
+        mixConfig:activeCategory.mixConfig || null,
+        categoryStats:activeCategory.categoryId === 'grammar_mix' ? categoryStats : null
       };
       localStorage.setItem('tracegram_learning_logs',JSON.stringify([...list,log].slice(-100)));
       saved.current = true;
     } catch(e) { console.warn('Could not save learning log',e); }
-  },[isMultiplayer,activeCategory,selectedLevel,score,correctCount,firstTryCount,wrongAttempts,totalCount]);
+  },[isMultiplayer,activeCategory,selectedLevel,score,correctCount,firstTryCount,wrongAttempts,totalCount,categoryStats]);
 
   const accuracy = totalCount ? Math.round(firstTryCount / totalCount * 100) : 0;
+  const isMix = activeCategory?.categoryId === 'grammar_mix';
+  const byTopic = isMix ? Object.entries(categoryStats || {}).filter(([,stat]) => stat?.attempted > 0).map(([id,stat]) => ({
+    id,
+    title: activeCategory?.problems?.find(p => p.sourceCategoryId === id)?.sourceCategoryTitle?.replace(/^Sub-\\d+:\\s*/, '') || id,
+    attempted: stat.attempted,
+    firstCorrect: stat.firstCorrect || 0,
+    incorrect: stat.incorrect || 0,
+    rate: Math.round(100 * (stat.firstCorrect || 0) / stat.attempted),
+  })).sort((a,b) => a.rate - b.rate || b.incorrect - a.incorrect || a.title.localeCompare(b.title,'ja')).slice(0,6) : [];
   return <main className="tg-workspace flex-1 min-h-[100dvh] overflow-y-auto px-4 py-8 md:py-12">
     <div className="max-w-[740px] mx-auto space-y-5">
       <div className="tg-paper tg-margin tg-holes rounded-[22px] p-5 pl-12 md:p-10 md:pl-16">
@@ -65,6 +76,20 @@ export default function ResultScreen({
                 <div className="text-2xl font-bold text-[#8c694f] tabular-nums mt-1">{wrongAttempts} <span className="text-sm">回</span></div>
               </div>
             </div>
+            {isMix && byTopic.length > 0 && (
+              <div className="mt-7 pt-5 border-t border-[#d9dfd3]">
+                <h2 className="font-bold text-[#345746] text-base mb-1">分野別の初回正答率</h2>
+                <p className="text-xs text-stone-500 mb-3">初回に間違えた分野から順に表示しています。各分野の出題数は異なります。</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {byTopic.map(topic => (
+                    <div key={topic.id} className="rounded-xl border border-[#dde2d7] bg-[#fffef8] px-3 py-2.5 flex items-center justify-between gap-3">
+                      <span className="font-semibold text-xs md:text-sm text-[#394b3e] min-w-0 line-clamp-2">{topic.title}</span>
+                      <span className="shrink-0 font-bold text-sm text-[#51735b] tabular-nums">{topic.firstCorrect}/{topic.attempted}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </>
         )}
         <div className="flex flex-wrap gap-2 mt-8">
