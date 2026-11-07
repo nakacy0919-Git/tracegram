@@ -70,7 +70,7 @@ export default function ReadingPane({
   if (!summaryData) return null;
 
   return (
-    <div className="h-full flex flex-col bg-[#fcfaf4] relative">
+    <div className="h-full min-h-0 min-w-0 flex flex-col bg-[#fcfaf4] relative">
       <div className="flex items-center justify-between px-3 md:px-5 py-2.5 border-b border-[#dcded2] bg-[#fffdf7] z-20 shrink-0">
         <div className="flex items-center gap-2 text-[#456b55] font-semibold text-sm">
           <BookOpen size={17}/> 本文
@@ -94,7 +94,7 @@ export default function ReadingPane({
             </div>
             <button type="button" onClick={()=>setIsSwapped(!isSwapped)}
               className="tg-outline w-full rounded-lg text-xs font-semibold py-2 flex items-center justify-center gap-2">
-              <ArrowLeftRight size={15}/> 左右を入れ替える
+              <ArrowLeftRight size={15}/> 表示位置を入れ替える
             </button>
           </div>
         </details>
@@ -104,7 +104,7 @@ export default function ReadingPane({
       <div 
         id="left-scroll-pane" // 🌟 スクロール同期用のID
         ref={scrollContainerRef}
-        className="tg-note flex-1 overflow-y-auto p-3 md:p-6 pb-10 relative" 
+        className="tg-note flex-1 min-h-0 min-w-0 overflow-y-auto p-3 md:p-6 pb-10 relative" 
         onScroll={handleScrollSync} // 🌟 右パネルを自動追従させる
         onPointerMove={handleTracePointerMove}
         onPointerUp={handleTracePointerUp}
