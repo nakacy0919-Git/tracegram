@@ -17,7 +17,7 @@ const fixture = categoryIds.map(id => ({
   problems: [1, 2, 3].flatMap(level => Array.from({ length: 15 }, (_, k) => ({
     id: `${id}-${['b','i','a'][level-1]}-${k+1}`,
     level,
-    tokens: ['She', 'likes', 'English.'],
+    tokens: ['She', 'likes', `${id}-${level}-${k+1}.`],
     targetIndices: [1]
   })))
 }));
@@ -66,6 +66,17 @@ const counts = Object.values(questions.reduce((acc,p)=>{
 }, {}));
 assert(Math.max(...counts) - Math.min(...counts) <= 1, 'round-robin allocation prevents category dominance');
 assert(questions.every(p=>p.sourceCategoryId && p.sourceCategoryTitle));
+assert.equal(new Set(questions.map(p=>p.tokens.join(' '))).size, 30,
+  'repeat text must not occur when alternatives exist');
+const sampleGroup = [{id:'one',problems:[
+  {id:'first',tokens:['I','like','tea.']},
+  {id:'repeat',tokens:['I','like','tea.']},
+  {id:'different',tokens:['I','like','coffee.']}
+]}];
+const two=selectBalancedMix(sampleGroup,2,()=>0.35);
+assert.equal(new Set(two.map(p=>p.tokens.join(' '))).size,2,'prefer different full sentences');
+assert.equal(selectBalancedMix(sampleGroup,3,()=>0.35).length,3,'do not drop valid questions if unique texts run out');
+
 
 const session=createMixSession(withCustom,config,()=>0.73);
 assert(session && session.categoryId===MIX_COURSE_ID);
