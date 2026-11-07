@@ -22,7 +22,7 @@ export const calculateReadingMatch = (expected, spoken) => {
   return Math.max(0, Math.round(100 * (1 - prev[b.length] / Math.max(a.length, b.length))));
 };
 
-export default function PronunciationMission({ targetSentence, onComplete, onFallback }) {
+export default function PronunciationMission({ targetSentence, onComplete, onFallback, onSkip }) {
   const [isRecording, setIsRecording] = useState(false);
   const [supported, setSupported] = useState(true);
   const [transcript, setTranscript] = useState('');
@@ -113,6 +113,15 @@ export default function PronunciationMission({ targetSentence, onComplete, onFal
     window.speechSynthesis.speak(utterance);
   };
 
+  // Skipping the oral practice returns to the same tracing exercise; it never awards points.
+  const skipOralPractice = () => {
+    recordingRef.current = false;
+    try { recognitionRef.current?.abort(); } catch {}
+    try { window.speechSynthesis?.cancel(); } catch {}
+    setIsRecording(false);
+    if (typeof onSkip === 'function') onSkip();
+  };
+
   const passed = accuracy !== null && accuracy >= 80;
   return (
     <div className="tg-paper tg-note text-[#2b4032] p-4 md:p-6 rounded-2xl flex flex-col items-center w-full gap-3">
@@ -166,6 +175,14 @@ export default function PronunciationMission({ targetSentence, onComplete, onFal
             </button>
           )}
         </div>
+      )}
+      {typeof onSkip === 'function' && (
+        <button type="button" onClick={skipOralPractice}
+          className="mt-1 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-[#c9d4c6] bg-[#fffef9] text-[#466752] text-sm font-semibold hover:bg-[#ebf2e9] transition-colors"
+          aria-label="音読をスキップし、同じ英文のトレースに戻る">
+          Skip <ArrowRight size={16} />
+          <span className="text-xs font-normal">音読をとばして再挑戦</span>
+        </button>
       )}
       {!!transcript && <p className="text-sm text-stone-600 text-center w-full select-text">認識結果: {transcript}</p>}
       {(!supported || /マイクを利用できません/.test(error)) && (
