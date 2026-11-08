@@ -47,13 +47,19 @@ assert.doesNotMatch(summary, /h-\[42dvh\]|min-h-\[52dvh\]|lg:w-\[var\(--left-pan
 assert.match(reading, /overflow-y-auto/, 'passage scrolls independently');
 assert.match(game, /tg-game-workspace/);
 assert.match(game, /tg-game-content/);
-assert.match(game, /tg-success-medallion/, 'success uses a circular glossy medal instead of drawn marker');
-assert.match(game, /tg-success-text/, 'Correct text is centered in the success medal');
-assert.doesNotMatch(game, /M39 88 C22 48 104 19/, 'old hand-drawn oval is removed');
-assert(css.includes('.tg-success-medallion {') && css.includes('aspect-ratio: 1 / 1'), 'success medal stays circular at every screen size');
-assert(css.includes('.tg-success-text {') && css.includes('background: linear-gradient(180deg'), 'Correct lettering uses a refined green gradient');
-assert(css.includes('.tg-success-medallion::before {'), 'reflective glossy highlight is present');
-
+const success = read('src/components/student/SuccessFlash.jsx');
+const traceEngine = read('src/hooks/useTrace.js');
+assert.match(game, /import SuccessFlash from '\.\/SuccessFlash'/, 'game imports the new success feedback');
+assert.match(game, /<SuccessFlash key=/, 'successful answers use the transparent checkmark');
+assert.doesNotMatch(game, /tg-success-medallion|M39 88 C22 48 104 19/, 'old opaque badge and sketchy ellipse removed');
+assert.match(success, /<circle cx="90" cy="90" r="68"/, 'check icon uses a perfect circle');
+assert.match(success, /<path[\s\S]*?d="M 54 92 L 79 117 L 128 66"/, 'check mark is inside the circle');
+assert.match(success, /Correct!/, 'Correct text is below the icon');
+assert.match(success, /CONFETTI\.map/, 'lightweight paper confetti animation appears');
+assert.match(success, /useReducedMotion/, 'reduced motion disables confetti');
+assert.match(css, /\.tg-success-overlay\s*\{\s*background:\s*transparent;/, 'underlying notebook stays visible');
+assert.doesNotMatch(css, /\.tg-success-medallion\s*\{/, 'old opaque medallion styling removed');
+assert.match(traceEngine, /nextProblem\(\), 1050\)/, 'fast automatic advance after correct answer');
 assert.match(game, /tg-recovery-overlay/);
 assert.match(splash, /tg-opening-content/);
 assert.match(splash, /tg-opening-logo/);
