@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run check:data && npm run check:mix && next build",
+    "build": "npm run check:data && npm run check:mix && npm run check:layout && next build",
     "check:data": "node scripts/validate-grammar-data.mjs",
     "check:mix": "node scripts/test-grammar-mix.mjs",
+    "check:layout": "node scripts/test-ipad-layout.mjs",
     "start": "next start",
     "lint": "eslint"
   },

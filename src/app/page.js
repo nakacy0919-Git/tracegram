@@ -49,8 +49,8 @@ export default function TraceGramApp() {
   };
 
   return (
-    <div className="min-h-screen text-[#2b332e] flex flex-col relative tg-workspace">
-      <main className="flex-1 flex flex-col">
+    <div className="tg-app-shell text-[#2b332e] relative tg-workspace">
+      <main className="tg-app-main">
         {mode === 'student'
           ? <StudentMode categories={categories} onTeacherOpen={() => setMode('teacher')} />
           : <TeacherMode addCustomProblem={addCustomProblem} />}

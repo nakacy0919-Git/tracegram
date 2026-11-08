@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, CheckCircle2, AlertTriangle } from 'lucide-react'; 
-import PronunciationMission from './PronunciationMission'; 
+import PronunciationMission from './PronunciationMission';
+import SuccessFlash from './SuccessFlash'; 
 
 const playSlashSound = () => {
   try {
@@ -123,7 +124,7 @@ export default function GameScreen({
   const flowAutoJudge = gameMode === 'flow' && !requiresMultiStroke;
 
   return (
-    <div className="tg-workspace flex-1 flex flex-col relative z-10 w-full min-h-[100dvh] overflow-y-auto overflow-x-hidden" ref={mainContainerRef} onPointerMove={handlePointerMove} onPointerUp={() => handlePointerUp(flowAutoJudge)} onPointerCancel={() => handlePointerUp(false)}>
+    <div className="tg-workspace tg-fluid-screen tg-game-workspace flex flex-col relative z-10 overflow-y-auto" ref={mainContainerRef} onPointerMove={handlePointerMove} onPointerUp={() => handlePointerUp(flowAutoJudge)} onPointerCancel={() => handlePointerUp(false)}>
       
       {isMultiplayer && sortedPlayers.length > 0 && (
         <div className="absolute top-[80px] md:top-[90px] left-0 w-full z-40 flex flex-row flex-wrap justify-center gap-2 md:gap-4 px-2 pointer-events-none">
@@ -156,9 +157,9 @@ export default function GameScreen({
       </div>
 
       <div className="w-full h-1 bg-[#e5e4d9]"><div className="h-full bg-[#739a80] transition-all duration-500" style={{width: `${(currentProblemIdx / Math.max(1, filteredProblems.length)) * 100}%`}} /></div>
-      <div className="flex-1 flex flex-col items-center justify-start py-5 px-3 md:px-7 w-full max-w-[1100px] mx-auto relative">
+      <div className="tg-game-content flex-1 flex flex-col items-center justify-start py-5 px-3 md:px-7 w-full max-w-[1100px] mx-auto relative">
         
-        <div className="w-full mb-4 flex items-start gap-3 px-2">
+        <div className="tg-game-hint w-full mb-4 flex items-start gap-3 px-2">
           <span className="w-9 h-9 shrink-0 rounded-full border border-[#a5b9a7] bg-[#e9f0e7] text-[#365e48] flex items-center justify-center font-bold text-lg">{roleInitial}</span>
           <div className="min-w-0">
             <p className="text-[#2b3d32] text-base md:text-xl font-bold leading-snug">
@@ -175,11 +176,11 @@ export default function GameScreen({
         <motion.div 
           animate={shake ? { x: [-10, 10, -10, 10, 0] } : {}}
           transition={{ duration: 0.4 }}
-          className={`tg-paper tg-note tg-margin tg-holes w-full relative rounded-[22px] py-8 px-4 pl-12 md:p-10 md:pl-16 mb-3 flex flex-col justify-center min-h-[190px] overflow-hidden touch-none transition-colors ${gameMode === 'bug_slash' && !isBugSlashed ? 'ring-2 ring-[#c4a387]' : ''}`}
+          className={`tg-game-note tg-paper tg-note tg-margin tg-holes w-full relative rounded-[22px] py-8 px-4 pl-12 md:p-10 md:pl-16 mb-3 flex flex-col justify-center min-h-[190px] overflow-hidden touch-none transition-colors ${gameMode === 'bug_slash' && !isBugSlashed ? 'ring-2 ring-[#c4a387]' : ''}`}
         >
           <AnimatePresence mode="wait">
             <motion.div key={`sentence-${currentProblemIdx}-${isBugSlashed}`} initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -5, opacity: 0 }} transition={{ duration: 0.2 }} className="w-full">
-              <div className="text-left leading-[2.6rem] md:leading-[3.6rem] w-full relative">
+              <div className="tg-game-sentence text-left leading-[2.6rem] md:leading-[3.6rem] w-full relative">
                 
                 <AnimatePresence>
                   {displayTokens.map((token, idx) => {
@@ -245,7 +246,7 @@ export default function GameScreen({
           </AnimatePresence>
         </motion.div>
 
-        <div className="w-full flex flex-col items-center min-h-[100px] z-20">
+        <div className="tg-game-feedback w-full flex flex-col items-center min-h-[100px] z-20">
           <AnimatePresence mode="wait">
             {feedbackState === 'idle' && isBugSlashed && (gameMode !== 'flow' || requiresMultiStroke) ? (
               <motion.button 
@@ -258,40 +259,7 @@ export default function GameScreen({
                 <CheckCircle2 size={20} /> 判定する
               </motion.button>
             ) : feedbackState === 'correct' ? (
-              <motion.div
-                key={`correct-${currentProblemIdx}`}
-                role="status" aria-live="polite"
-                initial={{ opacity: 0, scale: 0.88, y: 12 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 1.06, y: -5 }}
-                transition={{ type: 'spring', stiffness: 260, damping: 22 }}
-                className="relative w-full max-w-[450px] h-[172px] flex items-center justify-center select-none pointer-events-none"
-              >
-                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 420 180" fill="none" aria-hidden="true">
-                  <motion.path
-                    d="M39 88 C22 48 104 19 190 20 C302 14 390 53 393 98 C399 147 321 161 210 160 C98 166 41 142 39 88"
-                    stroke="#4a9a68" strokeWidth="5.5" strokeLinecap="round" strokeLinejoin="round"
-                    initial={{ pathLength: 0, opacity: 0.6 }}
-                    animate={{ pathLength: 1, opacity: 1 }}
-                    transition={{ duration: 0.82, ease: 'easeOut', delay: 0.1 }}
-                  />
-                  <motion.path
-                    d="M60 145 Q198 165 351 143"
-                    stroke="#8eb99b" strokeWidth="2" strokeLinecap="round"
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{ pathLength: 1, opacity: 0.65 }}
-                    transition={{ duration: 0.45, delay: 0.65 }}
-                  />
-                </svg>
-                <motion.span
-                  initial={{ opacity: 0, scale: 0.85, y: 7 }}
-                  animate={{ opacity: 1, scale: [0.85, 1.05, 1], y: 0 }}
-                  transition={{ duration: 0.5, ease: [0.2, 1, 0.3, 1], delay: 0.13 }}
-                  className="tg-correct-label text-[clamp(3.1rem,10vw,5.2rem)] leading-none relative z-10 pb-2"
-                >
-                  Correct!
-                </motion.span>
-              </motion.div>
+              <SuccessFlash key={`correct-${currentProblemIdx}`} />
             ) : null}
           </AnimatePresence>
           {gameMode === 'flow' && !requiresMultiStroke && feedbackState === 'idle' && isBugSlashed && (
@@ -306,39 +274,54 @@ export default function GameScreen({
 
       <AnimatePresence>
         {feedbackState === 'wrong' && (
-          <motion.div 
+          <motion.div
             key="wrong-modal-overlay"
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
-            exit={{ opacity: 0 }} 
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#27352f]/65 backdrop-blur-[3px]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="tg-recovery-overlay fixed inset-0 z-[100] flex items-center justify-center px-3 py-3 sm:px-5 sm:py-4 bg-[#24332c]/65 backdrop-blur-[3px]"
           >
-            <motion.div 
+            <motion.div
               key="wrong-modal-content"
-              initial={{ scale: 0.9, y: 30, opacity: 0 }} 
-              animate={{ scale: 1, y: 0, opacity: 1 }} 
-              exit={{ scale: 0.9, y: 30, opacity: 0 }} 
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="tg-paper rounded-[22px] tg-note shadow-xl w-full max-w-2xl border border-[#d7d7c8] flex flex-col max-h-[90dvh]"
+              role="dialog" aria-modal="true" aria-labelledby="tg-recovery-title"
+              initial={{ scale: 0.96, y: 13, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.97, y: 10, opacity: 0 }}
+              transition={{ type: 'spring', damping: 28, stiffness: 320 }}
+              className="tg-recovery-modal tg-paper tg-note rounded-[22px] shadow-[0_18px_70px_rgba(17,37,25,.30)] w-full max-w-[980px] min-w-0 max-h-[calc(100dvh-28px)] overflow-hidden flex flex-col border border-[#d4e2d5]"
             >
-              <div className="p-4 md:p-6 overflow-y-auto flex flex-col gap-4">
-                <div className="w-full bg-[#edf2e6]/90 p-4 rounded-xl border border-[#d9e5d7] flex flex-col items-center">
-                  <p className="text-[#3e6558] font-bold text-sm mb-2">正しい構造はこちら</p>
-                  <div className="text-center leading-[2.5rem] w-full">
-                   {activeProblem.tokens.map((token, idx) => {
-                     const isTarget = (activeProblem.targetIndices || (activeProblem.targetIndex !== undefined ? [activeProblem.targetIndex] : [])).includes(idx);
-                     return (
-                       <span key={`ans-${idx}`} className={`inline-block text-lg md:text-2xl font-semibold px-1 mx-0.5 ${isTarget ? 'bg-[#d5e7d3] text-[#315a42] border-b-[3px] border-[#739878]' : 'text-stone-400'}`}>
-                         {token}
-                       </span>
-                     );
-                   })}
+              <div className="w-full min-w-0 min-h-0 overflow-y-auto overscroll-contain p-3 sm:p-5 md:px-7 md:py-5 flex flex-col gap-3 md:gap-4">
+                <div className="w-full rounded-[17px] bg-gradient-to-r from-[#eef6ee] via-[#f6faf4] to-[#eaf4ec] px-4 py-3 md:py-4 border border-[#d4e6d7] text-center">
+                  <h2 id="tg-recovery-title" className="text-[#58816c] font-bold text-xs md:text-sm tracking-wide mb-2">
+                    正しい構造はこちら
+                  </h2>
+                  <div className="w-full leading-[2rem] md:leading-[2.4rem]">
+                    {activeProblem.tokens.map((token, idx) => {
+                      const isTarget = (activeProblem.targetIndices ||
+                        (activeProblem.targetIndex !== undefined ? [activeProblem.targetIndex] : [])).includes(idx);
+                      return (
+                        <span key={`ans-${idx}`}
+                          className={`inline-block text-lg md:text-2xl font-semibold px-1 mx-0.5 ${isTarget ?
+                            'bg-[#d4e9d9] text-[#365b43] border-b-[3px] border-[#81b298]' :
+                            'text-[#748678]'}`}>
+                          {token}
+                        </span>
+                      );
+                    })}
                   </div>
                   {activeProblem.translation && (
-                    <p className="text-slate-500 font-bold mt-4 text-sm md:text-base italic">{activeProblem.translation}</p>
+                    <p className="text-[#647a76] font-medium mt-2 text-sm md:text-base">
+                      {activeProblem.translation}
+                    </p>
                   )}
                 </div>
-                <PronunciationMission key={activeProblem.id || currentProblemIdx} targetSentence={activeProblem.tokens.join(' ')} onComplete={onRetryTrace} onFallback={onRetryTrace} onSkip={onRetryTrace} />
+                <PronunciationMission
+                  key={activeProblem.id || currentProblemIdx}
+                  targetSentence={activeProblem.tokens.join(' ')}
+                  onComplete={onRetryTrace}
+                  onFallback={onRetryTrace}
+                  onSkip={onRetryTrace}
+                />
               </div>
             </motion.div>
           </motion.div>
