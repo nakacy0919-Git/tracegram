@@ -250,8 +250,9 @@ export function useTrace(categories) {
       setScore(prev => prev + 1000 + combo * 100);
       setCombo(prev => prev + 1);
       setCorrectCount(prev => prev + 1);
-      // 正解の光と音を楽しめる長さを確保。画面移動時はタイマーを取り消す。
-      advanceTimerRef.current = setTimeout(() => nextProblem(), 1700);
+      // チェック＋小さな紙吹雪を短く見せたら、自動的に次の英文へ進む。
+      // 画面移動時は既存の clearAdvance() でタイマーを取り消す。
+      advanceTimerRef.current = setTimeout(() => nextProblem(), 1050);
     } else {
       failedProblemIdsRef.current.add(activeProblem.id);
       setWrongAttempts(prev => prev + 1);
