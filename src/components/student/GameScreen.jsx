@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, CheckCircle2, AlertTriangle } from 'lucide-react'; 
-import PronunciationMission from './PronunciationMission'; 
+import PronunciationMission from './PronunciationMission';
+import SuccessFlash from './SuccessFlash'; 
 
 const playSlashSound = () => {
   try {
@@ -258,33 +259,7 @@ export default function GameScreen({
                 <CheckCircle2 size={20} /> 判定する
               </motion.button>
             ) : feedbackState === 'correct' ? (
-              <motion.div
-                key={`correct-${currentProblemIdx}`}
-                role="status"
-                aria-live="polite"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.18 }}
-                className="tg-success-veil fixed inset-0 z-[80] flex items-center justify-center pointer-events-none select-none"
-              >
-                <motion.div
-                  initial={{ scale: 0.76, opacity: 0, y: 16 }}
-                  animate={{ scale: 1, opacity: 1, y: 0 }}
-                  exit={{ scale: 1.05, opacity: 0 }}
-                  transition={{ type: 'spring', stiffness: 260, damping: 24, mass: 0.85 }}
-                  className="tg-success-medallion relative flex items-center justify-center"
-                >
-                  <motion.span
-                    initial={{ opacity: 0, scale: 0.92 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4, delay: 0.13 }}
-                    className="tg-success-text relative z-10 leading-none"
-                  >
-                    Correct!
-                  </motion.span>
-                </motion.div>
-              </motion.div>
+              <SuccessFlash key={`correct-${currentProblemIdx}`} />
             ) : null}
           </AnimatePresence>
           {gameMode === 'flow' && !requiresMultiStroke && feedbackState === 'idle' && isBugSlashed && (
