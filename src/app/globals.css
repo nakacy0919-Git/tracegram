@@ -362,77 +362,38 @@ div#__next_turbo_dev_overlay, #__next_turbopack_overlay { display: none !importa
   to { clip-path: inset(0 0 0 0); }
 }
 
-/*
- * Correct feedback: a genuine circular, glossy sage-green medallion.
- * No hand-drawn SVG oval, handwriting font or artificial marker stroke.
- * Keep the text comfortably inside the circle at short landscape heights.
- */
-.tg-success-veil {
-  background:
-    radial-gradient(circle at center,
-      rgba(170, 218, 187, .20) 0%,
-      rgba(207, 227, 206, .13) 39%,
-      rgba(243, 244, 234, 0) 73%);
+/* Correct feedback is a transparent SVG check icon, not an opaque badge.
+   Keep the underlying notebook visible. Brief confetti uses 14 DOM fragments
+   that disappear automatically; no canvas layer or animation dependency. */
+.tg-success-overlay {
+  background: transparent;
 }
-.tg-success-medallion {
-  width: min(76vw, 58dvh, 380px);
-  height: auto;
-  aspect-ratio: 1 / 1;
-  flex: 0 0 auto;
-  border-radius: 50%;
-  border: clamp(3px, .55vmin, 6px) solid rgba(237, 255, 245, .88);
-  background:
-    radial-gradient(circle at 36% 21%, rgba(255, 255, 255, .9) 0%, rgba(242, 255, 249, .53) 22%, rgba(222, 249, 231, .06) 52%, transparent 72%),
-    linear-gradient(145deg, #dbf3e4 0%, #b0e1c9 28%, #83c8aa 58%, #579d7d 100%);
-  box-shadow:
-    inset 0 7px 13px rgba(255, 255, 255, .76),
-    inset 0 -15px 22px rgba(31, 101, 76, .17),
-    0 0 0 2px rgba(92, 166, 125, .36),
-    0 14px 35px rgba(34, 92, 65, .22),
-    0 30px 72px rgba(46, 118, 80, .12);
-  isolation: isolate;
+.tg-success-content {
+  width: min(85vw, 360px);
+  min-width: 0;
 }
-.tg-success-medallion::before {
-  content: '';
-  position: absolute;
-  inset: 6% 8% 48%;
-  border-radius: 50% 50% 48% 48% / 61% 61% 31% 31%;
-  background: linear-gradient(180deg,
-    rgba(255,255,255,.87) 0%,
-    rgba(246,255,250,.57) 43%,
-    rgba(255,255,255,0) 100%);
-  pointer-events: none;
-}
-.tg-success-medallion::after {
-  content: '';
-  position: absolute;
-  inset: 3.2%;
-  border-radius: 50%;
-  border: 1.5px solid rgba(243, 255, 245, .60);
-  box-shadow: inset 0 0 1px rgba(55, 115, 77, .14);
-  pointer-events: none;
-}
-.tg-success-text {
+.tg-success-icon {
   display: block;
+  width: clamp(112px, 19vmin, 168px);
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 3px 6px rgba(63, 162, 86, .13));
+}
+.tg-success-caption {
+  display: block;
+  color: #3d9e54;
   font-family: 'Avenir Next', 'Segoe UI', Arial, Helvetica, sans-serif;
-  font-size: clamp(1.9rem, 6.2dvh, 4.5rem);
+  font-size: clamp(1.8rem, 5vmin, 2.7rem);
   font-weight: 800;
   font-style: normal;
-  letter-spacing: -.06em;
+  letter-spacing: -.035em;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, .78);
   white-space: nowrap;
-  color: #165b43; /* fallback */
-  background: linear-gradient(180deg,
-    #0d4d39 0%,
-    #21765a 28%,
-    #328a67 42%,
-    #16523f 72%,
-    #103c30 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 2px 0 rgba(255, 255, 255, .64));
 }
-
+.tg-success-confetti {
+  transform-origin: center;
+  box-shadow: 0 1px 2px rgba(75, 113, 85, .08);
+}
 @media (prefers-reduced-motion: reduce) {
   .tg-ink-token.tg-mark-selected::before { animation: none; }
 }
@@ -598,7 +559,7 @@ div#__next_turbo_dev_overlay, #__next_turbopack_overlay { display: none !importa
     font-size: clamp(1.15rem, 2.6vw, 1.85rem);
   }
   .tg-game-feedback { min-height: 76px; }
-  .tg-success-medallion { width: min(76vw, 56dvh, 350px); }
+  .tg-success-icon { width: clamp(100px, 21dvh, 146px); }
   .tg-opening-logo { width: 120px; height: 120px; }
   .tg-opening-title { font-size: clamp(2.3rem, 5vw, 3.8rem); }
   .tg-opening-subtitle { margin-bottom: 1.25rem; }
@@ -611,8 +572,8 @@ div#__next_turbo_dev_overlay, #__next_turbopack_overlay { display: none !importa
 @media (orientation: landscape) and (max-height: 560px) {
   .tg-game-note { min-height: 115px; }
   .tg-game-content { padding-top: .5rem; }
-  .tg-success-medallion { width: min(76vw, 54dvh, 270px); }
-  .tg-success-text { font-size: clamp(1.65rem, 6dvh, 3rem); }
+  .tg-success-icon { width: clamp(90px, 22dvh, 118px); }
+  .tg-success-caption { font-size: clamp(1.65rem, 5.3dvh, 2rem); }
   .tg-opening-logo { width: 96px; height: 96px; }
   .tg-opening-subtitle { margin-bottom: .7rem; }
   .tg-opening-paper { inset-inline: 12px; }
