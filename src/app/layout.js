@@ -1,4 +1,5 @@
 import "./globals.css";
+import Script from "next/script";
 
 // ★ ここでタブのタイトルとアイコンを設定します
 export const metadata = {
@@ -15,7 +16,7 @@ export default function RootLayout({ children }) {
     // サイトの言語を日本語(ja)に設定
     <html lang="ja">
       {/* 🌟 ここに suppressHydrationWarning を追加して、拡張機能の干渉エラーを無視させます */}
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning>{children}<Script src="/share-qr.js" strategy="afterInteractive" /></body>
     </html>
   );
 }
