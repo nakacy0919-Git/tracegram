@@ -221,7 +221,7 @@ export default function MenuScreen({
 
   return <main className={wrap}>
     <div className="max-w-[980px] mx-auto space-y-5">
-      <header className="flex items-center justify-between gap-3 pr-[94px] md:pr-0">
+      <header className="flex items-center justify-between gap-3">
         <button type="button" onClick={onReplayOpening}
           title="ロゴのオープニングを見る" aria-label="Tracegram オープニングを再生する"
           className="inline-flex gap-2.5 items-center rounded-xl hover:opacity-75 transition-opacity shrink-0">
@@ -234,6 +234,9 @@ export default function MenuScreen({
           <button type="button" onClick={()=>navigate('reading')} className={page==='reading'?'font-bold text-[#315747]':'text-stone-500 hover:text-[#315747]'}>長文</button>
           {onTeacherOpen && <button type="button" onClick={onTeacherOpen} className="text-stone-500 hover:text-[#315747]">教材作成</button>}
         </div>
+        <button type="button" data-share-qr className="site-qr-trigger" aria-label="QRコードでこのページを共有" title="QRコードで共有">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M6 6h1M17 6h1M6 17h1M14 14h3v3h-3v-3M21 14v3M17 21h4M14 21v-2M21 19v-1"/></svg>
+        </button>
       </header>
 
       {page==='home' && <>
