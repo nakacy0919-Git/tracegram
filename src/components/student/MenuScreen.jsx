@@ -87,7 +87,8 @@ export default function MenuScreen({
     setMistakes(saved && typeof saved === 'object' && !Array.isArray(saved) ? saved : {});
   },[gameState]);
 
-  const categories = useMemo(()=>availableCategories.filter(c=>Array.isArray(c.problems)&&c.problems.length>0),[availableCategories]);
+  const categories = useMemo(()=>availableCategories.filter(c=>Array.isArray(c.problems)&&c.problems.length>0 &&
+    (!isMultiplayer || !['custom','review','grammar_mix'].includes(c.categoryId))),[availableCategories,isMultiplayer]);
   const byId = useMemo(()=>new Map(categories.map(c=>[c.categoryId,c])),[categories]);
   const problemMap = useMemo(()=>{
     const m=new Map();
@@ -121,7 +122,7 @@ export default function MenuScreen({
     selectSubCategory(course);
   }
   function launch(lvl,qty,course=activeCategory) {
-    if (!course) return;
+    if (!course || (isMultiplayer && ['custom','review','grammar_mix'].includes(course.categoryId))) return;
     if (isMultiplayer && isHost) {
       setBattleSetup({mainId:course.groupId||'CUSTOM',subCategory:course,level:lvl,questionCount:qty});
       setAppScreen('lobby');
@@ -192,7 +193,7 @@ export default function MenuScreen({
               <option value={5}>5 問</option><option value={10}>10 問</option><option value={20}>20 問</option><option value={50}>50 問</option><option value="all">すべて</option>
             </select>
           </div>
-          <details className="border-t border-[#e1e2d6] mt-6 pt-4 group">
+          {!isMultiplayer ? <details className="border-t border-[#e1e2d6] mt-6 pt-4 group">
             <summary className="cursor-pointer flex items-center gap-2 text-sm text-stone-600 hover:text-[#3e6558] font-semibold select-none">
               <Settings2 size={16}/> プレイ方法を変更する
               <span className="font-normal text-xs text-stone-400">（現在：{gameModes.find(m=>m.id===gameMode)?.title}）</span>
@@ -208,7 +209,9 @@ export default function MenuScreen({
               ))}
             </div>
             <p className="mt-2 text-xs text-stone-500">離れた単語を選ぶときは、複数回なぞってから判定できます。</p>
-          </details>
+          </details> : <p className="text-xs text-[#53735d] mt-5 border-t border-[#e1e2d6] pt-4">
+            対戦では公平に比較できるよう、全員が同じ問題・順番・一筆フローで挑戦します。最大50問。
+          </p>}
           <button type="button" disabled={!chosen?.amount}
             onClick={()=>launch(chosen.value,count)}
             className="tg-primary mt-7 w-full py-4 rounded-2xl flex items-center justify-center gap-3 text-lg font-bold">
@@ -232,7 +235,7 @@ export default function MenuScreen({
           <button type="button" onClick={()=>navigate('home')} className={page==='home'?'font-bold text-[#315747]':'text-stone-500 hover:text-[#315747]'}>ホーム</button>
           <button type="button" onClick={()=>navigate('grammar')} className={page==='grammar'?'font-bold text-[#315747]':'text-stone-500 hover:text-[#315747]'}>文法</button>
           <button type="button" onClick={()=>navigate('reading')} className={page==='reading'?'font-bold text-[#315747]':'text-stone-500 hover:text-[#315747]'}>長文</button>
-          {onTeacherOpen && <button type="button" onClick={onTeacherOpen} className="text-stone-500 hover:text-[#315747]">教材作成</button>}
+          {onTeacherOpen && !isMultiplayer && <button type="button" onClick={onTeacherOpen} className="text-stone-500 hover:text-[#315747]">教材作成</button>}
         </div>
         <button type="button" data-share-qr className="site-qr-trigger" aria-label="QRコードでこのページを共有" title="QRコードで共有">
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M6 6h1M17 6h1M6 17h1M14 14h3v3h-3v-3M21 14v3M17 21h4M14 21v-2M21 19v-1"/></svg>
@@ -290,16 +293,16 @@ export default function MenuScreen({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <HomeTile number="01" icon={PencilLine} title="文法をなぞる" detail="文型・主語・動詞・関係詞" onClick={()=>navigate('grammar')}/>
           <HomeTile number="02" icon={BookOpen} title="長文をなぞる" detail="読解・構造・要約・語彙" onClick={()=>navigate('reading')}/>
+          <HomeTile number="03" icon={Users} title={isMultiplayer ? '対戦する教材を選ぶ' : 'みんなで文法バトル'}
+            detail="2〜4人 · スピード対戦 · 協力 · 2対2チーム戦"
+            onClick={()=>isMultiplayer && isHost?navigate('grammar'):setAppScreen('title')}/>
         </div>
         <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-2 text-sm">
           <button type="button" onClick={()=>navigate('mix')} className="tg-pill flex items-center gap-2"><Shuffle size={17}/> Grammar Mix</button>
           <button type="button" onClick={()=>navigate('review')} className="tg-pill flex items-center gap-2">
             <RotateCcw size={17}/> まちがいノート <span className="text-xs opacity-65">{missed.length}</span>
           </button>
-          <button type="button" onClick={()=>isMultiplayer && isHost?navigate('grammar'):setAppScreen('title')} className="tg-pill flex items-center gap-2">
-            <Users size={17}/> みんなで対戦
-          </button>
-          {onTeacherOpen && <button type="button" onClick={onTeacherOpen} className="tg-pill md:hidden flex items-center gap-2">
+           {onTeacherOpen && !isMultiplayer && <button type="button" onClick={onTeacherOpen} className="tg-pill md:hidden flex items-center gap-2">
             <NotebookPen size={17}/> 教材作成
           </button>}
         </div>
