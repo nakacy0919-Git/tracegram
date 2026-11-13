@@ -64,6 +64,14 @@ export default function GameScreen({
   const [slashingIndex, setSlashingIndex] = useState(null); 
   const [shake, setShake] = useState(false);
   const [showTranslation, setShowTranslation] = useState(false);
+  const [visibleCheer, setVisibleCheer] = useState(null);
+
+  useEffect(() => {
+    if (!latestCheer) return;
+    setVisibleCheer(latestCheer);
+    const timer = setTimeout(() => setVisibleCheer(null), 4500);
+    return () => clearTimeout(timer);
+  }, [latestCheer]);
 
   const SLASH_ANIMATION_DURATION = 300;
 
@@ -162,10 +170,9 @@ export default function GameScreen({
               ))}
             </div>
           </div>
-          {latestCheer && Date.now() - latestCheer.at < 12000 &&
-            <p role="status" className="text-[11px] text-center text-[#52765b] mt-1">
-              {latestCheer.from} さんから {latestCheer.emoji} エール！
-            </p>}
+          {visibleCheer && <p role="status" className="text-[11px] text-center text-[#52765b] mt-1">
+            {visibleCheer.from} さんから {visibleCheer.emoji} エール！
+          </p>}
         </div>
       )}
 
