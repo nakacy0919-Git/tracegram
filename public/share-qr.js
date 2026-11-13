@@ -95,7 +95,19 @@
   }
 
   async function openQR(trigger) {
-    const pageUrl = window.location.origin + window.location.pathname;
+    // Room QR buttons supply a same-origin join link, while the home button
+    // continues to share the plain landing page without a room number.
+    const homeUrl = window.location.origin + window.location.pathname;
+    let pageUrl = homeUrl;
+    const requested = trigger?.getAttribute('data-share-url');
+    if (requested) {
+      try {
+        const candidate = new URL(requested, homeUrl);
+        if (candidate.origin === window.location.origin && /^https?:$/.test(candidate.protocol)) {
+          pageUrl = candidate.toString();
+        }
+      } catch { /* fall back to home */ }
+    }
     if (!/^https?:\/\//.test(pageUrl)) return;
     previousFocus = trigger;
     const panel = getDialog();
