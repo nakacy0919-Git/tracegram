@@ -3,7 +3,7 @@ import React from 'react';
 import { Users, ArrowLeft, LogIn, PencilLine } from 'lucide-react';
 
 export default function TitleScreen({
-  onSinglePlayer, onCreateRoom, joinPin, setJoinPin, onJoinRoom,
+  onSinglePlayer, onCreateRoom, playerName, setPlayerName, joinPin, setJoinPin, onJoinRoom,
   connectionStatus, errorMessage
 }) {
   const connecting = connectionStatus === 'connecting';
@@ -17,7 +17,13 @@ export default function TitleScreen({
         <section className="tg-paper tg-margin tg-holes rounded-[22px] py-7 px-6 pl-12 md:px-10 md:pl-16">
           <span className="tg-tag">GROUP TRACE</span>
           <h1 className="tg-serif font-bold text-[#304235] text-2xl md:text-4xl mt-2">友達といっしょに、なぞる。</h1>
-          <p className="text-sm text-stone-600 mt-3 mb-7">同じ英文をなぞって競争。2〜4人で遊べます。</p>
+          <p className="text-sm text-stone-600 mt-3 mb-5">2〜4人で、対戦・協力・チーム戦。先生も生徒もすぐに参加できます。</p>
+          <label htmlFor="battle-name" className="block text-sm font-semibold text-[#344c3b] mb-2">表示名（本名でなくてもOK）</label>
+          <input id="battle-name" type="text" value={playerName} maxLength={18}
+            onChange={event => setPlayerName(event.target.value.slice(0, 18))}
+            autoComplete="off" placeholder="例：Team Sakura / Aさん"
+            className="tg-outline rounded-xl w-full px-4 py-3 mb-5 text-base"/>
+          <p className="text-xs text-stone-500 mb-5">同じWi-Fiでもインターネット接続が必要です。ルーム番号またはQRリンクで参加します。成績はサーバーに保存しません。</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <section className="rounded-xl border border-[#dce0d4] bg-[#fffef8] p-5 space-y-3">
               <div className="w-11 h-11 flex items-center justify-center rounded-full bg-[#e2ebe1] text-[#456951]"><PencilLine size={22}/></div>
@@ -43,6 +49,7 @@ export default function TitleScreen({
               </button>
             </section>
           </div>
+          {connecting && <p role="status" className="mt-4 text-sm text-[#456c57] font-semibold">接続中です。学校のWi-Fiによっては通信が制限される場合があります。</p>}
           {errorMessage && <p role="alert" className="bg-[#f7e6df] border border-[#e7c3b6] text-[#854a3d] p-3 rounded-xl mt-4 text-sm">{errorMessage}</p>}
         </section>
       </div>
