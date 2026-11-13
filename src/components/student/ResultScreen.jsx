@@ -1,14 +1,16 @@
 "use client";
 import React, { useEffect, useRef } from 'react';
 import { ArrowLeft, Home, NotebookPen, RotateCcw } from 'lucide-react';
+import { BATTLE_MODES, calculateBattleBoard } from '../../lib/battleSession.mjs';
 
 export default function ResultScreen({
-  isMultiplayer, playersData, myPeerId, score, activeCategory,
+  isMultiplayer, playersData, myPeerId, battleMode = 'race', score, activeCategory,
   selectedLevel, correctCount, firstTryCount = 0, wrongAttempts = 0, categoryStats = {},
   totalCount, onBackToLobby, onBackToLevelSelect, onBackToHome
 }) {
   const saved = useRef(false);
-  const players = Object.values(playersData || {}).sort((a,b)=>(b.score||0)-(a.score||0));
+  const board = calculateBattleBoard(playersData, battleMode, totalCount);
+  const players = board.players;
   useEffect(()=>{
     if (isMultiplayer || saved.current || !activeCategory) return;
     try {
@@ -43,17 +45,43 @@ export default function ResultScreen({
       <div className="tg-paper tg-margin tg-holes rounded-[22px] p-5 pl-12 md:p-10 md:pl-16">
         <span className="tg-tag">TRACEGRAM · YOUR NOTE</span>
         <h1 className="tg-serif text-3xl md:text-4xl font-bold text-[#2d4535] mt-2">
-          {isMultiplayer ? '対戦の記録' : '今日の学習記録'}
+          {isMultiplayer ? BATTLE_MODES[battleMode]?.label || '教室バトルの記録' : '今日の学習記録'}
         </h1>
         <p className="mt-1 text-stone-500 text-sm">{activeCategory?.title || 'Tracegram'}</p>
         <div className="h-px bg-[#d9dfd3] mt-6 mb-6"/>
         {isMultiplayer ? (
-          <div className="space-y-2">
+          <div className="space-y-3">
+            {battleMode === 'coop' && (
+              <div className="rounded-xl bg-[#eef5e9] border border-[#c9ddcc] p-4">
+                <p className="text-sm font-bold text-[#365e45]">チーム全体の正解数</p>
+                <p className="text-3xl font-bold text-[#365e45] mt-1 tabular-nums">
+                  {board.totalSolved} <span className="text-base text-stone-500">/ {board.possible}</span>
+                </p>
+                <div className="w-full h-2.5 bg-white rounded-full overflow-hidden mt-3">
+                  <div className="h-full bg-[#6c9c7b]" style={{width: (board.possible ? Math.min(100,100*board.totalSolved/board.possible) : 0)+'%'}}/>
+                </div>
+                <p className="text-xs text-stone-600 mt-2">{board.finishedCount}/{players.length} 人が完了。
+                  {board.finishedCount === players.length && board.totalSolved === board.possible ?
+                    ' 全員で全問クリア！' : ' 仲間の得点も加算されています。'}</p>
+              </div>
+            )}
+            {battleMode === 'teams' && (
+              <div className="grid grid-cols-2 gap-3">
+                {['A','B'].map(team => (
+                  <div key={team} className="rounded-xl bg-[#eef5e9] border border-[#c9ddcc] p-3 text-center">
+                    <p className="text-xs font-bold text-[#44664e]">チーム {team}</p>
+                    <p className="text-2xl font-bold text-[#365e45]">{board.teams[team].score.toLocaleString()}</p>
+                    <p className="text-[11px] text-stone-600">{board.teams[team].members.join('・')}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+            <p className="text-xs text-stone-500">{board.finishedCount === players.length ? '全員の結果' : 'ほかのメンバーが挑戦中のため、順位は暫定です。'}</p>
             {players.map((person,index)=>(
               <div key={person.id || index}
                 className={`rounded-xl px-4 py-3 border flex justify-between items-center gap-3 ${person.id===myPeerId?'bg-[#e9f0e6] border-[#afc5b2]':'bg-white/60 border-[#e5e5d9]'}`}>
                 <div className="flex items-center gap-3 min-w-0">
-                  <span className="tg-serif text-xl text-[#65816d] w-7">{index+1}.</span>
+                  <span className="tg-serif text-xl text-[#65816d] w-7">{battleMode === 'coop' ? '✓' : index+1+'.'}</span>
                   <span className="font-semibold text-[#2c4134] truncate">{person.id===myPeerId?'あなた':person.name}</span>
                 </div>
                 <span className="tabular-nums font-bold text-[#355845] whitespace-nowrap">{Number(person.score||0).toLocaleString()} pt</span>
