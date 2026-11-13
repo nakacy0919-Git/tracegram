@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, CheckCircle2, AlertTriangle } from 'lucide-react'; 
 import PronunciationMission from './PronunciationMission';
-import SuccessFlash from './SuccessFlash'; 
+import SuccessFlash from './SuccessFlash';
+import { BATTLE_MODES, calculateBattleBoard } from '../../lib/battleSession.mjs'; 
 
 const playSlashSound = () => {
   try {
@@ -35,6 +36,9 @@ export default function GameScreen({
   isMultiplayer,
   playersData,
   myPeerId,
+  battleMode = 'race',
+  latestCheer,
+  onCheer,
   activeCategory,
   selectedLevel,
   currentProblemIdx,
@@ -118,7 +122,8 @@ export default function GameScreen({
 
   const cleanHint = (activeProblem.hint || '指定された文法のまとまりをなぞってください').replace(/【.*?】/, '').trim();
   const roleInitial = (activeProblem.targetRole || '?').charAt(0).toUpperCase();
-  const sortedPlayers = Object.values(playersData || {}).sort((a, b) => b.score - a.score);
+  const board = calculateBattleBoard(playersData, battleMode, filteredProblems.length);
+  const sortedPlayers = board.players;
   const targets = [...(activeProblem.targetIndices || (activeProblem.targetIndex !== undefined ? [activeProblem.targetIndex] : []))].sort((a,b)=>a-b);
   const requiresMultiStroke = targets.some((index, i) => i > 0 && index !== targets[i - 1] + 1);
   const flowAutoJudge = gameMode === 'flow' && !requiresMultiStroke;
@@ -127,18 +132,40 @@ export default function GameScreen({
     <div className="tg-workspace tg-fluid-screen tg-game-workspace flex flex-col relative z-10 overflow-y-auto" ref={mainContainerRef} onPointerMove={handlePointerMove} onPointerUp={() => handlePointerUp(flowAutoJudge)} onPointerCancel={() => handlePointerUp(false)}>
       
       {isMultiplayer && sortedPlayers.length > 0 && (
-        <div className="absolute top-[80px] md:top-[90px] left-0 w-full z-40 flex flex-row flex-wrap justify-center gap-2 md:gap-4 px-2 pointer-events-none">
-          {sortedPlayers.map((player, index) => {
-            const isMe = player.id === myPeerId;
-            const rankColors = index === 0 ? "bg-yellow-400 text-yellow-900 border-yellow-300" : index === 1 ? "bg-slate-200 text-slate-700 border-slate-300" : index === 2 ? "bg-amber-600 text-amber-50 border-amber-500" : "bg-white/90 text-slate-600 border-slate-200";
-            return (
-              <motion.div key={player.id} layout initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className={`flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-full border-2 shadow-md backdrop-blur-md ${rankColors} ${isMe ? 'ring-2 ring-cyan-400 ring-offset-1' : ''}`}>
-                <span className="font-black text-sm md:text-base italic">{index + 1}</span>
-                <span className="font-bold text-xs md:text-sm truncate max-w-[60px] md:max-w-[100px]">{player.name === 'Host (You)' && isMe ? 'あなた' : player.name}</span>
-                <span className="font-black text-sm md:text-lg tracking-tighter ml-1">{player.score}</span>
-              </motion.div>
-            );
-          })}
+        <div className="relative z-30 w-full bg-[#f2f5ec] border-b border-[#dce3d6] px-3 py-2">
+          <div className="max-w-[1050px] mx-auto flex flex-wrap items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center gap-2 min-w-0">
+              <span className="text-xs font-bold text-[#3c6650]">{BATTLE_MODES[battleMode]?.label}</span>
+              {battleMode === 'coop' ? (
+                <span className="text-xs md:text-sm font-semibold text-[#355d47]">
+                  全員の正解 {board.totalSolved}/{board.possible} · 完了 {board.finishedCount}/{sortedPlayers.length}
+                </span>
+              ) : battleMode === 'teams' ? (
+                <span className="text-xs md:text-sm font-bold text-[#3f624c]">
+                  A組 {board.teams.A.score.toLocaleString()} pt : B組 {board.teams.B.score.toLocaleString()} pt
+                </span>
+              ) : sortedPlayers.map((player, index) => (
+                <span key={player.id} className={'text-xs px-2 py-1 rounded-full border font-bold ' +
+                  (player.id === myPeerId ? 'bg-[#d8ebdf] border-[#83b295]' : 'bg-white/80 border-[#dce3d6]')}>
+                  {index + 1}位 {player.name} {player.score.toLocaleString()}
+                </span>
+              ))}
+            </div>
+            <div className="flex items-center gap-1 shrink-0">
+              <span className="sr-only">友達にエールを送る</span>
+              {['👏', '🔥', '💡'].map(emoji => (
+                <button key={emoji} type="button" title={'エール ' + emoji}
+                  aria-label={emoji + ' のエールを送る'} onClick={() => onCheer?.(emoji)}
+                  className="rounded-lg border border-[#d7e0d4] bg-white/80 hover:bg-[#dcefe3] px-2 py-1 text-base">
+                  {emoji}
+                </button>
+              ))}
+            </div>
+          </div>
+          {latestCheer && Date.now() - latestCheer.at < 12000 &&
+            <p role="status" className="text-[11px] text-center text-[#52765b] mt-1">
+              {latestCheer.from} さんから {latestCheer.emoji} エール！
+            </p>}
         </div>
       )}
 
