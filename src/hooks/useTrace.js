@@ -69,21 +69,32 @@ export function useTrace(categories) {
   };
 
 
-  const startGame = (level, questionCount = 10, categoryOverride = null) => {
+  const startGame = (level, questionCount = 10, categoryOverride = null, orderedIds = null) => {
     const course = categoryOverride || activeCategory;
     if (!course?.problems || !Array.isArray(course.problems)) return false;
     let extracted = level === 'all' ? [...course.problems] :
       course.problems.filter(problem => getProblemLevel(problem) === Number(level));
     if (!extracted.length) return false;
 
-    // Uniform difficulty parsing for ID-based and explicit-level exercises.
-    const problems = [...extracted];
-    for (let i = problems.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [problems[i], problems[j]] = [problems[j], problems[i]];
+    let finalProblems;
+    if (orderedIds !== null) {
+      // In classroom play the host decides the order once. Never shuffle again
+      // on each iPad; reject missing, duplicated or wrong-level IDs.
+      if (!Array.isArray(orderedIds) || orderedIds.length === 0 || orderedIds.length > 50 ||
+          new Set(orderedIds).size !== orderedIds.length) return false;
+      const byId = new Map(extracted.map(problem => [problem.id, problem]));
+      if (!orderedIds.every(id => typeof id === 'string' && byId.has(id))) return false;
+      finalProblems = orderedIds.map(id => byId.get(id));
+    } else {
+      // Ordinary single-player practice keeps its existing random order.
+      const problems = [...extracted];
+      for (let i = problems.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [problems[i], problems[j]] = [problems[j], problems[i]];
+      }
+      const limit = Number.parseInt(questionCount, 10);
+      finalProblems = Number.isInteger(limit) && limit > 0 ? problems.slice(0, limit) : problems;
     }
-    const limit = Number.parseInt(questionCount, 10);
-    const finalProblems = Number.isInteger(limit) && limit > 0 ? problems.slice(0, limit) : problems;
 
     clearAdvance();
     failedProblemIdsRef.current = new Set();

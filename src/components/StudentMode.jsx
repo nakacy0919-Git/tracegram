@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useTrace } from '../hooks/useTrace';
 import { playCorrectChime } from '../lib/traceAudio';
 import { useMultiplayer } from '../hooks/useMultiplayer';
+import { createBattlePlan, resolveBattlePlan } from '../lib/battleSession.mjs';
 
 import TitleScreen from './student/TitleScreen';
 import OpeningSplash from './student/OpeningSplash';
@@ -25,14 +26,16 @@ export default function StudentMode({ categories, onTeacherOpen }) {
 
   const {
     isMultiplayer, isHost, roomId, connectionStatus, errorMessage,
-    playersData, myPeerId, battleConfig,
-    createRoom, joinRoom, syncMyScore, startBattle, exitMultiplayer
+    playersData, myPeerId, battleConfig, sessionStatus, latestCheer,
+    createRoom, joinRoom, syncMyScore, startBattle, returnToLobby, sendCheer, exitMultiplayer
   } = useMultiplayer();
 
   const [appScreen, setAppScreen] = useState('main'); 
   const [joinPin, setJoinPin] = useState('');
   const [battleSetup, setBattleSetup] = useState(null);
-  const [pendingBattle, setPendingBattle] = useState(null);
+  const [battleType, setBattleType] = useState('race');
+  const [battleError, setBattleError] = useState('');
+  const [playerName, setPlayerName] = useState('');
 
   const [showOpening, setShowOpening] = useState(true);
 
@@ -57,30 +60,48 @@ export default function StudentMode({ categories, onTeacherOpen }) {
 
   const processedBattleRef = useRef(null);
 
+  // QR invite URLs prefill the room number, but never join a room without a tap.
+  useEffect(() => {
+    const pin = new URLSearchParams(window.location.search).get('battle');
+    if (/^\\d{6}$/.test(pin || '')) {
+      setJoinPin(pin);
+      setAppScreen('title');
+    }
+  }, []);
+
   useEffect(() => {
     if (feedbackState === 'correct') playCorrectChime();
   }, [feedbackState]);
 
   useEffect(() => {
-    if (isMultiplayer) syncMyScore(score, combo);
-  }, [score, combo, isMultiplayer, syncMyScore]);
+    if (isMultiplayer) syncMyScore(score, combo, correctCount, gameState === 'result');
+  }, [score, combo, correctCount, gameState, isMultiplayer, syncMyScore]);
 
   useEffect(() => {
-    if (battleConfig && processedBattleRef.current !== battleConfig) {
-      processedBattleRef.current = battleConfig; 
-      selectMainCategory(battleConfig.mainId);
-      selectSubCategory(battleConfig.subCategory);
-      setPendingBattle(battleConfig.level);
+    if (!battleConfig || processedBattleRef.current === battleConfig.sessionId) return;
+    processedBattleRef.current = battleConfig.sessionId;
+    // Use only local catalog exercises. Never accept answer keys from a peer.
+    const resolved = resolveBattlePlan(battleConfig, categories);
+    if (!resolved || !startGame(battleConfig.level, resolved.problemIds.length,
+      resolved.category, resolved.problemIds)) {
+      setBattleError('この教材が端末にありません。全員が同じ版のTracegramを開いてください。');
+      setAppScreen('lobby');
+      return;
     }
-  }, [battleConfig, selectMainCategory, selectSubCategory]);
+    setBattleError('');
+    setGameMode('flow'); // same play method on every iPad
+    setAppScreen('game');
+  }, [battleConfig, categories, startGame]);
 
   useEffect(() => {
-    if (pendingBattle !== null && activeCategory?.categoryId === battleConfig?.subCategory?.categoryId) {
-      startGame(pendingBattle);
-      setPendingBattle(null);
-      setAppScreen('game');
+    if (sessionStatus === 'lobby' && !isHost && isMultiplayer && appScreen === 'game') {
+      setAppScreen('lobby');
     }
-  }, [activeCategory, pendingBattle, battleConfig, startGame]);
+  }, [sessionStatus, isHost, isMultiplayer, appScreen]);
+
+  useEffect(() => {
+    if (connectionStatus === 'error') setAppScreen('title');
+  }, [connectionStatus]);
 
   useEffect(() => {
     if (appScreen === 'title' && connectionStatus === 'connected') {
@@ -93,6 +114,9 @@ export default function StudentMode({ categories, onTeacherOpen }) {
     setAppScreen('main');
     setMenuViewMode('home');
     setGameState('main_select');
+    setBattleSetup(null);
+    setBattleError('');
+    processedBattleRef.current = null;
   };
 
   if (showOpening) return <OpeningSplash onEnter={dismissOpening} />;
@@ -101,10 +125,12 @@ export default function StudentMode({ categories, onTeacherOpen }) {
     return (
       <TitleScreen 
          onSinglePlayer={() => setAppScreen('main')}
-        onCreateRoom={() => createRoom()}
+        onCreateRoom={() => createRoom(playerName)}
+        playerName={playerName}
+        setPlayerName={setPlayerName}
         joinPin={joinPin}
         setJoinPin={setJoinPin}
-        onJoinRoom={(pin) => joinRoom(pin)}
+        onJoinRoom={(pin) => joinRoom(pin, playerName)}
         connectionStatus={connectionStatus}
         errorMessage={errorMessage}
       />
@@ -118,11 +144,38 @@ export default function StudentMode({ categories, onTeacherOpen }) {
         playersData={playersData}
         myPeerId={myPeerId}
         isHost={isHost}
+        battleType={battleType}
+        onBattleTypeChange={setBattleType}
+        battleSetup={battleSetup}
+        battleError={battleError}
+        sessionStatus={sessionStatus}
         onExit={handleExitToTitle}
+        onChooseCourse={() => {
+          returnToLobby();
+          setBattleError('');
+          setAppScreen('main');
+          backToMain();
+          setMenuViewMode('grammar');
+        }}
         onStartBattle={() => {
-          if (Object.values(playersData).length >= 2) {
-            startBattle(battleSetup);
-            startGame(battleSetup.level, battleSetup.questionCount || 10, battleSetup.subCategory);
+          if (!battleSetup?.subCategory) {
+            setBattleError('先に文法教材を選んでください。');
+            return;
+          }
+          const plan = createBattlePlan(battleSetup.subCategory,
+            battleSetup.level, battleSetup.questionCount, battleType);
+          if (!plan) {
+            setBattleError('出題できる共通教材がありません。別の教材を選んでください。');
+            return;
+          }
+          processedBattleRef.current = plan.sessionId;
+          if (!startBattle(plan)) {
+            setBattleError('参加人数を確認してください。チーム対抗戦は4人で遊べます。');
+            return;
+          }
+          setGameMode('flow');
+          if (startGame(plan.level, plan.problemIds.length, battleSetup.subCategory, plan.problemIds)) {
+            setBattleError('');
             setAppScreen('game');
           }
         }}
@@ -186,6 +239,7 @@ export default function StudentMode({ categories, onTeacherOpen }) {
         isMultiplayer={isMultiplayer}
         playersData={playersData}
         myPeerId={myPeerId}
+        battleMode={battleConfig?.mode || 'race'}
         score={score}
         activeCategory={activeCategory}
         selectedLevel={selectedLevel}
@@ -194,7 +248,7 @@ export default function StudentMode({ categories, onTeacherOpen }) {
         wrongAttempts={wrongAttempts}
         categoryStats={categoryStats}
         totalCount={filteredProblems?.length || 0}
-        onBackToLobby={() => setAppScreen('lobby')}
+        onBackToLobby={() => { returnToLobby(); setAppScreen('lobby'); }}
         onBackToLevelSelect={() => {
           if (activeCategory?.categoryId === 'grammar_mix') { backToMain(); setMenuViewMode('mix'); }
           else backToLevelSelect();
@@ -211,6 +265,9 @@ export default function StudentMode({ categories, onTeacherOpen }) {
       isMultiplayer={isMultiplayer}
       playersData={playersData}
       myPeerId={myPeerId}
+      battleMode={battleConfig?.mode || 'race'}
+      latestCheer={latestCheer}
+      onCheer={sendCheer}
       activeCategory={activeCategory}
       selectedLevel={selectedLevel}
       currentProblemIdx={currentProblemIdx}
@@ -227,7 +284,7 @@ export default function StudentMode({ categories, onTeacherOpen }) {
       handlePointerUp={handlePointerUp}
       submitAnswer={submitAnswer}
       onExit={() => {
-        if (isMultiplayer) setAppScreen('lobby');
+        if (isMultiplayer) { returnToLobby(); setAppScreen('lobby'); }
         else if (activeCategory?.categoryId === 'grammar_mix') { backToMain(); setMenuViewMode('mix'); }
         else backToLevelSelect();
       }}
